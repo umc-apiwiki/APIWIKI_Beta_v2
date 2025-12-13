@@ -1,19 +1,24 @@
 // src/app/page.tsx
 'use client';
 
+import * as Sentry from '@sentry/nextjs';
 import SearchBar from '@/components/SearchBar';
 import CategoryCarousel from '@/components/CategoryCarousel';
 import APICarousel from '@/components/APICarousel';
 import NewsCarousel from '@/components/NewsCarousel';
 import NewsCard from '@/components/NewsCard';
 import { mockAPIs, newsItems } from '@/data/mockData';
-import { useEffect } from 'react';
 
 export default function HomePage() {
-  // Carousels are now handled by dedicated components (APICarousel, NewsCarousel)
-
   const popularAPIs = mockAPIs.slice(0, 10);
   const suggestedAPIs = mockAPIs.slice(5, 15);
+
+  // const triggerGlitchTipTestError = () => {
+  //   const error = new Error('GlitchTip UI test error');
+  //   Sentry.captureException(error);
+  //   // Also throw to surface in dev; GlitchTip should capture via Sentry SDK
+  //   throw error;
+  // };
 
   return (
     <div className="min-h-screen bg-white">
@@ -62,6 +67,15 @@ export default function HomePage() {
         <div className="max-w-2xl mx-auto mb-8">
           <SearchBar />
         </div>
+
+        {/* <div className="mb-10 flex justify-center">
+          <button
+            onClick={triggerGlitchTipTestError}
+            className="rounded-lg border border-rose-300 px-4 py-2 text-sm text-rose-600 hover:bg-rose-50 transition-colors"
+          >
+            GlitchTip 테스트 에러 보내기
+          </button>
+        </div> */}
 
         <CategoryCarousel />
       </main>
