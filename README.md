@@ -29,7 +29,7 @@ cd api-wiki
 # lucide-react 아이콘 라이브러리 설치
 npm install lucide-react
 ```
-
+ 
 ### 3. 프로젝트 구조 생성
 
 ```
