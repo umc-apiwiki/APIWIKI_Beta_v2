@@ -2,7 +2,6 @@
 
 import type { Metadata } from 'next';
 import './globals.css';
-import Script from 'next/script';
 import Footer from '@/components/Footer';
 
 export const metadata: Metadata = {
@@ -23,12 +22,6 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Noto+Sans+KR:wght@400;500;700&family=Orbitron:wght@700&display=swap" rel="stylesheet" />
       </head>
       <body className="font-sans">
-        {/* Kakao Maps SDK: set NEXT_PUBLIC_KAKAO_KEY in .env.local */}
-        <Script
-          src={`https://dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_KEY}&libraries=services`}
-          strategy="beforeInteractive"
-        />
-        
         <main className="min-h-screen">
           {children}
         </main>
