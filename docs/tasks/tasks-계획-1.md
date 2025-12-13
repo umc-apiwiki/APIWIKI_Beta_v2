@@ -1,0 +1,89 @@
+### 관련 파일
+- `package.json` - Sentry/GA 관련 의존성 및 스크립트 정의
+- `next.config.js` - Sentry source map 업로드, API 라우트 래핑, GA용 설정(필요 시)
+- `sentry.client.config.ts` - 클라이언트 에러/트랜잭션 수집 초기화
+- `sentry.server.config.ts` - 서버/Edge 에러/트랜잭션 수집 초기화
+- `src/app/api/glitchtip-tunnel/route.ts` - 클라이언트 에러용 GlitchTip 터널 엔드포인트
+- `src/app/layout.tsx` - 전역 Sentry 설정 및 GA 스니펫/프로바이더 주입
+- `src/app/page.tsx` - 샘플 에러 트리거 및 GA 이벤트 테스트 버튼 추가 위치
+- `prisma/schema.prisma` - Supabase DB 스키마 정의
+- `prisma/migrations/` - Prisma 마이그레이션 산출물
+- `src/lib/db.ts` - Prisma 클라이언트/DB 연결 유틸 (생성 예정)
+- `src/app/api/health/route.ts` - DB 헬스체크용 API 라우트 (생성 예정)
+- `.env.example` - SENTRY_DSN, GLITCHTIP_URL, GA_ID, DATABASE_URL 등 환경변수 템플릿
+- `coolify/README.md` - Coolify 배포 절차/설정 기록(생성 예정)
+- `coolify/app.nixpacks.toml` 또는 `Dockerfile` - Next 배포용 Nixpacks/Docker 설정
+- `coolify/supabase/docker-compose.yml` - self-hosted Supabase 스택 구성 (생성 예정)
+
+## 작업
+- [ ] 1.0 GlitchTip(Sentry) 모니터링 연동 및 클라이언트 터널 경로 준비 (Push 단위)
+    - [ ] 1.1 @sentry/nextjs 설치 및 환경변수 키(SENTRY_DSN 등) 추가 (.env.example 반영) (커밋 단위)
+        - [ ] 1.1.1 테스트 코드 작성
+        - [ ] 1.1.2 테스트 실행 및 검증
+        - [ ] 1.1.3 오류 수정 (필요 시)
+    - [ ] 1.2 sentry.client.config.ts / sentry.server.config.ts 초기화 및 tracesSampleRate 기본값 설정 (커밋 단위)
+        - [ ] 1.2.1 테스트 코드 작성
+        - [ ] 1.2.2 테스트 실행 및 검증
+        - [ ] 1.2.3 오류 수정 (필요 시)
+    - [ ] 1.3 next.config.js에 withSentryConfig 적용, productionBrowserSourceMaps 설정 및 API 라우트 래핑 (커밋 단위)
+        - [ ] 1.3.1 테스트 코드 작성
+        - [ ] 1.3.2 테스트 실행 및 검증
+        - [ ] 1.3.3 오류 수정 (필요 시)
+    - [ ] 1.4 app/api/glitchtip-tunnel/route.ts 구현 및 클라이언트 tunnel 옵션 연결 (커밋 단위)
+        - [ ] 1.4.1 테스트 코드 작성
+        - [ ] 1.4.2 테스트 실행 및 검증
+        - [ ] 1.4.3 오류 수정 (필요 시)
+    - [ ] 1.5 샘플 에러 트리거 UI 추가 후 GlitchTip 수집 확인(문서화 포함) (커밋 단위)
+        - [ ] 1.5.1 테스트 코드 작성
+        - [ ] 1.5.2 테스트 실행 및 검증
+        - [ ] 1.5.3 오류 수정 (필요 시)
+
+- [ ] 2.0 Supabase + Prisma 초기 스키마/마이그레이션 세팅 및 연결 검증 (Push 단위)
+    - [ ] 2.1 DATABASE_URL(.env.example) 정의 및 Prisma Client 초기 부트스트랩(src/lib/db.ts) (커밋 단위)
+        - [ ] 2.1.1 테스트 코드 작성
+        - [ ] 2.1.2 테스트 실행 및 검증
+        - [ ] 2.1.3 오류 수정 (필요 시)
+    - [ ] 2.2 prisma/schema.prisma 작성 및 최초 모델 정의(예: user/api meta 기본 테이블) (커밋 단위)
+        - [ ] 2.2.1 테스트 코드 작성
+        - [ ] 2.2.2 테스트 실행 및 검증
+        - [ ] 2.2.3 오류 수정 (필요 시)
+    - [ ] 2.3 prisma migrate dev 실행 및 마이그레이션 산출물 커밋 (커밋 단위)
+        - [ ] 2.3.1 테스트 코드 작성
+        - [ ] 2.3.2 테스트 실행 및 검증
+        - [ ] 2.3.3 오류 수정 (필요 시)
+    - [ ] 2.4 DB 헬스체크용 API 라우트(app/api/health/route.ts) 추가 및 런타임 연결 확인 (커밋 단위)
+        - [ ] 2.4.1 테스트 코드 작성
+        - [ ] 2.4.2 테스트 실행 및 검증
+        - [ ] 2.4.3 오류 수정 (필요 시)
+
+- [ ] 3.0 Coolify 배포 파이프라인 구성 (Next Nixpacks, Supabase self-host, GlitchTip 서비스 포함) (Push 단위)
+    - [ ] 3.1 Next 앱 Nixpacks/Docker 설정(coolify/app.nixpacks.toml 또는 Dockerfile) 작성 및 빌드 확인 (커밋 단위)
+        - [ ] 3.1.1 테스트 코드 작성
+        - [ ] 3.1.2 테스트 실행 및 검증
+        - [ ] 3.1.3 오류 수정 (필요 시)
+    - [ ] 3.2 coolify/supabase/docker-compose.yml 작성 및 서비스(Studio, REST, Realtime 등) 구성 문서화 (커밋 단위)
+        - [ ] 3.2.1 테스트 코드 작성
+        - [ ] 3.2.2 테스트 실행 및 검증
+        - [ ] 3.2.3 오류 수정 (필요 시)
+    - [ ] 3.3 GlitchTip 서비스/환경변수 세팅 및 Coolify 상 연동 절차 기록(coolify/README.md) (커밋 단위)
+        - [ ] 3.3.1 테스트 코드 작성
+        - [ ] 3.3.2 테스트 실행 및 검증
+        - [ ] 3.3.3 오류 수정 (필요 시)
+    - [ ] 3.4 배포용 환경변수 템플릿(.env.example) 최신화 및 CI 빌드 커맨드 검증 (커밋 단위)
+        - [ ] 3.4.1 테스트 코드 작성
+        - [ ] 3.4.2 테스트 실행 및 검증
+        - [ ] 3.4.3 오류 수정 (필요 시)
+
+- [ ] 4.0 Google Analytics 연동 및 기본 페이지뷰/이벤트 추적 설정 (Push 단위)
+    - [ ] 4.1 GA Measurement ID 환경변수(NEXT_PUBLIC_GA_ID) 추가 및 .env.example 반영 (커밋 단위)
+        - [ ] 4.1.1 테스트 코드 작성
+        - [ ] 4.1.2 테스트 실행 및 검증
+        - [ ] 4.1.3 오류 수정 (필요 시)
+    - [ ] 4.2 app/layout.tsx에 GA 스니펫/Script 삽입 및 기본 페이지뷰 훅 구성 (커밋 단위)
+        - [ ] 4.2.1 테스트 코드 작성
+        - [ ] 4.2.2 테스트 실행 및 검증
+        - [ ] 4.2.3 오류 수정 (필요 시)
+    - [ ] 4.3 주요 인터랙션(검색/카테고리 클릭) 이벤트 트래킹 헬퍼 추가 및 샘플 이벤트 발생 확인 (커밋 단위)
+        - [ ] 4.3.1 테스트 코드 작성
+        - [ ] 4.3.2 테스트 실행 및 검증
+        - [ ] 4.3.3 오류 수정 (필요 시)
