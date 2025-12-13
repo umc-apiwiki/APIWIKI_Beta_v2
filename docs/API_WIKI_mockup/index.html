@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API WIKI - Dynamic Prototype</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Noto+Sans+KR:wght@400;500;700&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header class="main-header">
+        <a href="#" style="margin-right:auto;">About Us</a>
+        <a href="#">Community</a>
+        <a href="#" class="login-btn">Login</a>
+    </header>
+
+    <main class="main-container">
+        <div class="logo-container">
+            <h1 class="logo animated-gradient">API WIKI</h1>
+        </div>
+        
+        <div class="search-container">
+            <div class="search-bar-wrapper">
+                <input type="text" class="search-input" placeholder="모든 API를 검색해 보세요">
+                <button class="search-button" onclick="location.href='search.html'">Search</button>
+            </div>
+        </div>
+
+        <!-- 태그 바로가기 (화살표 포함 캐러셀) -->
+        <div id="quick-tags-carousel" class="carousel-wrapper-small" style="margin-top: 1.25rem;">
+            <button class="carousel-btn prev" aria-label="이전 태그">&lt;</button>
+            <div class="carousel-track tags">
+                <a href="#" class="category-item">결제</a>
+                <a href="#" class="category-item">소셜로그인</a>
+                <a href="#" class="category-item">지도</a>
+                <a href="#" class="category-item">날씨</a>
+                <a href="#" class="category-item">AI</a>
+                <a href="#" class="category-item">이메일</a>
+                <a href="#" class="category-item">금융</a>
+                <a href="#" class="category-item">데이터</a>
+                <a href="#" class="category-item">보안</a>
+            </div>
+            <button class="carousel-btn next" aria-label="다음 태그">&gt;</button>
+        </div>
+    </main>
+
+    <div class="content-section">
+
+        <section class="content-block">
+            <h2 class="content-title">Recent Popular</h2>
+            <div id="popular-api-carousel" class="carousel-wrapper">
+                <button class="carousel-btn prev">&lt;</button>
+                <div class="carousel-track">
+                    <a href="#" class="content-card">
+                        <div class="card-header"><img src="https://via.placeholder.com/40/EA4335/FFFFFF?text=Y"><h3>Youtube</h3></div>
+                        <p>Used by 1.2B people | ★ 4.8</p><div class="card-tags"><span class="tag free">free</span></div>
+                    </a>
+                    <a href="#" class="content-card">
+                        <div class="card-header"><img src="https://via.placeholder.com/40/4285F4/FFFFFF?text=O"><h3>OpenStreetMap</h3></div>
+                        <p>Used by 760M people | ★ 4.1</p><div class="card-tags"><span class="tag mixed">mixed</span></div>
+                    </a>
+                    <a href="#" class="content-card">
+                        <div class="card-header"><img src="https://via.placeholder.com/40/34A853/FFFFFF?text=G"><h3>Google Login</h3></div>
+                        <p>Used by 2.1B people | ★ 4.7</p><div class="card-tags"><span class="tag free">free</span></div>
+                    </a>
+                    <a href="#" class="content-card">
+                        <div class="card-header"><img src="https://via.placeholder.com/40/000000/FFFFFF?text=AI"><h3>OpenAI(GPT-5)</h3></div>
+                        <p>Used by 970M people | ★ 4.1</p><div class="card-tags"><span class="tag paid">paid</span></div>
+                    </a>
+                    <a href="#" class="content-card">
+                        <div class="card-header"><img src="https://via.placeholder.com/40/FBBC05/FFFFFF?text=T"><h3>Toss Payments</h3></div>
+                        <p>Used by 480M people | ★ 4.6</p><div class="card-tags"><span class="tag mixed">mixed</span></div>
+                    </a>
+                </div>
+                <button class="carousel-btn next">&gt;</button>
+            </div>
+        </section>
+
+        <section class="content-block">
+            <h2 class="content-title">Suggest API</h2>
+            <div id="suggest-api-carousel" class="carousel-wrapper">
+                <button class="carousel-btn prev">&lt;</button>
+                <div class="carousel-track">
+                    <a href="#" class="content-card">
+                        <div class="card-header"><img src="https://via.placeholder.com/40/4285F4/FFFFFF?text=K"><h3>국토교통부_2D지도</h3></div>
+                        <p>최근 사용한 '지도'와 유사<br>Used by 30M people | ★ 2.3</p>
+                    </a>
+                     <a href="#" class="content-card">
+                        <div class="card-header"><img src="https://via.placeholder.com/40/34A853/FFFFFF?text=N"><h3>네이버 지도 API</h3></div>
+                        <p>최근 사용한 '지도'와 유사<br>Used by 520M people | ★ 4.7</p>
+                    </a>
+                    <a href="#" class="content-card">
+                        <div class="card-header"><img src="https://via.placeholder.com/40/FBBC05/FFFFFF?text=S"><h3>SGIS 지도 API</h3></div>
+                        <p>최근 사용한 '지도'와 유사<br>Used by 30M people | ★ 4.1</p>
+                    </a>
+                    <a href="#" class="content-card">
+                        <div class="card-header"><img src="https://via.placeholder.com/40/000000/FFFFFF?text=G"><h3>Google Maps API</h3></div>
+                        <p>최근 사용한 '지도'와 유사<br>Used by 2.5B people | ★ 4.5</p>
+                    </a>
+                </div>
+                <button class="carousel-btn next">&gt;</button>
+            </div>
+        </section>
+        
+        <section class="content-block">
+            <h2 class="content-title">Latest news</h2>
+            <div id="news-carousel" class="carousel-wrapper">
+                <button class="carousel-btn prev">&lt;</button>
+                <div class="carousel-track">
+                    <a href="#" class="news-card">
+                        <h4>카카오 맵 API 중단으로 혹시 겪은 사람 있나요</h4>
+                        <p>javascript appkey를 사용하고 도메인도 제대로 등록되어있고 잘쓰고 있었는데요! Uncaught ReferenceError: kakao is not defined...</p>
+                        <span>by anon40729937</span>
+                    </a>
+                    <a href="#" class="news-card">
+                        <h4>OpenAI의 ChatGPT API 업데이트 소식</h4>
+                        <p>OpenAI에서 기본 ChatGPT API에 대해서 흥미로운 업데이트를 진행했습니다. 함수 호출 (Function calling) 기능이 추가되었습니다...</p>
+                        <span>by tilnote</span>
+                    </a>
+                     <a href="#" class="news-card">
+                        <h4>새로운 결제 API, '코리아페이' 출시</h4>
+                        <p>국내 환경에 최적화된 새로운 결제 API '코리아페이'가 출시되었습니다. 간편한 연동과 강력한 보안을 특징으로 내세우고 있습니다.</p>
+                        <span>by API WIKI News</span>
+                    </a>
+                </div>
+                <button class="carousel-btn next">&gt;</button>
+            </div>
+        </section>
+    </div>
+
+    <footer class="main-footer">
+        <p>API WIKI Project</p>
+    </footer>
+    
+    <script>
+        function setupCarousel(carouselId) {
+            const carouselWrapper = document.getElementById(carouselId);
+            if (!carouselWrapper) return;
+
+            const track = carouselWrapper.querySelector('.carousel-track');
+            const prevBtn = carouselWrapper.querySelector('.carousel-btn.prev');
+            const nextBtn = carouselWrapper.querySelector('.carousel-btn.next');
+            
+            // 첫 번째 아이템의 너비를 기준으로 스크롤 양 계산 (gap 포함)
+            const item = track.querySelector('.content-card, .news-card, .category-item');
+            if (!item) return;
+            
+            const itemStyle = window.getComputedStyle(item);
+            const itemMarginRight = parseInt(itemStyle.marginRight) || 0;
+            const scrollAmount = item.offsetWidth + itemMarginRight + 16; // 16 is gap
+
+            nextBtn.addEventListener('click', () => {
+                track.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+            });
+
+            prevBtn.addEventListener('click', () => {
+                track.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+            });
+        }
+
+        // 각 캐러셀에 대해 함수 실행
+        document.addEventListener('DOMContentLoaded', () => {
+            setupCarousel('quick-tags-carousel');
+            setupCarousel('popular-api-carousel');
+            setupCarousel('suggest-api-carousel');
+            setupCarousel('news-carousel');
+        });
+    </script>
+
+</body>
+</html>
