@@ -2,16 +2,29 @@
 'use client';
 
 import * as Sentry from '@sentry/nextjs';
+import { useState } from 'react';
 import SearchBar from '@/components/SearchBar';
 import CategoryCarousel from '@/components/CategoryCarousel';
 import APICarousel from '@/components/APICarousel';
 import NewsCarousel from '@/components/NewsCarousel';
 import NewsCard from '@/components/NewsCard';
 import { mockAPIs, newsItems } from '@/data/mockData';
+import { supabase } from '@/lib/supabaseClient';
 
 export default function HomePage() {
   const popularAPIs = mockAPIs.slice(0, 10);
   const suggestedAPIs = mockAPIs.slice(5, 15);
+  const [supabaseStatus, setSupabaseStatus] = useState<string>('');
+
+  // const checkSupabase = async () => {
+  //   setSupabaseStatus('확인 중...');
+  //   const { data, error } = await supabase.from('User').select('id').limit(1);
+  //   if (error) {
+  //     setSupabaseStatus(`실패: ${error.message}`);
+  //     return;
+  //   }
+  //   setSupabaseStatus(`성공: ${data?.length ?? 0} rows 조회됨`);
+  // };
 
   // const triggerGlitchTipTestError = () => {
   //   const error = new Error('GlitchTip UI test error');
@@ -67,6 +80,16 @@ export default function HomePage() {
         <div className="max-w-2xl mx-auto mb-8">
           <SearchBar />
         </div>
+
+        {/* <div className="mb-6 flex flex-col items-center gap-2 text-sm text-gray-700">
+          <button
+            onClick={checkSupabase}
+            className="rounded-lg border border-emerald-200 px-4 py-2 text-emerald-700 hover:bg-emerald-50 transition-colors"
+          >
+            Supabase 연결 확인
+          </button>
+          {supabaseStatus && <span className="text-gray-600">{supabaseStatus}</span>}
+        </div> */}
 
         {/* <div className="mb-10 flex justify-center">
           <button
