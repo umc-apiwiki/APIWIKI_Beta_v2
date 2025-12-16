@@ -1,15 +1,25 @@
-```typescript
 // placeholder: api detail page
 // src/app/api/[id]/page.tsx
-import { notFound } from 'next/navigation';
-import Header from '@/components/Header'; // Assuming Header is needed based on the diff, though not in original
+'use client';
+
+import { useState } from 'react';
+import { useParams, useRouter } from 'next/navigation';
+import { ChevronLeft, Star, Users } from 'lucide-react';
+import { getAPIById, getRelatedAPIs } from '@/data/mockData';
 import APICard from '@/components/APICard';
-import { getAPIById, getRelatedAPIs } from '@/lib/apiService';
+import WikiEditor from '@/components/WikiEditor';
 
-export default async function APIDetailPage({ params }: { params: { id: string } }) {
-  const api = await getAPIById(params.id);
-
+export default function APIDetailPage() {
+  const params = useParams();
+  const router = useRouter();
+  const [activeTab, setActiveTab] = useState('개요');
+  
+  const api = getAPIById(params.id as string);
+  
   if (!api) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-4">API를 찾을 수 없습니다</h1>
           <button
             onClick={() => router.push('/explore')}
@@ -73,11 +83,11 @@ export default async function APIDetailPage({ params }: { params: { id: string }
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
-                  className={`flex - 1 px - 6 py - 4 font - medium transition - colors whitespace - nowrap ${
-  activeTab === tab
-    ? 'text-blue-600 border-b-2 border-blue-600 bg-blue-50'
-    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-} `}
+                  className={`flex-1 px-6 py-4 font-medium transition-colors whitespace-nowrap ${
+                    activeTab === tab
+                      ? 'text-blue-600 border-b-2 border-blue-600 bg-blue-50'
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                  }`}
                 >
                   {tab}
                 </button>
@@ -223,7 +233,7 @@ export default async function APIDetailPage({ params }: { params: { id: string }
                   </div>
 
                   <div className="bg-gray-900 text-gray-100 rounded-xl p-6 font-mono text-sm overflow-x-auto">
-                    <pre>{`# ${ api.name } API 사용 예제
+                    <pre>{`# ${api.name} API 사용 예제
 
 import requests
 
@@ -231,21 +241,21 @@ API_KEY = "your_api_key_here"
 BASE_URL = "https://api.example.com/v1"
 
 def get_data():
-headers = {
-  "Authorization": f"Bearer {API_KEY}",
-  "Content-Type": "application/json"
-}
-
-response = requests.get(
-  f"{BASE_URL}/endpoint",
-  headers = headers
-)
-
-if response.status_code == 200:
-  return response.json()
-else:
-print(f"Error: {response.status_code}")
-return None
+    headers = {
+        "Authorization": f"Bearer {API_KEY}",
+        "Content-Type": "application/json"
+    }
+    
+    response = requests.get(
+        f"{BASE_URL}/endpoint",
+        headers=headers
+    )
+    
+    if response.status_code == 200:
+        return response.json()
+    else:
+        print(f"Error: {response.status_code}")
+        return None
 
 # 사용 예시
 data = get_data()
@@ -298,7 +308,7 @@ print(data)`}</pre>
 
               <div className="mb-4">
                 <div className="text-sm text-gray-500">빠른 엔드포인트</div>
-                <pre className="bg-gray-900 text-gray-100 rounded-md p-3 text-sm font-mono overflow-x-auto mt-2">{`GET / v1 / example`}</pre>
+                <pre className="bg-gray-900 text-gray-100 rounded-md p-3 text-sm font-mono overflow-x-auto mt-2">{`GET /v1/example`}</pre>
               </div>
 
               <div className="flex gap-3 mt-4">

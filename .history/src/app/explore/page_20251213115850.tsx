@@ -1,19 +1,16 @@
-```typescript
 // src/app/explore/page.tsx
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
-import APICard from '@/components/APICard';
-import Header from '@/components/Header';
-import { searchAPIs, getAllCategories, type SearchFilters } from '@/lib/apiService';
-import type { API } from '@/types';
+import { useState, useEffect, useRef, useCallback, Suspense } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { mockAPIs, getAPIById } from '@/data/mockData';
+import { API } from '@/types';
+import CompareModal from '@/components/CompareModal';
 
-export default function ExplorePage() {
+function ExploreContent() {
+  const router = useRouter();
   const searchParams = useSearchParams();
-  const [apis, setApis] = useState<API[]>([]);
-  const [categories, setCategories] = useState<string[]>([]);
-  const [loading, setLoading] = useState(true);
   const initialQuery = searchParams.get('q') || '';
 
   const [searchQuery, setSearchQuery] = useState(initialQuery);
@@ -197,7 +194,7 @@ export default function ExplorePage() {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      router.push(`/ explore ? q = ${ encodeURIComponent(searchQuery) } `);
+      router.push(`/explore?q=${encodeURIComponent(searchQuery)}`);
     }
   };
 
@@ -581,7 +578,7 @@ export default function ExplorePage() {
             {/* 정렬 옵션 및 결과 수 */}
             <div className="flex items-center justify-between mb-4">
               <p className="text-sm text-gray-600">
-                {searchQuery && `"${searchQuery}" 에 대한`}검색결과 약 {filteredAPIs.length.toLocaleString()}개
+                {searchQuery && `"${searchQuery}" 에 대한 `}검색결과 약 {filteredAPIs.length.toLocaleString()}개
               </p>
               <div className="flex items-center gap-4">
                 <select
@@ -640,7 +637,7 @@ export default function ExplorePage() {
                   </button>
 
                   {/* API 카드 내용 */}
-                  <Link href={`/ api / ${ api.id } `} className="block flex-1">
+                  <Link href={`/api/${api.id}`} className="block flex-1">
                     <div className="text-4xl mb-3">{api.logo}</div>
                     <h3 className="font-bold text-lg mb-2 pr-8">{api.name}</h3>
                     <p className="text-sm text-gray-600 mb-3 line-clamp-3">

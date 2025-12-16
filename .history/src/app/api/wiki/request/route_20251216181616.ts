@@ -50,7 +50,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         }
 
         // API 조회
-        const api = await getById<API>('Api', apiId);
+        const api = await getById<Api>('Api', apiId);
         if (!api) {
             return NextResponse.json(
                 {
