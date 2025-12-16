@@ -6,8 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "migrate:mock-data": "tsx scripts/migrate-mock-data.ts"
+    "lint": "next lint"
   },
   "dependencies": {
     "@sentry/nextjs": "^10.30.0",
@@ -29,7 +28,6 @@
     "eslint-config-next": "14.2.0",
     "postcss": "^8.5.6",
     "tailwindcss": "^3.4.0",
-    "tsx": "^4.21.0",
     "typescript": "^5"
   }
 }
