@@ -1,11 +1,14 @@
 // src/app/layout.tsx
-'use client';
 
 import type { Metadata } from 'next';
 import './globals.css';
 import Footer from '@/components/Footer';
 import GoogleAnalytics from '@/components/GoogleAnalytics';
-import { SessionProvider } from 'next-auth/react';
+
+export const metadata: Metadata = {
+  title: 'API WIKI - 개발자들이 함께 만드는 API 선택 가이드',
+  description: '실제 사용 경험을 공유하며 함께 만드는 API 선택 가이드',
+};
 
 export default function RootLayout({
   children,
@@ -20,13 +23,12 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Noto+Sans+KR:wght@400;500;700&family=Orbitron:wght@700&display=swap" rel="stylesheet" />
       </head>
       <body className="font-sans">
-        <SessionProvider>
-          <GoogleAnalytics />
-          <main className="min-h-screen">
-            {children}
-          </main>
-          <Footer />
-        </SessionProvider>
+        <GoogleAnalytics />
+        <main className="min-h-screen">
+          {children}
+        </main>
+        <Footer />
+        
       </body>
     </html>
   );

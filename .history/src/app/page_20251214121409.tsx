@@ -8,7 +8,6 @@ import CategoryCarousel from '@/components/CategoryCarousel';
 import APICarousel from '@/components/APICarousel';
 import NewsCarousel from '@/components/NewsCarousel';
 import NewsCard from '@/components/NewsCard';
-import Header from '@/components/Header';
 import { mockAPIs, newsItems } from '@/data/mockData';
 import { supabase } from '@/lib/supabaseClient';
 
@@ -17,16 +16,60 @@ export default function HomePage() {
   const suggestedAPIs = mockAPIs.slice(5, 15);
   const [supabaseStatus, setSupabaseStatus] = useState<string>('');
 
+  // const checkSupabase = async () => {
+  //   setSupabaseStatus('확인 중...');
+  //   const { data, error } = await supabase.from('User').select('id').limit(1);
+  //   if (error) {
+  //     setSupabaseStatus(`실패: ${error.message}`);
+  //     return;
+  //   }
+  //   setSupabaseStatus(`성공: ${data?.length ?? 0} rows 조회됨`);
+  // };
+
+  // const triggerGlitchTipTestError = () => {
+  //   const error = new Error('GlitchTip UI test error');
+  //   Sentry.captureException(error);
+  //   // Also throw to surface in dev; GlitchTip should capture via Sentry SDK
+  //   throw error;
+  // };
+
   return (
     <div className="min-h-screen bg-white">
       {/* Header Navigation */}
-      <Header />
+      <header className="border-b border-gray-200 py-3 px-6">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <a
+              href="/"
+              className="text-xl font-bold"
+              style={{
+                fontFamily: 'Orbitron, sans-serif',
+                background: 'linear-gradient(90deg, #81FFEF, #F067B4)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent'
+              }}
+            >
+              API WIKI
+            </a>
+            <a href="/about" className="text-sm text-gray-700 hover:text-gray-900">About Us</a>
+          </div>
+
+          <nav className="flex items-center gap-6">
+            
+            <a href="/explore" className="text-sm text-gray-700 hover:text-gray-900">탐색</a>
+            <a href="/explore" className="text-sm text-gray-700 hover:text-gray-900">커뮤니티</a>
+            <button className="px-5 py-1.5 bg-teal-500 text-white rounded-lg hover:bg-teal-600 transition-colors text-sm">
+              로그인
+            </button>
+          </nav>
+        </div>
+      </header>
 
       {/* Hero Section */}
       <main className="text-center py-24 px-5">
         <div className="mb-8">
-          <h1
-            className="text-[5rem] font-bold animated-gradient"
+          <h1 
+            className="text-[5rem] font-bold animated-gradient" 
             style={{ fontFamily: 'Orbitron, sans-serif' }}
           >
             API WIKI

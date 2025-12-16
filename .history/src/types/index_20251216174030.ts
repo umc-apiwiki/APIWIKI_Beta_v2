@@ -219,10 +219,21 @@ export interface ApiResponse<T> {
   message?: string;
 }
 
-// ============================================
-// NextAuth 세션 확장
-// ============================================
+// 사용자 등급 타입
+export type UserGrade = 'bronze' | 'silver' | 'gold' | 'admin';
 
+// 사용자 타입
+export interface User {
+  id: string;
+  email: string;
+  name: string;
+  grade: UserGrade;
+  activity_score: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// NextAuth 세션 확장
 declare module 'next-auth' {
   interface Session {
     user: {
