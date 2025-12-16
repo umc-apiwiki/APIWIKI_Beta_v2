@@ -49,32 +49,17 @@ export default function Header() {
                         <a href="/explore" className="text-sm text-gray-700 hover:text-gray-900">커뮤니티</a>
 
                         {isAuthenticated ? (
-                            <>
-                                {canSubmitAPI(user) && (
-                                    <button
-                                        onClick={() => setIsAPIRegistrationModalOpen(true)}
-                                        className="text-sm text-teal-600 hover:text-teal-700 font-medium"
-                                    >
-                                        API 등록
-                                    </button>
-                                )}
-                                {isAdmin(user) && (
-                                    <a href="/admin" className="text-sm text-purple-600 hover:text-purple-700 font-medium">
-                                        관리자
-                                    </a>
-                                )}
-                                <div className="flex items-center gap-4">
-                                    <span className="text-sm text-gray-700">
-                                        {user?.name}님 ({user?.grade})
-                                    </span>
-                                    <button
-                                        onClick={signOut}
-                                        className="px-5 py-1.5 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors text-sm"
-                                    >
-                                        로그아웃
-                                    </button>
-                                </div>
-                            </>
+                            <div className="flex items-center gap-4">
+                                <span className="text-sm text-gray-700">
+                                    {user?.name}님 ({user?.grade})
+                                </span>
+                                <button
+                                    onClick={signOut}
+                                    className="px-5 py-1.5 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors text-sm"
+                                >
+                                    로그아웃
+                                </button>
+                            </div>
                         ) : (
                             <button
                                 onClick={() => setIsLoginModalOpen(true)}
@@ -97,11 +82,6 @@ export default function Header() {
                 isOpen={isSignupModalOpen}
                 onClose={() => setIsSignupModalOpen(false)}
                 onSwitchToLogin={handleSwitchToLogin}
-            />
-
-            <APIRegistrationModal
-                isOpen={isAPIRegistrationModalOpen}
-                onClose={() => setIsAPIRegistrationModalOpen(false)}
             />
         </>
     );

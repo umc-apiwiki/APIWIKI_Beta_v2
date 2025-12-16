@@ -98,11 +98,6 @@ export default function Header() {
                 onClose={() => setIsSignupModalOpen(false)}
                 onSwitchToLogin={handleSwitchToLogin}
             />
-
-            <APIRegistrationModal
-                isOpen={isAPIRegistrationModalOpen}
-                onClose={() => setIsAPIRegistrationModalOpen(false)}
-            />
         </>
     );
 }
