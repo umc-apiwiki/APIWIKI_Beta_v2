@@ -1749,7 +1749,7 @@ for (const api of _mockAPIs) {
   if (!api.relatedIds || api.relatedIds.length === 0) {
     // Use category overlap to find related APIs
     // @ts-ignore
-    const related = mockAPIs.filter(a => a.id !== api.id && a.categories.some((c: string) => api.categories.includes(c))).slice(0, 4).map(a => a.id);
+    const related = _mockAPIs.filter(a => a.id !== api.id && a.categories.some((c: string) => api.categories.includes(c))).slice(0, 4).map(a => a.id);
     // @ts-ignore
     api.relatedIds = related;
   }
