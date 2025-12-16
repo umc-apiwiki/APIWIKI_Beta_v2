@@ -7,12 +7,14 @@ import { isAdmin, canSubmitAPI } from '@/lib/permissions';
 import LoginModal from './LoginModal';
 import SignupModal from './SignupModal';
 import APIRegistrationModal from './APIRegistrationModal';
+import FeedbackModal from './FeedbackModal';
 
 export default function Header() {
     const { user, isAuthenticated, signOut } = useAuth();
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
     const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
     const [isAPIRegistrationModalOpen, setIsAPIRegistrationModalOpen] = useState(false);
+    const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
 
     const handleSwitchToSignup = () => {
         setIsLoginModalOpen(false);
@@ -46,7 +48,13 @@ export default function Header() {
 
                     <nav className="flex items-center gap-6">
                         <a href="/explore" className="text-sm text-gray-700 hover:text-gray-900">탐색</a>
-                        <a href="/explore" className="text-sm text-gray-700 hover:text-gray-900">커뮤니티</a>
+                        <a href="/boards" className="text-sm text-gray-700 hover:text-gray-900">커뮤니티</a>
+                        <button
+                            onClick={() => setIsFeedbackModalOpen(true)}
+                            className="text-sm text-gray-700 hover:text-gray-900 flex items-center gap-1"
+                        >
+                            💬 피드백
+                        </button>
 
                         {isAuthenticated ? (
                             <>
@@ -102,6 +110,12 @@ export default function Header() {
             <APIRegistrationModal
                 isOpen={isAPIRegistrationModalOpen}
                 onClose={() => setIsAPIRegistrationModalOpen(false)}
+            />
+
+            <FeedbackModal
+                isOpen={isFeedbackModalOpen}
+                onClose={() => setIsFeedbackModalOpen(false)}
+                userId={user?.id}
             />
         </>
     );
