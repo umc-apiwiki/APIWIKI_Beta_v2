@@ -3,7 +3,16 @@
 
 import { API, NewsItem } from '@/types';
 
-export const mockAPIs: API[] = [
+// Mock 데이터용 타입 (새로 추가된 필드는 선택사항)
+// 실제 사용 시에는 타입 단언을 통해 API[]로 변환
+type MockAPI = Omit<API, 'slug' | 'status' | 'created_at' | 'updated_at'> & {
+  slug?: string;
+  status?: API['status'];
+  created_at?: Date | string;
+  updated_at?: Date | string;
+};
+
+const _mockAPIs: MockAPI[] = [
   {
     id: '1',
     name: 'Youtube API',
@@ -24,9 +33,9 @@ export const mockAPIs: API[] = [
     countries: ['전세계'],
     authMethods: ['OAuth2', 'APIKey'],
     docsLanguages: ['영어'],
-    relatedIds: ['19','2','6'],
+    relatedIds: ['19', '2', '6'],
     viewsLast7Days: 120000,
-    recommendedForStacks: ['React','Node.js']
+    recommendedForStacks: ['React', 'Node.js']
   },
   {
     id: '2',
@@ -48,9 +57,9 @@ export const mockAPIs: API[] = [
     countries: ['전세계'],
     authMethods: ['APIKey'],
     docsLanguages: ['영어'],
-    relatedIds: ['5','6','8'],
+    relatedIds: ['5', '6', '8'],
     viewsLast7Days: 76000,
-    recommendedForStacks: ['Leaflet','OpenLayers']
+    recommendedForStacks: ['Leaflet', 'OpenLayers']
   },
   {
     id: '3',
@@ -69,10 +78,10 @@ export const mockAPIs: API[] = [
     ,
     countries: ['전세계'],
     authMethods: ['OAuth2'],
-    docsLanguages: ['영어','한국어'],
-    relatedIds: ['12','30'],
+    docsLanguages: ['영어', '한국어'],
+    relatedIds: ['12', '30'],
     viewsLast7Days: 98000,
-    recommendedForStacks: ['Web','Android','iOS']
+    recommendedForStacks: ['Web', 'Android', 'iOS']
   },
   {
     id: '4',
@@ -91,11 +100,11 @@ export const mockAPIs: API[] = [
     }
     ,
     countries: ['전세계'],
-    authMethods: ['APIKey','OAuth2'],
+    authMethods: ['APIKey', 'OAuth2'],
     docsLanguages: ['영어'],
-    relatedIds: ['8','17','30'],
+    relatedIds: ['8', '17', '30'],
     viewsLast7Days: 220000,
-    recommendedForStacks: ['Python','Node.js']
+    recommendedForStacks: ['Python', 'Node.js']
   },
   {
     id: '5',
@@ -115,10 +124,10 @@ export const mockAPIs: API[] = [
     ,
     countries: ['한국'],
     authMethods: ['APIKey'],
-    docsLanguages: ['한국어','영어'],
-    relatedIds: ['6','2'],
+    docsLanguages: ['한국어', '영어'],
+    relatedIds: ['6', '2'],
     viewsLast7Days: 45000,
-    recommendedForStacks: ['React','Vue']
+    recommendedForStacks: ['React', 'Vue']
   },
   {
     id: '6',
@@ -136,11 +145,11 @@ export const mockAPIs: API[] = [
     }
     ,
     countries: ['한국'],
-    authMethods: ['APIKey','OAuth2'],
+    authMethods: ['APIKey', 'OAuth2'],
     docsLanguages: ['한국어'],
-    relatedIds: ['5','2'],
+    relatedIds: ['5', '2'],
     viewsLast7Days: 52000,
-    recommendedForStacks: ['Web','Android']
+    recommendedForStacks: ['Web', 'Android']
   },
   {
     id: '7',
@@ -162,9 +171,9 @@ export const mockAPIs: API[] = [
     countries: ['한국'],
     authMethods: ['APIKey'],
     docsLanguages: ['한국어'],
-    relatedIds: ['10','22'],
+    relatedIds: ['10', '22'],
     viewsLast7Days: 31000,
-    recommendedForStacks: ['Backend','Node.js']
+    recommendedForStacks: ['Backend', 'Node.js']
   },
   {
     id: '8',
@@ -184,11 +193,11 @@ export const mockAPIs: API[] = [
     }
     ,
     countries: ['전세계'],
-    authMethods: ['APIKey','IAM'],
+    authMethods: ['APIKey', 'IAM'],
     docsLanguages: ['영어'],
-    relatedIds: ['17','26'],
+    relatedIds: ['17', '26'],
     viewsLast7Days: 150000,
-    recommendedForStacks: ['Node.js','Python']
+    recommendedForStacks: ['Node.js', 'Python']
   },
   {
     id: '9',
@@ -210,9 +219,9 @@ export const mockAPIs: API[] = [
     countries: ['전세계'],
     authMethods: ['APIKey'],
     docsLanguages: ['영어'],
-    relatedIds: ['15','13'],
+    relatedIds: ['15', '13'],
     viewsLast7Days: 22000,
-    recommendedForStacks: ['Backend','Python']
+    recommendedForStacks: ['Backend', 'Python']
   },
   {
     id: '10',
@@ -234,9 +243,9 @@ export const mockAPIs: API[] = [
     countries: ['전세계'],
     authMethods: ['APIKey'],
     docsLanguages: ['영어'],
-    relatedIds: ['7','22'],
+    relatedIds: ['7', '22'],
     viewsLast7Days: 98000,
-    recommendedForStacks: ['Backend','Ruby','Node.js']
+    recommendedForStacks: ['Backend', 'Ruby', 'Node.js']
   },
   {
     id: '11',
@@ -1699,7 +1708,7 @@ const companyCountryMap: Record<string, string[]> = {
   'Redis': ['전세계']
 };
 
-for (const api of mockAPIs) {
+for (const api of _mockAPIs) {
   // countries
   // @ts-ignore
   if (!api.countries) api.countries = companyCountryMap[api.company] || ['전세계'];
@@ -1801,7 +1810,7 @@ for (const api of mockAPIs) {
 }
 
 export function getAPIById(id: string): API | undefined {
-  return mockAPIs.find(api => api.id === id);
+  return _mockAPIs.find((api) => api.id === id) as API | undefined;
 }
 
 export function getRelatedAPIs(api: API, limit: number = 3): API[] {
@@ -1809,12 +1818,15 @@ export function getRelatedAPIs(api: API, limit: number = 3): API[] {
   if (api.relatedIds && api.relatedIds.length > 0) {
     return api.relatedIds
       .map(id => getAPIById(id))
-      .filter(Boolean)
-      .slice(0, limit) as API[];
+      .filter((api): api is API => api !== undefined)
+      .slice(0, limit);
   }
 
-  // Fallback: category overlap
-  return mockAPIs
-    .filter(a => a.id !== api.id && a.categories.some(c => api.categories.includes(c)))
-    .slice(0, limit);
+  // Otherwise, fallback: find APIs sharing at least one category
+  return _mockAPIs
+    .filter(a => a.id !== api.id && a.categories?.some(c => api.categories?.includes(c)))
+    .slice(0, limit) as API[];
 }
+
+// Mock 데이터를 API[] 타입으로 export (타입 단언 사용)
+export const mockAPIs = _mockAPIs as API[];

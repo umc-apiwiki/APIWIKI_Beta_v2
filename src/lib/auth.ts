@@ -21,7 +21,7 @@ export const authOptions: NextAuthOptions = {
                 // Supabase에서 사용자 조회
                 const { data: user, error } = await supabase
                     .from('User')
-                    .select('id, email, name, password_hash, grade')
+                    .select('id, email, name, password_hash, grade, activity_score')
                     .eq('email', credentials.email)
                     .single();
 
