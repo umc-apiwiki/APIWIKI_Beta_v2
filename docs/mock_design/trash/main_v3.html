@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Wiki - 완벽한 그리드 레이아웃</title>
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
+    <style>
+        :root {
+            --primary-blue: #2196F3;
+            --bg-light: #F9FBFE;
+            --text-dark: rgba(0, 0, 0, 0.70);
+            --text-gray: #565656;
+            --grid-margin: 24px;
+            --grid-gutter: 24px;
+            --shadow: 1px 1px 10px 2px rgba(33, 150, 243, 0.25);
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: 'Pretendard', sans-serif;
+            background-color: var(--bg-light);
+            display: flex;
+            justify-content: center; /* 전체 중앙 정렬 */
+            overflow: hidden;
+        }
+
+        /* 배경 글로우 효과 (정중앙 고정) */
+        .bg-glow {
+            position: fixed;
+            width: 471px;
+            height: 466px;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 149, 255, 0.2);
+            border-radius: 9999px;
+            filter: blur(150px);
+            z-index: 0;
+        }
+
+        /* 12컬럼 그리드 컨테이너 */
+        .container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 1440px; /* 피그마 기준 너비 */
+            height: 100vh;
+            padding: 0 var(--grid-margin); /* 좌우 마진 24px */
+            display: grid;
+            grid-template-columns: repeat(12, 1fr); /* 12열 */
+            gap: var(--grid-gutter); /* 간격 24px */
+            box-sizing: border-box;
+        }
+
+        /* 네비게이션 컨테이너 수정 */
+        nav {
+            grid-column: span 12;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            position: relative; /* 자식 요소의 absolute 배치를 위한 기준 */
+        }
+
+        /* 로고: 왼쪽 고정 */
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 32px;
+            font-weight: 500;
+            color: var(--text-dark);
+            position: absolute;
+            left: 0;
+        }
+
+        /* 메뉴: 화면의 절대 중앙 고정 */
+        .nav-center {
+            display: flex;
+            gap: 40px;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%); /* 정확히 자신의 절반만큼 왼쪽으로 이동하여 중앙 정렬 */
+        }
+
+
+
+        .nav-center a {
+            text-decoration: none;
+            color: var(--text-gray);
+            font-size: 20px;
+            font-weight: 500;
+        }
+        
+        /* 로그인 버튼: 오른쪽 고정 */
+        .login-btn {
+            font-size: 24px;
+            font-weight: 500;
+            color: var(--text-gray);
+            cursor: pointer;
+            position: absolute;
+            right: 0;
+        }
+
+
+        /* 메인 컨텐츠 영역 */
+        main {
+            grid-column: 1 / span 12; /* 12칸 전체 사용 */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-top: -50px; /* 로고와 검색창 사이 밸런스 조정 */
+        }
+
+        h1 {
+            font-size: 80px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin: 0;
+        }
+
+        .subtitle {
+            font-size: 24px;
+            color: rgba(0, 0, 0, 0.63);
+            margin: 20px 0 50px 0;
+            text-align: center;
+        }
+
+        /* 검색창 - 그리드에 맞춘 너비 (중앙 8컬럼 권장) */
+        .search-container {
+            width: 732px; /* 피그마 수치 적용 */
+            max-width: 100%;
+            height: 60px;
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .search-input {
+            width: 100%;
+            height: 100%;
+            background: white;
+            border-radius: 41.5px;
+            border: 0.25px solid var(--primary-blue);
+            box-shadow: var(--shadow);
+            padding: 0 60px 0 30px;
+            font-size: 18px;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 25px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 30px;
+            height: 30px;
+        }
+
+        /* 태그 그룹 - Gutter 24px 적용 */
+        .tags-container {
+            display: flex;
+            gap: var(--grid-gutter); /* 간격 24px */
+            flex-wrap: wrap;
+            justify-content: center;
+            max-width: 1000px;
+        }
+
+        .tag {
+            padding: 8px 20px;
+            height: 40px;
+            background: white;
+            border-radius: 20px;
+            border: 0.25px solid var(--primary-blue);
+            box-shadow: var(--shadow);
+            color: var(--primary-blue);
+            font-size: 20px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-sizing: border-box;
+        }
+
+        /* 하단 화살표 버튼 */
+        .bottom-nav {
+            grid-column: span 12;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            padding-bottom: 40px;
+        }
+
+        .arrow-up {
+            width: 40px;
+            height: 43px;
+            cursor: pointer;
+            opacity: 0.43;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-glow"></div>
+
+    <div class="container">
+        <nav>
+            <div class="logo-area">
+                <img src="logo.png" alt="Logo" class="logo-img" style="height: 40px;">
+                <span>API Wiki</span>
+            </div>
+            <div class="nav-center">
+                <a href="#">Community</a>
+                <a href="#">Category</a>
+                <a href="#">About Us</a>
+            </div>
+            <div class="login-btn">Login</div>
+        </nav>
+
+        <main>
+            <h1>API Wiki</h1>
+            <p class="subtitle">개발자가 함께 만드는 API 지식, 실시간으로 업데이트됩니다</p>
+
+            <div class="search-container">
+                <input type="text" class="search-input">
+                <img src="search_icon.png" alt="Search" class="search-icon">
+            </div>
+
+            <div class="tags-container">
+                <div class="tag">결제</div>
+                <div class="tag">소셜로그인</div>
+                <div class="tag">지도</div>
+                <div class="tag">날씨</div>
+                <div class="tag">AI</div>
+                <div class="tag">이메일</div>
+                <div class="tag">금융</div>
+            </div>
+        </main>
+
+        <div class="bottom-nav">
+            <img src="nav-arrow-up-icon.png" alt="Open" class="arrow-up">
+        </div>
+    </div>
+
+</body>
+</html>

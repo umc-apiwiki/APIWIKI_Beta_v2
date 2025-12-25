@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Wiki - 완성본</title>
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
+    <style>
+        :root {
+            --primary-blue: #2196F3;
+            --bg-light: #F9FBFE;
+            --text-dark: #333333;
+            --grid-margin: 24px;
+            --grid-gutter: 24px;
+            --shadow: 0px 4px 15px rgba(33, 150, 243, 0.15);
+        }
+
+        body, html {
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
+            font-family: 'Pretendard', sans-serif;
+            background-color: var(--bg-light);
+            overflow: hidden;
+        }
+
+        /* -----------------------------------------------------------
+           1. 배경 그라데이션 (Glow)
+        ----------------------------------------------------------- */
+        .bg-glow {
+            position: fixed;
+            width: 800px; height: 800px;
+            left: 50%; top: 50%;
+            transform: translate(-50%, -50%) scale(1);
+            background: radial-gradient(circle, rgba(33, 150, 243, 0.15) 0%, rgba(249, 251, 254, 0) 70%);
+            transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 0;
+            pointer-events: none;
+        }
+        body.active .bg-glow { transform: translate(-50%, -50%) scale(2.5); opacity: 0; }
+
+        /* -----------------------------------------------------------
+           2. 네비게이션 (1-2-6-2-1 그리드)
+        ----------------------------------------------------------- */
+        nav {
+            position: fixed; top: 0; left: 0; right: 0;
+            display: grid; grid-template-columns: repeat(12, 1fr);
+            gap: var(--grid-gutter); padding: 20px var(--grid-margin);
+            align-items: center; z-index: 1000;
+        }
+        .logo-area { grid-column: 2 / span 2; display: flex; align-items: center; gap: 10px; font-size: 28px; font-weight: 400; color: var(--primary-blue); cursor: pointer; }
+        .nav-links { grid-column: 4 / span 6; display: flex; justify-content: center; gap: 40px; }
+        .nav-links a { text-decoration: none; color: #565656; font-size: 18px; font-weight: 500; }
+        .login-btn { grid-column: 10 / span 2; text-align: right; font-size: 20px; font-weight: 500; color: #565656; cursor: pointer; }
+
+        /* -----------------------------------------------------------
+           3. 메인 히어로 섹션 (Hero Section)
+        ----------------------------------------------------------- */
+        #hero-section {
+            position: relative; width: 100%; height: 100vh;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1); z-index: 10;
+        }
+        body.active #hero-section { transform: translateY(-350px); opacity: 0; pointer-events: none; }
+
+        .main-title { font-size: 80px; font-weight: 600; color: #444; margin-bottom: 10px; transition: 0.8s; }
+        .scrolled-title { /* 상단 고정용 가짜 타이틀 */
+            position: fixed; left: 50%; top: 60px; transform: translateX(-50%);
+            font-size: 80px; font-weight: 600; color: #444; opacity: 0; z-index: 500; transition: 0.8s;
+        }
+        body.active .scrolled-title { opacity: 1; transform: translateX(-50%) scale(0.6); top: 80px; }
+
+        .subtitle { font-size: 24px; color: rgba(0,0,0,0.5); margin-bottom: 40px; }
+
+        /* 검색창 & 오버레이 */
+        .search-wrap { position: relative; width: 730px; }
+        .search-bar {
+            width: 100%; height: 60px; border-radius: 30px; border: 1px solid #E0E0E0;
+            background: white; padding: 0 60px 0 30px; font-size: 18px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05); outline: none; box-sizing: border-box;
+        }
+        .search-icon { position: absolute; right: 25px; top: 18px; color: #B0B0B0; width: 24px; }
+
+        .search-overlay {
+            position: absolute; top: 70px; left: 0; right: 0; background: white;
+            border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            padding: 20px; display: none; z-index: 20; text-align: left;
+        }
+        .search-wrap:focus-within .search-overlay { display: block; }
+
+        .tag-wrap { display: flex; gap: 10px; margin-top: 25px; }
+        .tag { padding: 8px 20px; border-radius: 20px; border: 1px solid #E3F2FD; background: white; color: var(--primary-blue); font-size: 16px; cursor: pointer; box-shadow: 0 2px 5px rgba(33, 150, 243, 0.1); }
+
+        /* -----------------------------------------------------------
+           4. 스크롤 전환 버튼 & 리스트 컨텐츠
+        ----------------------------------------------------------- */
+        .toggle-btn { position: fixed; left: 50%; transform: translateX(-50%); cursor: pointer; z-index: 1000; transition: 0.5s; }
+        .up-arrow { bottom: 40px; }
+        .down-arrow { top: 180px; transform: translateX(-50%) rotate(180deg); opacity: 0; pointer-events: none; }
+        
+        body.active .up-arrow { opacity: 0; transform: translateX(-50%) translateY(20px); }
+        body.active .down-arrow { opacity: 1; pointer-events: auto; }
+
+        #list-container {
+            position: fixed; top: 250px; left: 0; right: 0; bottom: 0;
+            overflow-y: auto; padding: 40px var(--grid-margin);
+            opacity: 0; transform: translateY(100px);
+            transition: all 0.8s ease 0.2s; z-index: 50;
+        }
+        body.active #list-container { opacity: 1; transform: translateY(0); }
+
+        .section-box { grid-column: span 12; margin-top: 50px; }
+        .section-title { font-size: 30px; font-weight: 500; color: rgba(0,0,0,0.6); margin-bottom: 25px; }
+        .card-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--grid-gutter); }
+        .card { background: white; border-radius: 15px; border: 0.25px solid var(--primary-blue); box-shadow: var(--shadow); padding: 15px; }
+
+        /* -----------------------------------------------------------
+           5. 로그인 모달 (로그인.jpg)
+        ----------------------------------------------------------- */
+        #login-modal {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.1);
+            backdrop-filter: blur(5px); display: none; align-items: center; justify-content: center; z-index: 2100;
+        }
+        .modal-box {
+            background: white; width: 400px; padding: 40px; border-radius: 30px;
+            text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.1); position: relative;
+        }
+        .social-btn {
+            width: 100%; height: 55px; border-radius: 30px; border: 1px solid #E0E0E0;
+            margin-top: 15px; display: flex; align-items: center; justify-content: center;
+            gap: 10px; font-weight: 500; cursor: pointer; background: white;
+        }
+    </style>
+</head>
+<body id="page">
+
+    <div class="bg-glow"></div>
+
+    <nav>
+        <div class="logo-area" onclick="location.reload()">
+            <img src="logo.png" alt="Logo" style="height:35px;"> API Wiki
+        </div>
+        <div class="nav-links">
+            <a href="#">Community</a>
+            <a href="#">Category</a>
+            <a href="#">About Us</a>
+        </div>
+        <div class="login-btn" onclick="toggleModal(true)">Login</div>
+    </nav>
+
+    <div class="scrolled-title">API Wiki</div>
+
+    <section id="hero-section">
+        <div class="main-title">API Wiki</div>
+        <p class="subtitle">개발자가 함께 만드는 API 지식, 실시간으로 업데이트됩니다</p>
+        
+        <div class="search-wrap">
+            <input type="text" class="search-bar" placeholder="">
+            <img src="search_icon.png" class="search-icon" alt="search">
+            
+            <div class="search-overlay">
+                <p style="color:var(--primary-blue); font-weight:600;">Recent</p>
+                <div style="margin-bottom:20px; font-size:15px; color:#555;">🕒 AWS API</div>
+                <p style="color:var(--primary-blue); font-weight:600;">Trending</p>
+                <div style="line-height:2.2; font-size:15px; color:#555;">
+                    📈 AWS API<br>📈 Google Map API<br>📈 Kakao Login
+                </div>
+            </div>
+        </div>
+
+        <div class="tag-wrap">
+            <div class="tag">결제</div>
+            <div class="tag">소셜로그인</div>
+            <div class="tag">지도</div>
+            <div class="tag">날씨</div>
+            <div class="tag">AI</div>
+            <div class="tag">이메일</div>
+            <div class="tag">금융</div>
+        </div>
+    </section>
+
+    <div class="toggle-btn up-arrow" onclick="toggleView(true)">
+        <img src="nav-arrow-up-icon.png" width="30" alt="Up">
+    </div>
+    <div class="toggle-btn down-arrow" onclick="toggleView(false)">
+        <img src="nav-arrow-up-icon.png" width="30" alt="Down">
+    </div>
+
+    <div id="list-container">
+        <div style="display:grid; grid-template-columns: repeat(12, 1fr); gap: 24px; max-width:1440px; margin:0 auto;">
+            <div class="section-box">
+                <p class="section-title">Latest News</p>
+                <div class="card-grid">
+                    <div class="card"><img src="https://placehold.co/310x155" style="width:100%; border-radius:10px;"><b>쿠팡 경력 개발자 관련...</b></div>
+                    <div class="card"><img src="https://placehold.co/310x155" style="width:100%; border-radius:10px;"><b>AI 코드 생성 시대...</b></div>
+                    <div class="card"><img src="https://placehold.co/310x155" style="width:100%; border-radius:10px;"><b>해외 IT 개발자 취업...</b></div>
+                    <div class="card"><img src="https://placehold.co/310x155" style="width:100%; border-radius:10px;"><b>NIA-경과원 업무협약...</b></div>
+                </div>
+            </div>
+            <div class="section-box">
+                <p class="section-title">Recent Popular</p>
+                <div class="card-grid">
+                    <div class="card" style="display:flex; gap:15px; align-items:center;"><img src="https://placehold.co/60x60" style="border-radius:10px;">Youtube</div>
+                    <div class="card" style="display:flex; gap:15px; align-items:center;"><img src="https://placehold.co/60x60" style="border-radius:10px;">OpenStreetMap</div>
+                    <div class="card" style="display:flex; gap:15px; align-items:center;"><img src="https://placehold.co/60x60" style="border-radius:10px;">Google Login</div>
+                    <div class="card" style="display:flex; gap:15px; align-items:center;"><img src="https://placehold.co/60x60" style="border-radius:10px;">Open AI</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="login-modal" onclick="toggleModal(false)">
+        <div class="modal-box" onclick="event.stopPropagation()">
+            <img src="logo.png" style="height:60px; margin-bottom:10px;">
+            <h2 style="color:var(--primary-blue); margin:0;">API Wiki</h2>
+            <p style="color:#888; margin:10px 0 30px;">로그인 하고 경험을 공유해요!</p>
+            <div class="social-btn">Sign up with Google</div>
+            <div class="social-btn">Sign up with Github</div>
+            <p style="font-size:12px; color:#AAA; margin-top:30px;">계속 진행할 경우 이용약관 및 개인정보 처리방침에 동의하는 것으로 간주됩니다.</p>
+        </div>
+    </div>
+
+    <script>
+        function toggleView(isActive) {
+            document.getElementById('page').classList.toggle('active', isActive);
+        }
+        function toggleModal(show) {
+            document.getElementById('login-modal').style.display = show ? 'flex' : 'none';
+        }
+    </script>
+</body>
+</html>

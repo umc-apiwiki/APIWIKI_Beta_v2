@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Wiki - Interactive</title>
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
+    <style>
+        :root {
+            --primary-blue: #2196F3;
+            --bg-light: #F9FBFE;
+            --text-dark: rgba(0, 0, 0, 0.70);
+            --text-gray: #565656;
+            --shadow-blue: 1px 1px 10px 2px rgba(33, 150, 243, 0.25);
+            --grid-margin: 24px;
+            --grid-gutter: 24px;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: 'Pretendard', sans-serif;
+            background-color: var(--bg-light);
+            overflow-x: hidden;
+        }
+
+        /* 배경 그라데이션 - 계속 유지 */
+        .bg-glow {
+            position: fixed;
+            width: 500px;
+            height: 500px;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 149, 255, 0.2);
+            border-radius: 50%;
+            filter: blur(120px);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* 네비게이션 */
+        nav {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: var(--grid-gutter);
+            padding: 20px var(--grid-margin);
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: transparent;
+            transition: background 0.3s;
+        }
+
+        body.active nav {
+            background: rgba(249, 251, 254, 0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        .logo-area {
+            grid-column: span 3;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 28px;
+            font-weight: 400;
+            color: var(--primary-blue);
+            width: 100%;
+            cursor: pointer;
+        }
+
+        .logo-img {
+            height: 40px;
+            width: auto;
+        }
+
+        .nav-links {
+            grid-column: span 6;
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            width: 100%;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-gray);
+            font-size: 18px;
+            font-weight: 500;
+            transition: color 0.3s;
+            white-space: nowrap;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-blue);
+        }
+
+        .login-btn {
+            grid-column: span 3;
+            text-align: right;
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-gray);
+            cursor: pointer;
+            width: 100%;
+        }
+
+        /* 메인 히어로 섹션 - 스크롤시 위로 올라가며 사라짐 */
+        main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            position: relative;
+            z-index: 50;
+            text-align: center;
+            transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1), opacity 0.8s ease;
+        }
+
+        body.active main {
+            transform: translateY(-300px);
+            opacity: 0;
+            z-index: 1;
+            /* pointer-events: none; */
+        }
+        
+        body.active h1,
+        body.active .subtitle,
+        body.active .tags-container {
+            pointer-events: none;
+        }
+
+        /* 스크롤시 상단에 고정될 타이틀 */
+        .sticky-title {
+            font-size: 45px;
+            font-weight: 700;
+            color: var(--text-dark);
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        body.active .sticky-title {
+            opacity: 1;
+        }
+
+        h1 {
+            font-size: 80px;
+            font-weight: 700;
+            margin: 0;
+            color: var(--text-dark);
+        }
+
+        .subtitle {
+            font-size: 22px;
+            color: rgba(0, 0, 0, 0.6);
+            margin: 10px 0 50px 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;  /* 추가 */
+        }
+        .subtitle.hide {
+            opacity: 0;
+            transform: translateY(-10px);
+            pointer-events: none;
+        }
+
+        .search-container {
+            position: relative;
+            width: 732px;
+            z-index: 40;
+            margin-bottom: 40px;
+            /* margin-top: -20px; */
+            transition: margin-top 0.3s ease;
+        }
+        .search-container.active {
+           margin-top: -50px;  /* 추가 - 검색창 활성화시 위로 당김 */
+        }
+
+        .search-input-wrapper {
+            position: relative;
+            width: 100%;
+            background: white;
+            border-radius: 30px;
+            border: 1px solid var(--primary-blue);
+            box-shadow: var(--shadow-blue);
+            transition: all 0.5s ease;
+            overflow: hidden;  /* 추가 */
+            z-index: 40;
+        }
+
+        .search-input-wrapper.active {
+            border-radius: 30px;  /* 30px 30px 0 0에서 변경 */
+           
+        }
+
+        .search-input-wrapper.active .search-icon-btn {
+            top: 30px;  /* 50%에서 고정 위치로 변경 */
+            transform: translateY(0);  /* transform 제거 */
+        }
+
+        .search-input {
+            width: 100%;
+            height: 60px;
+            padding: 0 60px 0 30px;
+            border: none;
+            background: transparent;
+            font-size: 18px;
+            outline: none;
+            box-sizing: border-box;
+            position: relative;  /* 추가 */
+            z-index: 140;  /* 추가 */
+        }
+
+        .search-icon-btn {
+            position: absolute;
+            right: 25px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 28px;
+            height: 28px;
+            cursor: pointer;
+            z-index: 150;  /* 추가 - 드롭다운보다 위에 */
+            pointer-events: none;  /* 추가 - 클릭 방지 */
+        }
+
+        .tags-container {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            max-width: 800px;
+            margin-bottom: 80px;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        .tags-container.hide {
+            opacity: 0;
+            transform: translateY(-10px);
+            pointer-events: none;
+        }
+
+        .tag {
+            padding: 8px 22px;
+            background: white;
+            border: 0.5px solid var(--primary-blue);
+            box-shadow: var(--shadow-blue);
+            border-radius: 20px;
+            color: var(--primary-blue);
+            font-size: 18px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tag:hover {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        /* 검색 드롭다운 */
+        .search-dropdown {
+            display: none;
+            position: relative;  /* absolute에서 relative로 변경 */
+            top: 0;  /* 60px에서 0으로 */
+            left: 0;
+            width: 100%;
+            background: transparent;  /* white에서 transparent로 */
+            border-radius: 0;
+            box-shadow: none;  /* 그림자 제거 */
+            padding: 20px 0 0 0;  /* 상단 패딩만 유지 */
+            text-align: left;
+            border: none;  /* 테두리 제거 */
+            z-index: 120;
+            margin-top: 10px;  /* 추가 - 인풋과 드롭다운 사이 간격 */
+        }
+
+        .search-dropdown.show {
+            display: block !important;
+        }
+
+        .dropdown-section {
+            padding: 10px 40px;
+        }
+
+        .section-title {
+            color: #1769AA;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .search-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            color: #071E31;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .search-item:hover {
+            color: var(--primary-blue);
+        }
+
+        /* 하단 스크롤 버튼 */
+        .toggle-btn {
+            position: fixed;
+            left: 50%;
+            transform: translateX(-50%);
+            cursor: pointer;
+            z-index: 1000;
+            transition: opacity 0.5s, transform 0.5s;
+        }
+
+        .up-arrow {
+            bottom: 30px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateX(-50%) translateY(0);
+            }
+            40% {
+                transform: translateX(-50%) translateY(-10px);
+            }
+            60% {
+                transform: translateX(-50%) translateY(-5px);
+            }
+        }
+
+        .down-arrow {
+            position: relative; /* fixed에서 relative로 변경 */
+            margin: 0 auto 30px auto;
+            text-align: center;
+            display: block;
+            opacity: 0;
+            pointer-events: none;
+            animation: bounce 2s infinite;
+        }
+
+        body.active .up-arrow {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        body.active .down-arrow {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .arrow-icon {
+            width: 40px;
+            height: auto;
+            opacity: 0.7;
+            transition: all 0.3s;
+        }
+
+        .toggle-btn:hover .arrow-icon {
+            opacity: 1;
+        }
+
+        /* 스크롤 컨텐츠 섹션 */
+        .scroll-content {
+            position: fixed;
+            top: 100px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            overflow-y: auto;
+            opacity: 0;
+            transform: translateY(100px);
+            transition: all 0.8s ease 0.2s;
+            z-index: 1;
+            padding: 0 var(--grid-margin) 50px;
+        }
+
+        body.active .scroll-content {
+            opacity: 1;
+            transform: translateY(0);
+            z-index: 100;
+        }
+
+        .content-section {
+            max-width: 1440px;
+            margin: 50px auto 0;
+        }
+
+        .content-section h2 {
+            font-size: 32px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 30px;
+        }
+
+        .news-grid, .api-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: var(--shadow-blue);
+            border: 0.5px solid var(--primary-blue);
+            overflow: hidden;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 2px 2px 20px 4px rgba(33, 150, 243, 0.3);
+        }
+
+        .card-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            background: #e0e0e0;
+        }
+
+        .card-content {
+            padding: 20px;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        .card-subtitle {
+            font-size: 14px;
+            color: var(--text-gray);
+            margin-bottom: 12px;
+        }
+
+        .card-meta {
+            font-size: 12px;
+            color: rgba(0, 0, 0, 0.5);
+        }
+
+        .api-card {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: var(--shadow-blue);
+            border: 0.5px solid var(--primary-blue);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .api-card:hover {
+            transform: translateX(5px);
+            box-shadow: 2px 2px 20px 4px rgba(33, 150, 243, 0.3);
+        }
+
+        .api-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .api-info {
+            flex: 1;
+        }
+
+        .api-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+        }
+
+        .api-stats {
+            font-size: 14px;
+            color: var(--text-gray);
+        }
+
+        /* 로그인 모달 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.18);
+            backdrop-filter: blur(3px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 25px;
+            box-shadow: var(--shadow-blue);
+            border: 0.5px solid var(--primary-blue);
+            width: 390px;
+            padding: 40px;
+            position: relative;
+            text-align: center;
+            transform: scale(0.9);
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            opacity: 0.5;
+            transition: opacity 0.2s;
+            font-size: 24px;
+            color: #aaa;
+        }
+
+        .modal-close:hover {
+            opacity: 1;
+        }
+
+        .modal-logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-logo img {
+            height: 150px;
+        }
+
+        .modal-title {
+            text-align: center;
+            color: var(--primary-blue);
+            font-size: 32px;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        .modal-subtitle {
+            text-align: center;
+            color: rgba(0, 0, 0, 0.6);
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 40px;
+        }
+
+        .login-button {
+            width: 100%;
+            padding: 15px 20px;
+            margin-bottom: 15px;
+            border-radius: 50px;
+            border: 1px solid #E0E0E9;
+            background: white;
+            box-shadow: 0px 18px 30px rgba(130, 119, 197, 0.11);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            font-size: 18px;
+            font-weight: 500;
+            color: #1D1C2B;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .login-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0px 20px 35px rgba(130, 119, 197, 0.15);
+            background: #f8f8f8;
+        }
+
+        .login-button img {
+            width: 24px;
+            height: 24px;
+        }
+
+        .modal-footer {
+            text-align: center;
+            font-size: 11px;
+            color: rgba(0, 0, 0, 0.43);
+            line-height: 1.5;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body id="app-root">
+
+    <div class="bg-glow"></div>
+
+    <nav>
+        <div class="logo-area" onclick="resetToHome()">
+            <img src="logo.svg" alt="Logo" class="logo-img" onerror="this.style.display='none'">
+            <span>API Wiki</span>
+        </div>
+        
+        <div class="nav-links">
+            <a href="#community">Community</a>
+            <a href="#category">Category</a>
+            <a href="#about">About Us</a>
+        </div>
+        
+        <div class="login-btn" onclick="openLoginModal()">Login</div>
+    </nav>
+
+    
+
+    <main>
+        <h1>API Wiki</h1>
+        <p class="subtitle">개발자가 함께 만드는 API 지식, 실시간으로 업데이트됩니다</p>
+
+        <div class="search-container">
+            <div class="search-input-wrapper" id="searchWrapper">
+                <input type="text" class="search-input" placeholder="궁금한 API를 검색해보세요" id="searchInput">
+                <svg class="search-icon-btn" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="11" cy="11" r="7" stroke="#6A6A6A" stroke-width="2"/>
+                    <path d="M20 20L17 17" stroke="#6A6A6A" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                
+                <div class="search-dropdown" id="searchDropdown">
+                    <div class="dropdown-section">
+                        <div class="section-title">Recent</div>
+                        <div class="search-item">🔄 AWS API</div>
+                        <div class="search-item">🔄 AWS API</div>
+                    </div>
+                    
+                    <div class="dropdown-section">
+                        <div class="section-title">Trending</div>
+                        <div class="search-item">📈 AWS API</div>
+                        <div class="search-item">📈 AWS API</div>
+                        <div class="search-item">📈 AWS API</div>
+                        <div class="search-item">📈 AWS API</div>
+                        <div class="search-item">📈 AWS API</div>
+                        <div class="search-item">📈 AWS API</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tags-container">
+            <div class="tag">결제</div>
+            <div class="tag">소셜로그인</div>
+            <div class="tag">지도</div>
+            <div class="tag">날씨</div>
+            <div class="tag">AI</div>
+            <div class="tag">이메일</div>
+            <div class="tag">금융</div>
+        </div>
+    </main>
+
+    <!-- 올릴 때: 삼각형 (위쪽 화살표) -->
+    <div class="toggle-btn up-arrow" onclick="toggleActive(true)">
+        <img src="nav-arrow-up-solid.svg" alt="Up" class="arrow-icon" onerror="this.style.display='none'">
+    </div>
+    
+
+
+    <div class="scroll-content" id="scrollContent">
+        <div class="sticky-title">API Wiki</div>
+        <!-- 내릴 때: 역삼각형 (아래쪽 화살표) -->
+        <div class="toggle-btn down-arrow" onclick="toggleActive(false)">
+            <img src="nav-arrow-up-solid.svg" alt="Down" class="arrow-icon" style="transform: rotate(180deg);" onerror="this.style.display='none'">
+        </div>
+        <div class="content-section">
+            <h2>Latest News</h2>
+            <div class="news-grid">
+                <div class="card">
+                    <div class="card-image"></div>
+                    <div class="card-content">
+                        <div class="card-title">"구글 중국의 비아냐, 2025 경쟁력까지 재발견"</div>
+                        <div class="card-subtitle">서울특별 라디오 나우어 모바일</div>
+                        <div class="card-meta">서울특별 라디오 | 나우어 모바일</div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-image"></div>
+                    <div class="card-content">
+                        <div class="card-title">AI가 코드 짜는 시대, '개발자와' 역할과 이름은 다시 묻다</div>
+                        <div class="card-subtitle">서울특별 라디오 나우어 모바일</div>
+                        <div class="card-meta">서울특별 라디오 | 나우어 모바일</div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-image"></div>
+                    <div class="card-content">
+                        <div class="card-title">"대기업 공무원 이첸 에약은..." 영어학당의 IT개발자를</div>
+                        <div class="card-subtitle">서울특별 라디오 나우어 모바일</div>
+                        <div class="card-meta">서울특별 라디오 | 나우어 모바일</div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-image"></div>
+                    <div class="card-content">
+                        <div class="card-title">NIA-경기도경제과학진흥원...</div>
+                        <div class="card-subtitle">서울특별 라디오 나우어 모바일</div>
+                        <div class="card-meta">서울특별 라디오 | 나우어 모바일</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Recent Popular</h2>
+            <div class="api-grid">
+                <div class="api-card">
+                    <div class="api-icon">▶️</div>
+                    <div class="api-info">
+                        <div class="api-name">Youtube</div>
+                        <div class="api-stats">Star 4.8 • Used by 1.2B people • Free</div>
+                    </div>
+                </div>
+                <div class="api-card">
+                    <div class="api-icon">🗺️</div>
+                    <div class="api-info">
+                        <div class="api-name">OpenStreetMap</div>
+                        <div class="api-stats">Star 4.1 • Used by 760M people • Mixed</div>
+                    </div>
+                </div>
+                <div class="api-card">
+                    <div class="api-icon">G</div>
+                    <div class="api-info">
+                        <div class="api-name">Google Login API</div>
+                        <div class="api-stats">Star 4.7 • Used by 2.1B people • Free</div>
+                    </div>
+                </div>
+                <div class="api-card">
+                    <div class="api-icon">🤖</div>
+                    <div class="api-info">
+                        <div class="api-name">Open AI</div>
+                        <div class="api-stats">Star 4.2 • Used by 97K people • Paid</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Suggest API</h2>
+            <div class="api-grid">
+                <div class="api-card">
+                    <div class="api-icon">🇰🇷</div>
+                    <div class="api-info">
+                        <div class="api-name">국토부 2D지도API</div>
+                        <div class="api-stats">Star 4.8 • Used by 1.2B people • Free</div>
+                    </div>
+                </div>
+                <div class="api-card">
+                    <div class="api-icon">N</div>
+                    <div class="api-info">
+                        <div class="api-name">Naver</div>
+                        <div class="api-stats">Star 4.3 • Used by 820M people • Mixed</div>
+                    </div>
+                </div>
+                <div class="api-card">
+                    <div class="api-icon">💬</div>
+                    <div class="api-info">
+                        <div class="api-name">카카오페이</div>
+                        <div class="api-stats">Star 3.6 • Used by 120M people • Free</div>
+                    </div>
+                </div>
+                <div class="api-card">
+                    <div class="api-icon">📦</div>
+                    <div class="api-info">
+                        <div class="api-name">AWS API</div>
+                        <div class="api-stats">Star 4.8 • Used by 99K people • Paid</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 로그인 모달 -->
+    <div class="modal-overlay" id="loginModal" onclick="closeLoginModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <span class="modal-close" onclick="closeLoginModal()">&times;</span>
+            
+            <div class="modal-logo">
+                <img src="logo.svg" alt="API Wiki Logo" onerror="this.style.display='none'">
+            </div>
+            
+            <h2 class="modal-title">API Wiki</h2>
+            <p class="modal-subtitle">로그인 하고 경험을 공유해요!</p>
+            
+            <button class="login-button">
+                <svg width="24" height="24" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                </svg>
+                Sign up with Google
+            </button>
+            
+            <button class="login-button">
+                <svg width="24" height="24" viewBox="0 0 24 24">
+                    <path fill="#24292F" d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.17 6.839 9.49.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.167 22 16.418 22 12c0-5.523-4.477-10-10-10z"/>
+                </svg>
+                Sign up with Github
+            </button>
+            
+            <div class="modal-footer">
+                계속 진행할 경우 API WIKI의 이용약관에 동의하고<br>
+                개인정보 처리 방침을 이해하는 것으로 간주됩니다.
+            </div>
+        </div>
+    </div>
+
+<script>
+        
+        // 검색창 요소들
+        const searchInput = document.getElementById('searchInput');
+        const searchWrapper = document.getElementById('searchWrapper');
+        const searchDropdown = document.getElementById('searchDropdown');
+
+        // 1. 활성화 토글 (스크롤 버튼 클릭)
+        window.toggleActive = function(isActive) {
+            document.getElementById('app-root').classList.toggle('active', isActive);
+            
+            // 페이지 전환 시 검색창 닫기 (클래스 제거로 통일)
+            searchDropdown.classList.remove('show');
+            searchWrapper.classList.remove('active');
+        }
+
+        // 2. 홈으로 리셋
+        window.resetToHome = function() {
+            document.getElementById('app-root').classList.remove('active');
+            searchDropdown.classList.remove('show');
+            searchWrapper.classList.remove('active');
+        }
+
+        // 3. 검색창 포커스 이벤트
+        searchInput.addEventListener('focus', () => {
+            searchDropdown.classList.add('show');
+            searchWrapper.classList.add('active');
+            document.querySelector('.search-container').classList.add('active');
+            document.querySelector('.subtitle').classList.add('hide');  // 추가
+            document.querySelector('.tags-container').classList.add('hide');  // 추가
+        });
+
+        // 4. 검색창 외부 클릭 시 닫기
+        document.addEventListener('click', (e) => {
+            // 클릭된 요소가 검색창 영역 내부가 아닐 때만 닫기
+            if (!searchWrapper.contains(e.target)) {
+                searchDropdown.classList.remove('show');
+                searchWrapper.classList.remove('active');
+                document.querySelector('.search-container').classList.remove('active');
+                document.querySelector('.subtitle').classList.remove('hide');  // 추가
+                document.querySelector('.tags-container').classList.remove('hide');  // 추가
+            }
+        });
+
+        // 5. 로그인 모달 열기
+        window.openLoginModal = function() {
+            const modal = document.getElementById('loginModal');
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // 6. 로그인 모달 닫기
+        window.closeLoginModal = function(event) {
+            if (!event || event.target.id === 'loginModal' || event.target.classList.contains('modal-close')) {
+                const modal = document.getElementById('loginModal');
+                modal.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        }
+
+        // 7. ESC 키로 닫기
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                window.closeLoginModal();
+                searchDropdown.classList.remove('show');
+                searchWrapper.classList.remove('active');
+            }
+        });
+
+        // 8. 태그 클릭 이벤트
+        document.querySelectorAll('.tag').forEach(tag => {
+            tag.addEventListener('click', function(e) {
+                e.stopPropagation(); // 부모 클릭 이벤트 전파 방지
+                searchInput.value = this.textContent;
+                searchDropdown.classList.add('show');
+                searchWrapper.classList.add('active');
+                searchInput.focus();
+            });
+        });
+    
+</script>
+
+</body>
+</html>

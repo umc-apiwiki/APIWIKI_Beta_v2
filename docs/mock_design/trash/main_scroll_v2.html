@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Wiki - Grid Full-fill Layout</title>
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
+    <style>
+        :root {
+            --primary-blue: #2196F3;
+            --bg-light: #F9FBFE;
+            --text-dark: rgba(0, 0, 0, 0.70);
+            --text-gray: #565656;
+            --shadow-blue: 1px 1px 10px 2px rgba(33, 150, 243, 0.25);
+            --grid-margin: 24px;
+            --grid-gutter: 24px;
+        }
+
+        body, html {
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
+            font-family: 'Pretendard', sans-serif;
+            background-color: var(--bg-light);
+            overflow: hidden;
+        }
+
+        /* 1. 배경 그라데이션 - 활성화 시 퍼지며 사라짐 */
+        .bg-glow {
+            position: fixed;
+            width: 500px; height: 500px;
+            left: 50%; top: 50%;
+            transform: translate(-50%, -50%) scale(1);
+            background: rgba(0, 149, 255, 0.2);
+            border-radius: 50%;
+            filter: blur(120px);
+            z-index: 0;
+            transition: transform 1s ease-out, opacity 0.8s ease-out;
+        }
+        body.active .bg-glow { transform: translate(-50%, -50%) scale(3); opacity: 0; }
+
+        /* 2. 네비게이션 (고정) */
+        nav {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: var(--grid-gutter);
+            padding: 20px var(--grid-margin);
+            align-items: center;
+            position: fixed; top: 0; left: 0; right: 0;
+            z-index: 1000;
+        }
+        .logo-area { grid-column: span 3; display: flex; align-items: center; gap: 12px; font-size: 28px; font-weight: 400; color: var(--primary-blue); cursor: pointer; }
+        .nav-links { grid-column: span 6; display: flex; justify-content: center; gap: 40px; }
+        .nav-links a { text-decoration: none; color: var(--text-gray); font-size: 18px; font-weight: 500; transition: color 0.3s; }
+        .login-btn { grid-column: span 3; text-align: right; font-size: 20px; font-weight: 600; color: var(--text-gray); cursor: pointer; }
+
+        /* 3. 메인 히어로 (중앙 타이틀 및 검색) */
+        main {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            height: 100vh; position: relative; z-index: 5; text-align: center;
+            transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+        body.active main { transform: translateY(-300px); opacity: 0; pointer-events: none; }
+
+        h1 { font-size: 80px; font-weight: 700; margin: 0; color: var(--text-dark); transition: 0.8s; }
+        /* 스크롤 시 상단에 고정될 타이틀 */
+        .sticky-title {
+            position: fixed; left: 50%; top: 100px; transform: translateX(-50%);
+            font-size: 40px; font-weight: 700; color: var(--text-dark);
+            opacity: 0; z-index: 100; transition: 0.8s;
+        }
+        body.active .sticky-title { opacity: 1; }
+
+        .subtitle { font-size: 22px; color: rgba(0, 0, 0, 0.6); margin: 10px 0 50px 0; }
+        
+        .search-container { position: relative; width: 730px; margin-bottom: 40px; }
+        .search-input { width: 100%; height: 60px; padding: 0 60px 0 30px; border-radius: 40px; border: 0.5px solid var(--primary-blue); background: white; box-shadow: var(--shadow-blue); font-size: 18px; outline: none; box-sizing: border-box; }
+        .search-icon-btn { position: absolute; right: 25px; top: 50%; transform: translateY(-50%); width: 28px; cursor: pointer; }
+
+        /* 검색창 Recent/Trending 오버레이 */
+        .search-overlay {
+            position: absolute; top: 70px; left: 0; right: 0; background: white;
+            border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            padding: 30px; display: none; z-index: 20; text-align: left;
+        }
+        .search-container:focus-within .search-overlay { display: block; }
+
+        .tag { padding: 8px 22px; background: white; border: 0.5px solid var(--primary-blue); box-shadow: var(--shadow-blue); border-radius: 20px; color: var(--primary-blue); font-size: 18px; font-weight: 500; cursor: pointer; transition: 0.3s; }
+        .tag:hover { background: var(--primary-blue); color: white; }
+
+        /* 4. 슬라이딩 버튼 (삼각형 / 역삼각형) */
+        .toggle-btn { position: fixed; left: 50%; transform: translateX(-50%); cursor: pointer; z-index: 1000; transition: 0.5s; }
+        .up-arrow { bottom: 30px; }
+        .down-arrow { top: 160px; transform: translateX(-50%) rotate(180deg); opacity: 0; pointer-events: none; }
+        
+        body.active .up-arrow { opacity: 0; pointer-events: none; }
+        body.active .down-arrow { opacity: 1; pointer-events: auto; }
+
+        /* 5. 하단 리스트 컴포넌트 */
+        #list-view {
+            position: fixed; top: 240px; left: 0; right: 0; bottom: 0;
+            overflow-y: auto; opacity: 0; transform: translateY(100px);
+            transition: all 0.8s ease 0.2s; z-index: 50;
+            padding: 0 var(--grid-margin) 50px;
+        }
+        body.active #list-view { opacity: 1; transform: translateY(0); }
+
+        .section-box { display: grid; grid-template-columns: repeat(12, 1fr); gap: 24px; max-width: 1440px; margin: 50px auto 0; }
+        .section-title { grid-column: span 12; font-size: 30px; font-weight: 500; color: rgba(0,0,0,0.63); margin-bottom: 24px; text-align: left; }
+        .card-grid { grid-column: span 12; display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--grid-gutter); }
+        .card { background: white; border-radius: 15px; border: 0.25px solid var(--primary-blue); box-shadow: var(--shadow-blue); padding: 15px; }
+
+        /* 6. 로그인 모달 */
+        #login-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.1); backdrop-filter: blur(5px); display: none; align-items: center; justify-content: center; z-index: 2000; }
+        .modal-box { background: white; width: 400px; padding: 40px; border-radius: 30px; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.1); }
+        .social-btn { width: 100%; height: 55px; border-radius: 30px; border: 1px solid #E0E0E0; margin-top: 15px; display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: 500; cursor: pointer; }
+    </style>
+</head>
+<body id="app-root">
+
+    <div class="bg-glow"></div>
+
+    <nav>
+        <div class="logo-area" onclick="location.reload()">
+            <img src="logo.png" alt="Logo" class="logo-img">
+            <span>API Wiki</span>
+        </div>
+        <div class="nav-links">
+            <a href="#">Community</a>
+            <a href="#">Category</a>
+            <a href="#">About Us</a>
+        </div>
+        <div class="login-btn" onclick="toggleModal(true)">Login</div>
+    </nav>
+
+    <div class="sticky-title">API Wiki</div>
+
+    <main>
+        <h1>API Wiki</h1>
+        <p class="subtitle">개발자가 함께 만드는 API 지식, 실시간으로 업데이트됩니다</p>
+
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder="궁금한 API를 검색해보세요">
+            <img src="search_icon.png" alt="Search" class="search-icon-btn">
+            
+            <div class="search-overlay">
+                <p style="color:var(--primary-blue); font-weight:600; margin-top:0;">Recent</p>
+                <div style="margin-bottom:15px; font-size:16px;">🕒 AWS API</div>
+                <p style="color:var(--primary-blue); font-weight:600;">Trending</p>
+                <div style="line-height:2; font-size:16px;">
+                    📈 AWS API<br>📈 Google Map API<br>📈 Kakao Login
+                </div>
+            </div>
+        </div>
+
+        <div class="tags-container">
+            <div class="tag">결제</div>
+            <div class="tag">소셜로그인</div>
+            <div class="tag">지도</div>
+            <div class="tag">날씨</div>
+            <div class="tag">AI</div>
+            <div class="tag">이메일</div>
+            <div class="tag">금융</div>
+        </div>
+    </main>
+
+    <div class="toggle-btn up-arrow" onclick="toggleActive(true)">
+        <img src="nav-arrow-up-icon.png" alt="Up" class="arrow-up-icon">
+    </div>
+    <div class="toggle-btn down-arrow" onclick="toggleActive(false)">
+        <img src="nav-arrow-up-icon.png" alt="Down" class="arrow-up-icon">
+    </div>
+
+    <div id="list-view">
+        <div class="section-box">
+            <div class="section-title">Latest News</div>
+            <div class="card-grid">
+                <div class="card"><img src="https://placehold.co/310x155" style="width:100%; border-radius:10px;"><b>쿠팡 경력 개발자 관련...</b></div>
+                <div class="card"><img src="https://placehold.co/310x155" style="width:100%; border-radius:10px;"><b>AI 코드 생성 시대...</b></div>
+                <div class="card"><img src="https://placehold.co/310x155" style="width:100%; border-radius:10px;"><b>해외 IT 개발자 취업...</b></div>
+                <div class="card"><img src="https://placehold.co/310x155" style="width:100%; border-radius:10px;"><b>NIA-경과원 업무협약...</b></div>
+            </div>
+        </div>
+        <div class="section-box">
+            <div class="section-title">Recent Popular</div>
+            <div class="card-grid">
+                <div class="card" style="display:flex; gap:15px; align-items:center;"><img src="https://placehold.co/60x60" style="border-radius:10px;"><b>Youtube</b></div>
+                <div class="card" style="display:flex; gap:15px; align-items:center;"><img src="https://placehold.co/60x60" style="border-radius:10px;"><b>OpenStreetMap</b></div>
+                <div class="card" style="display:flex; gap:15px; align-items:center;"><img src="https://placehold.co/60x60" style="border-radius:10px;"><b>Google Login</b></div>
+                <div class="card" style="display:flex; gap:15px; align-items:center;"><img src="https://placehold.co/60x60" style="border-radius:10px;"><b>Open AI</b></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="login-modal" onclick="toggleModal(false)">
+        <div class="modal-box" onclick="event.stopPropagation()">
+            <img src="logo.png" style="height:60px; margin-bottom:15px;">
+            <h2 style="color:var(--primary-blue); margin:0;">API Wiki</h2>
+            <p style="color:#888; margin:10px 0 30px;">로그인 하고 경험을 공유해요!</p>
+            <div class="social-btn"><img src="https://placehold.co/20x20" alt="G"> Sign up with Google</div>
+            <div class="social-btn"><img src="https://placehold.co/20x20" alt="H"> Sign up with Github</div>
+            <p style="font-size:12px; color:#AAA; margin-top:30px; line-height:1.5;">계속 진행할 경우 API Wiki의 이용약관에 동의하고 개인정보 처리 방침을 이해하는 것으로 간주됩니다.</p>
+        </div>
+    </div>
+
+    <script>
+        function toggleActive(isActive) {
+            document.getElementById('app-root').classList.toggle('active', isActive);
+        }
+        function toggleModal(show) {
+            document.getElementById('login-modal').style.display = show ? 'flex' : 'none';
+        }
+    </script>
+</body>
+</html>
