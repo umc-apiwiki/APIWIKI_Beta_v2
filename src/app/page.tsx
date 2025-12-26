@@ -222,7 +222,7 @@ export default function HomePage() {
             zIndex: 100
           }}
         >
-        <div className="grid-container mt-[50px] pb-[50px]">
+          <div className="grid-container mt-[50px] pb-[50px]">
           {/* Sticky Title */}
           <motion.div 
             className="col-12 text-[45px] font-bold text-center mb-[50px]"
@@ -342,7 +342,7 @@ export default function HomePage() {
             </div>
           </motion.section>
         </div>
-      </motion.div>
+        </motion.div>
       )}
     </div>
   );

@@ -113,7 +113,7 @@ function ExploreContent() {
 
     // Price filter
     if (priceFilter.length > 0) {
-      result = result.filter(api => priceFilter.includes(api.price));
+      result = result.filter(api => api.price && priceFilter.includes(api.price));
     }
 
     // Rating filter
