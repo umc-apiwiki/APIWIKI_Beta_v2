@@ -81,7 +81,7 @@ export default function Header({ transparent = false, className = '' }: HeaderPr
                         onMouseEnter={(e) => e.currentTarget.style.color = 'var(--primary-blue)'}
                         onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-gray)'}
                     >
-                        Category
+                        Explore
                     </a>
                     <a 
                         href="/about" 
