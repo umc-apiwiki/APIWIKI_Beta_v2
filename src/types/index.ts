@@ -114,6 +114,7 @@ export interface Board {
   content: string;
   author_id: string | null; // 회원 작성자 ID (nullable for non-members)
   author_name: string | null; // 비회원 작성자 이름
+  author?: User | null; // 작성자 정보 (join 시 포함)
   created_at: Date | string;
   updated_at: Date | string;
 }
@@ -125,6 +126,7 @@ export interface Comment {
   content: string;
   author_id: string | null; // 회원 작성자 ID (nullable for non-members)
   author_name: string | null; // 비회원 작성자 이름
+  author?: User | null; // 작성자 정보 (join 시 포함)
   created_at: Date | string;
 }
 
