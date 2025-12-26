@@ -212,6 +212,7 @@ export default function WikiEditor({ apiId }: WikiEditorProps) {
             <div className="p-6">
               {activeTab === 'edit' ? (
                 <textarea
+                  data-wiki-editor="true"
                   value={text}
                   onChange={(e) => setText(e.target.value)}
                   className="w-full min-h-[400px] border-2 rounded-[15px] p-4 font-mono text-[14px] focus:outline-none transition-all resize-y"
