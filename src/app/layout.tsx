@@ -3,7 +3,6 @@
 
 import type { Metadata } from 'next';
 import './globals.css';
-import Footer from '@/components/Footer';
 import GoogleAnalytics from '@/components/GoogleAnalytics';
 import FloatingFeedbackButton from '@/components/FloatingFeedbackButton';
 import { SessionProvider } from 'next-auth/react';
@@ -24,7 +23,6 @@ export default function RootLayout({
           <main className="min-h-screen">
             {children}
           </main>
-          <Footer />
           <FloatingFeedbackButton />
         </SessionProvider>
       </body>

@@ -13,6 +13,7 @@ const BOARD_TITLES: Record<BoardType, string> = {
     inquiry: '문의 게시판',
     qna: 'Q&A 게시판',
     free: '자유 게시판',
+    community: '커뮤니티',
 };
 
 const BOARD_CONFIGS: Record<BoardType, { icon: string; gradient: string; description: string }> = {
@@ -30,6 +31,11 @@ const BOARD_CONFIGS: Record<BoardType, { icon: string; gradient: string; descrip
         icon: '✨',
         gradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
         description: '자유롭게 의견을 나누는 공간입니다'
+    },
+    community: {
+        icon: '🌐',
+        gradient: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
+        description: '커뮤니티에서 다양한 이야기를 나누세요'
     },
 };
 
@@ -106,9 +112,6 @@ export default function BoardTypePage({ params }: { params: { type: BoardType } 
                         </svg>
                         게시판 목록으로
                     </Link>
-                    <h1 className="text-[48px] font-bold" style={{ color: 'var(--text-dark)' }}>
-                        {BOARD_TITLES[params.type]}
-                    </h1>
                 </div>
 
                 {/* Action Bar */}

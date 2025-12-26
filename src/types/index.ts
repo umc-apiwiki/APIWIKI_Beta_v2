@@ -12,7 +12,7 @@ export type UserGrade = 'bronze' | 'silver' | 'gold' | 'admin';
 export type ApiStatus = 'pending' | 'approved' | 'rejected';
 
 /** 게시판 타입 */
-export type BoardType = 'inquiry' | 'qna' | 'free';
+export type BoardType = 'inquiry' | 'qna' | 'free' | 'community';
 
 /** 피드백 타입 */
 export type FeedbackType = 'error' | 'feature' | 'idea';

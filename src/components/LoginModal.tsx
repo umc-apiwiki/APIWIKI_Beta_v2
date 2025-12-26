@@ -93,12 +93,21 @@ export default function LoginModal({ isOpen, onClose, onSwitchToSignup }: LoginM
                     >
                         API Wiki
                     </h2>
-                    <p 
-                        className="text-[16px] mb-[30px]"
-                        style={{ color: 'var(--text-gray)' }}
-                    >
-                        로그인 하고 경험을 공유해요!
-                    </p>
+                    <div className="mb-[30px]">
+                        <p 
+                            className="text-[18px] font-semibold mb-[8px]"
+                            style={{ color: 'var(--text-dark)' }}
+                        >
+                            로그인 하고 경험을 공유해요!
+                        </p>
+                        <p 
+                            className="text-[14px] leading-[1.6]"
+                            style={{ color: 'var(--text-gray)' }}
+                        >
+                            현재 Beta 버전에서는 로그인 없이도<br />
+                            대부분의 기능을 이용할 수 있습니다.
+                        </p>
+                    </div>
                 </div>
 
                 {/* Login Buttons */}

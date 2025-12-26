@@ -60,8 +60,9 @@ export default function BoardForm({ type, onCancel }: BoardFormProps) {
             }
 
             // 성공 시 게시판 목록으로 이동
+            alert('게시글이 작성되었습니다!');
             router.push(`/boards/${type}`);
-            router.refresh();
+            if (onCancel) onCancel();
         } catch (err: any) {
             setError(err.message);
         } finally {

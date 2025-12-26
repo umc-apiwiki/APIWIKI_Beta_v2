@@ -19,8 +19,10 @@ function ExploreContent() {
   const [categories, setCategories] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const initialQuery = searchParams.get('q') || '';
+  const initialCategory = searchParams.get('category') || '';
 
   const [searchQuery, setSearchQuery] = useState(initialQuery);
+  const [selectedCategory, setSelectedCategory] = useState(initialCategory);
   const [sortBy, setSortBy] = useState('인기순');
   const [filteredAPIs, setFilteredAPIs] = useState<API[]>([]);
   const [displayedAPIs, setDisplayedAPIs] = useState<API[]>([]);
@@ -77,9 +79,24 @@ function ExploreContent() {
     fetchCategories();
   }, []);
 
+  // URL 파라미터가 변경되면 상태 업데이트
+  useEffect(() => {
+    const categoryParam = searchParams.get('category') || '';
+    const queryParam = searchParams.get('q') || '';
+    setSelectedCategory(categoryParam);
+    setSearchQuery(queryParam);
+  }, [searchParams]);
+
   // 필터 및 정렬 적용
   useEffect(() => {
     let result = [...apis];
+
+    // Category filter (URL 파라미터에서)
+    if (selectedCategory) {
+      result = result.filter(api =>
+        api.categories && api.categories.some(cat => cat === selectedCategory)
+      );
+    }
 
     // Search filter
     if (searchQuery) {
@@ -154,7 +171,7 @@ function ExploreContent() {
         break;
       case '최신순':
         break;
-      case '후기 많은 순':
+      case '후기lectedCategory, se 많은 순':
         result.sort((a, b) => parseFloat(b.users) - parseFloat(a.users));
         break;
       case '비용 낮은 순':

@@ -32,7 +32,7 @@ export default function WikiEditor({ apiId }: WikiEditorProps) {
               <button onClick={save} className="px-3 py-1 text-sm bg-blue-500 text-white rounded">저장</button>
             </>
           ) : (
-            <button onClick={() => setEditing(true)} className="px-3 py-1 text-sm bg-green-500 text-white rounded">편집요청</button>
+            <button onClick={() => setEditing(true)} className="px-3 py-1 text-sm bg-green-500 text-white rounded">편집하기</button>
           )}
         </div>
       </div>

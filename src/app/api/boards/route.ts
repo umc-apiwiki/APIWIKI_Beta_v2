@@ -76,7 +76,7 @@ export async function POST(request: NextRequest) {
         }
 
         // 타입 검증
-        if (!['inquiry', 'qna', 'free'].includes(body.type)) {
+        if (!['inquiry', 'qna', 'free', 'community'].includes(body.type)) {
             return NextResponse.json(
                 { success: false, error: '올바른 게시판 타입이 아닙니다' },
                 { status: 400 }
