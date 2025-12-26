@@ -4,11 +4,6 @@ const { withSentryConfig } = require('@sentry/nextjs');
 const nextConfig = {
   reactStrictMode: true,
   productionBrowserSourceMaps: false,
-  // Sentry 설정이 없어도 빌드가 가능하도록 설정
-  sentry: {
-    disableServerWebpackPlugin: !process.env.SENTRY_AUTH_TOKEN,
-    disableClientWebpackPlugin: !process.env.SENTRY_AUTH_TOKEN,
-  },
 };
 
 const sentryWebpackPluginOptions = {
@@ -24,4 +19,7 @@ const sentryWebpackPluginOptions = {
 module.exports = withSentryConfig(nextConfig, sentryWebpackPluginOptions, {
   hideSourceMaps: true,
   disableLogger: true,
+  // Sentry webpack plugin을 비활성화하는 옵션
+  disableServerWebpackPlugin: !process.env.SENTRY_AUTH_TOKEN,
+  disableClientWebpackPlugin: !process.env.SENTRY_AUTH_TOKEN,
 });
