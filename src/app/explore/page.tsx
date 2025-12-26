@@ -118,7 +118,7 @@ function ExploreContent() {
 
     // Rating filter
     if (ratingFilter > 0) {
-      result = result.filter(api => api.rating >= ratingFilter);
+      result = result.filter(api => api.rating !== undefined && api.rating >= ratingFilter);
     }
 
     // Country filter (if mock data has country list)
