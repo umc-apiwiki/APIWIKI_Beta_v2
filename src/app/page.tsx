@@ -7,7 +7,7 @@ import SearchBar from '@/components/SearchBar';
 import APICard from '@/components/APICard';
 import NewsCard from '@/components/NewsCard';
 import Header from '@/components/Header';
-import TagsSection from '@/components/TagsSection';
+import CategoryCarousel from '@/components/CategoryCarousel';
 import Image from 'next/image';
 import { API, NewsItem } from '@/types';
 
@@ -112,12 +112,19 @@ export default function HomePage() {
         transition={{ duration: 0.8, ease: [0.77, 0, 0.175, 1] }}
         style={{
           zIndex: isActive ? 1 : 50,
-          pointerEvents: isActive ? 'none' : 'auto'
+          pointerEvents: isActive ? 'none' : 'auto',
+          visibility: isActive ? 'hidden' : 'visible'
         }}
       >
         <motion.h1 
-          className="text-[80px] font-bold m-0"
-          style={{ color: 'var(--text-dark)' }}
+          className="text-[80px] font-bold m-0 select-none"
+          style={{ 
+            color: 'var(--text-dark)',
+            userSelect: 'none',
+            WebkitUserSelect: 'none',
+            MozUserSelect: 'none',
+            msUserSelect: 'none'
+          }}
           initial={{ opacity: 0, y: -20 }}
           animate={{ 
             opacity: 1, 
@@ -128,10 +135,14 @@ export default function HomePage() {
           API Wiki
         </motion.h1>
         <motion.p 
-          className="text-[22px] mt-[10px] mb-[50px]"
+          className="text-[22px] mt-[10px] mb-[50px] select-none"
           style={{ 
             color: 'rgba(0, 0, 0, 0.6)',
-            pointerEvents: searchFocused ? 'none' : 'auto'
+            pointerEvents: searchFocused ? 'none' : 'auto',
+            userSelect: 'none',
+            WebkitUserSelect: 'none',
+            MozUserSelect: 'none',
+            msUserSelect: 'none'
           }}
           initial={{ opacity: 0 }}
           animate={{
@@ -153,8 +164,9 @@ export default function HomePage() {
           <SearchBar onFocusChange={setSearchFocused} />
         </motion.div>
 
-        {/* Tags */}
+        {/* Category Carousel */}
         <motion.div
+          className="mt-0"
           style={{
             pointerEvents: searchFocused ? 'none' : 'auto'
           }}
@@ -164,7 +176,7 @@ export default function HomePage() {
           }}
           transition={{ duration: 0.3 }}
         >
-          <TagsSection />
+          <CategoryCarousel />
         </motion.div>
       </motion.main>
 
@@ -196,18 +208,20 @@ export default function HomePage() {
       </motion.div>
 
       {/* 스크롤 컨텐츠 섹션 */}
-      <motion.div 
-        className="fixed top-[100px] left-0 right-0 bottom-0 overflow-y-auto"
-        initial={{ opacity: 0, y: 100 }}
-        animate={{
-          opacity: isActive ? 1 : 0,
-          y: isActive ? 0 : 100
-        }}
-        transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
-        style={{
-          zIndex: isActive ? 100 : 1
-        }}
-      >
+      {isActive && (
+        <motion.div 
+          className="fixed top-[100px] left-0 right-0 bottom-0 overflow-y-auto"
+          initial={{ opacity: 0, y: 100 }}
+          animate={{
+            opacity: 1,
+            y: 0
+          }}
+          exit={{ opacity: 0, y: 100 }}
+          transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
+          style={{
+            zIndex: 100
+          }}
+        >
         <div className="grid-container mt-[50px] pb-[50px]">
           {/* Sticky Title */}
           <motion.div 
@@ -329,6 +343,7 @@ export default function HomePage() {
           </motion.section>
         </div>
       </motion.div>
+      )}
     </div>
   );
 }

@@ -46,24 +46,31 @@ export default function Header({ transparent = false, className = '' }: HeaderPr
                 {/* Logo Area - 3 columns */}
                 <a 
                     href="/"
-                    className="flex items-center gap-3 text-[28px] font-normal cursor-pointer"
+                    className="flex items-center gap-3 text-[28px] font-normal cursor-pointer select-none"
                     style={{ 
                         gridColumn: 'span 3',
-                        color: 'var(--primary-blue)'
+                        color: 'var(--primary-blue)',
+                        userSelect: 'none',
+                        WebkitUserSelect: 'none'
                     }}
                 >
                     <img 
                         src="/logo.svg" 
                         alt="API Wiki Logo" 
                         className="h-[40px] w-auto"
+                        draggable="false"
                     />
                     <span>API Wiki</span>
                 </a>
 
                 {/* Nav Links - 6 columns */}
                 <div 
-                    className="flex justify-center gap-10"
-                    style={{ gridColumn: 'span 6' }}
+                    className="flex justify-center gap-10 select-none"
+                    style={{ 
+                        gridColumn: 'span 6',
+                        userSelect: 'none',
+                        WebkitUserSelect: 'none'
+                    }}
                 >
                     <a 
                         href="/boards/community" 
@@ -96,8 +103,12 @@ export default function Header({ transparent = false, className = '' }: HeaderPr
 
                 {/* Login/User Area - 3 columns */}
                 <div 
-                    className="flex items-center justify-end gap-4"
-                    style={{ gridColumn: 'span 3' }}
+                    className="flex items-center justify-end gap-4 select-none"
+                    style={{ 
+                        gridColumn: 'span 3',
+                        userSelect: 'none',
+                        WebkitUserSelect: 'none'
+                    }}
                 >
                     {isAuthenticated ? (
                         <>

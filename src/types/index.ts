@@ -12,7 +12,7 @@ export type UserGrade = 'bronze' | 'silver' | 'gold' | 'admin';
 export type ApiStatus = 'pending' | 'approved' | 'rejected';
 
 /** 게시판 타입 */
-export type BoardType = 'inquiry' | 'qna' | 'free';
+export type BoardType = 'inquiry' | 'qna' | 'free' | 'community';
 
 /** 피드백 타입 */
 export type FeedbackType = 'error' | 'feature' | 'idea';
@@ -43,12 +43,12 @@ export interface User {
 export interface API {
   id: string;
   name: string;
-  company: string;
-  logo: string;
+  company?: string;
+  logo?: string;
   slug: string;
-  rating: number;
-  users: string;
-  price: 'free' | 'paid' | 'mixed';
+  rating?: number;
+  users?: string;
+  price?: 'free' | 'paid' | 'mixed';
   description: string;
   categories: string[];
   tags?: string[]; // 검색용 상세 태그

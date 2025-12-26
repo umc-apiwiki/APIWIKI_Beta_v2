@@ -1,25 +1,15 @@
 // src/components/FeedbackModal.tsx
-// 피드백 제출 모달 컴포넌트
-
 'use client';
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import type { FeedbackType } from '@/types';
 
-// ============================================
-// Props 타입
-// ============================================
-
 interface FeedbackModalProps {
     isOpen: boolean;
     onClose: () => void;
     userId?: string;
 }
-
-// ============================================
-// 피드백 타입 옵션
-// ============================================
 
 const FEEDBACK_TYPES = [
     {
@@ -45,43 +35,36 @@ const FEEDBACK_TYPES = [
     },
 ];
 
-// ============================================
-// 컴포넌트
-// ============================================
-
 export default function FeedbackModal({ isOpen, onClose, userId }: FeedbackModalProps) {
     const [selectedType, setSelectedType] = useState<FeedbackType>('error');
     const [content, setContent] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState('');
+    const [showSuccess, setShowSuccess] = useState(false);
 
-    // ESC 키로 모달 닫기
     useEffect(() => {
         const handleEsc = (e: KeyboardEvent) => {
             if (e.key === 'Escape' && isOpen) {
                 onClose();
             }
         };
-
         window.addEventListener('keydown', handleEsc);
         return () => window.removeEventListener('keydown', handleEsc);
     }, [isOpen, onClose]);
 
-    // 모달이 열릴 때 폼 초기화
     useEffect(() => {
         if (isOpen) {
             setSelectedType('error');
             setContent('');
             setError('');
+            setShowSuccess(false);
         }
     }, [isOpen]);
 
-    // 피드백 제출
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
 
-        // 유효성 검사
         if (content.length < 10) {
             setError('피드백 내용은 최소 10자 이상 입력해주세요');
             return;
@@ -97,22 +80,19 @@ export default function FeedbackModal({ isOpen, onClose, userId }: FeedbackModal
         try {
             const response = await fetch('/api/feedback', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    type: selectedType,
-                    content,
-                    userId,
-                }),
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ type: selectedType, content, userId }),
             });
 
             const data = await response.json();
 
             if (data.success) {
-                // 성공 토스트 (간단한 alert로 대체, 추후 toast 라이브러리 사용)
-                alert(data.message || '피드백이 제출되었습니다!');
-                onClose();
+                setShowSuccess(true);
+                setContent('');
+                setTimeout(() => {
+                    setShowSuccess(false);
+                    onClose();
+                }, 2000);
             } else {
                 setError(data.message || '피드백 제출에 실패했습니다');
             }
@@ -130,7 +110,6 @@ export default function FeedbackModal({ isOpen, onClose, userId }: FeedbackModal
         <AnimatePresence>
             {isOpen && (
                 <div className="fixed inset-0 z-[2000] flex items-center justify-center p-4">
-                    {/* 배경 오버레이 */}
                     <motion.div
                         className="absolute inset-0 bg-black"
                         initial={{ opacity: 0 }}
@@ -139,8 +118,6 @@ export default function FeedbackModal({ isOpen, onClose, userId }: FeedbackModal
                         transition={{ duration: 0.3 }}
                         onClick={onClose}
                     />
-
-                    {/* 모달 컨텐츠 */}
                     <motion.div 
                         className="relative bg-white max-w-2xl w-full max-h-[90vh] overflow-y-auto"
                         style={{ borderRadius: '20px' }}
@@ -149,7 +126,6 @@ export default function FeedbackModal({ isOpen, onClose, userId }: FeedbackModal
                         exit={{ opacity: 0, scale: 0.9, y: 20 }}
                         transition={{ type: 'spring', damping: 25, stiffness: 300 }}
                     >
-                        {/* 헤더 */}
                         <div className="flex items-center justify-between p-8 border-b" style={{ borderColor: 'rgba(0, 0, 0, 0.1)' }}>
                             <h2 className="text-[32px] font-bold" style={{ color: 'var(--text-dark)' }}>
                                 피드백 보내기
@@ -166,10 +142,7 @@ export default function FeedbackModal({ isOpen, onClose, userId }: FeedbackModal
                                 </svg>
                             </motion.button>
                         </div>
-
-                        {/* 폼 */}
                         <form onSubmit={handleSubmit} className="p-8">
-                            {/* 피드백 타입 선택 */}
                             <div className="mb-8">
                                 <label className="block text-[16px] font-semibold mb-4" style={{ color: 'var(--text-dark)' }}>
                                     피드백 타입을 선택해주세요
@@ -205,8 +178,6 @@ export default function FeedbackModal({ isOpen, onClose, userId }: FeedbackModal
                                     ))}
                                 </div>
                             </div>
-
-                            {/* 내용 입력 */}
                             <div className="mb-6">
                                 <label htmlFor="content" className="block text-[16px] font-semibold mb-3" style={{ color: 'var(--text-dark)' }}>
                                     내용
@@ -231,19 +202,13 @@ export default function FeedbackModal({ isOpen, onClose, userId }: FeedbackModal
                                     <span
                                         className="text-[13px] font-medium"
                                         style={{
-                                            color: content.length > 1000
-                                                ? '#ef4444'
-                                                : content.length >= 10
-                                                    ? '#22c55e'
-                                                    : 'var(--text-gray)'
+                                            color: content.length > 1000 ? '#ef4444' : content.length >= 10 ? '#22c55e' : 'var(--text-gray)'
                                         }}
                                     >
                                         {content.length} / 1000
                                     </span>
                                 </div>
                             </div>
-
-                            {/* 에러 메시지 */}
                             <AnimatePresence>
                                 {error && (
                                     <motion.div 
@@ -259,8 +224,22 @@ export default function FeedbackModal({ isOpen, onClose, userId }: FeedbackModal
                                     </motion.div>
                                 )}
                             </AnimatePresence>
-
-                            {/* 버튼 */}
+                            <AnimatePresence>
+                                {showSuccess && (
+                                    <motion.div 
+                                        className="mb-6 p-4 rounded-[12px]"
+                                        style={{ backgroundColor: '#f0fdf4', border: '1px solid #86efac' }}
+                                        initial={{ opacity: 0, scale: 0.9 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        exit={{ opacity: 0, scale: 0.9 }}
+                                    >
+                                        <p className="text-[14px] font-medium flex items-center gap-2" style={{ color: '#16a34a' }}>
+                                            <span className="text-[20px]">✅</span>
+                                            피드백이 성공적으로 제출되었습니다! 소중한 의견 감사합니다 🙏
+                                        </p>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
                             <div className="flex gap-4">
                                 <motion.button
                                     type="button"
@@ -277,19 +256,45 @@ export default function FeedbackModal({ isOpen, onClose, userId }: FeedbackModal
                                 >
                                     취소
                                 </motion.button>
-                                <motion.button
-                                    type="submit"
-                                    className="flex-1 px-6 py-4 rounded-[15px] text-white font-semibold text-[16px] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                                    style={{ 
-                                        backgroundColor: 'var(--primary-blue)',
-                                        boxShadow: 'var(--shadow-blue)'
-                                    }}
-                                    disabled={isSubmitting || content.length < 10 || content.length > 1000}
-                                    whileHover={{ scale: isSubmitting ? 1 : 1.02, y: isSubmitting ? 0 : -2 }}
-                                    whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
-                                >
-                                    {isSubmitting ? '제출 중...' : '피드백 제출'}
-                                </motion.button>
+                                <div className="flex-1 relative group">
+                                    <motion.button
+                                        type="submit"
+                                        className="w-full px-6 py-4 rounded-[15px] text-white font-semibold text-[16px] transition-all disabled:opacity-50"
+                                        style={{ 
+                                            backgroundColor: 'var(--primary-blue)',
+                                            boxShadow: 'var(--shadow-blue)',
+                                            cursor: (isSubmitting || showSuccess || content.length < 10 || content.length > 1000) ? 'not-allowed' : 'pointer'
+                                        }}
+                                        disabled={isSubmitting || showSuccess || content.length < 10 || content.length > 1000}
+                                        whileHover={{ scale: (isSubmitting || showSuccess || content.length < 10 || content.length > 1000) ? 1 : 1.02, y: (isSubmitting || showSuccess || content.length < 10 || content.length > 1000) ? 0 : -2 }}
+                                        whileTap={{ scale: (isSubmitting || showSuccess || content.length < 10 || content.length > 1000) ? 1 : 0.98 }}
+                                    >
+                                        {isSubmitting ? (
+                                            <span className="flex items-center justify-center gap-2">
+                                                <motion.div 
+                                                    className="w-5 h-5 border-3 border-white border-t-transparent rounded-full"
+                                                    animate={{ rotate: 360 }}
+                                                    transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                                                />
+                                                제출 중...
+                                            </span>
+                                        ) : showSuccess ? '제출 완료!' : '피드백 제출'}
+                                    </motion.button>
+                                    {(content.length < 10 && content.length > 0) && (
+                                        <AnimatePresence>
+                                            <motion.div
+                                                className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 rounded-lg text-[13px] text-white whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity"
+                                                style={{ backgroundColor: 'rgba(0, 0, 0, 0.8)' }}
+                                                initial={{ opacity: 0, y: 5 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                exit={{ opacity: 0, y: 5 }}
+                                            >
+                                                최소 10자 이상 입력해주세요 ({content.length}/10)
+                                                <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-black/80" />
+                                            </motion.div>
+                                        </AnimatePresence>
+                                    )}
+                                </div>
                             </div>
                         </form>
                     </motion.div>

@@ -28,10 +28,12 @@ export default function APIDetailPage({ params }: { params: { id: string } }) {
         setApi(data);
 
         // Fetch related APIs
-        const relatedResponse = await fetch(`/api/apis?category=${data.categories[0]}`);
-        if (relatedResponse.ok) {
-          const relatedData = await relatedResponse.json();
-          setRelatedAPIs(relatedData.filter((a: API) => a.id !== params.id).slice(0, 3));
+        if (data.categories && data.categories.length > 0) {
+          const relatedResponse = await fetch(`/api/apis?category=${data.categories[0]}&limit=3`);
+          if (relatedResponse.ok) {
+            const relatedData = await relatedResponse.json();
+            setRelatedAPIs(relatedData.filter((a: API) => a.id !== params.id).slice(0, 3));
+          }
         }
       } catch (error) {
         console.error('Error fetching API:', error);
@@ -108,21 +110,27 @@ export default function APIDetailPage({ params }: { params: { id: string } }) {
             <div className="bg-white rounded-xl shadow-sm p-8 mb-6 card-shadow">
               <div className="flex items-start justify-between mb-6 flex-wrap gap-4">
                 <div className="flex items-center gap-6">
-                  <div className="text-6xl">{api.logo}</div>
+                  <div className="text-6xl">{api.logo || '📦'}</div>
                   <div>
                     <h1 className="text-3xl font-bold mb-2" style={{ color: 'var(--text-dark)' }}>
                       {api.name}
                     </h1>
-                    <p className="mb-3" style={{ color: 'var(--text-gray)' }}>{api.company}</p>
+                    {api.company && (
+                      <p className="mb-3" style={{ color: 'var(--text-gray)' }}>{api.company}</p>
+                    )}
                     <div className="flex items-center gap-4">
-                      <div className="flex items-center gap-1">
-                        <Star size={20} className="fill-yellow-400 text-yellow-400" />
-                        <span className="font-semibold">{api.rating}</span>
-                      </div>
-                      <div className="flex items-center gap-1" style={{ color: 'var(--text-gray)' }}>
-                        <Users size={20} />
-                        <span>{api.users} users</span>
-                      </div>
+                      {api.rating !== undefined && (
+                        <div className="flex items-center gap-1">
+                          <Star size={20} className="fill-yellow-400 text-yellow-400" />
+                          <span className="font-semibold">{api.rating}</span>
+                        </div>
+                      )}
+                      {api.users && (
+                        <div className="flex items-center gap-1" style={{ color: 'var(--text-gray)' }}>
+                          <Users size={20} />
+                          <span>{api.users} users</span>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -174,11 +182,13 @@ export default function APIDetailPage({ params }: { params: { id: string } }) {
                       ))}
                     </ul>
 
-                    <h3 className="text-xl font-semibold mb-4" style={{ color: 'var(--text-dark)' }}>
-                      카테고리
-                    </h3>
-                    <div className="flex gap-2 mb-6 flex-wrap">
-                      {api.categories.map((category, idx) => (
+                    {api.categories && api.categories.length > 0 && (
+                      <>
+                        <h3 className="text-xl font-semibold mb-4" style={{ color: 'var(--text-dark)' }}>
+                          카테고리
+                        </h3>
+                        <div className="flex gap-2 mb-6 flex-wrap">
+                          {api.categories.map((category, idx) => (
                         <span 
                           key={idx} 
                           className="px-4 py-2 rounded-full text-sm font-medium"
@@ -189,8 +199,10 @@ export default function APIDetailPage({ params }: { params: { id: string } }) {
                         >
                           {category}
                         </span>
-                      ))}
-                    </div>
+                          ))}
+                        </div>
+                      </>
+                    )}
 
                     <h3 className="text-xl font-semibold mb-4" style={{ color: 'var(--text-dark)' }}>
                       공식 문서

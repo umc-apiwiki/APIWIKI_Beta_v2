@@ -1,12 +1,25 @@
 // src/lib/auth.ts
 import { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
+import GoogleProvider from 'next-auth/providers/google';
+import GitHubProvider from 'next-auth/providers/github';
 import { supabase } from './supabaseClient';
 import bcrypt from 'bcryptjs';
 import type { UserGrade } from '@/types';
 
 export const authOptions: NextAuthOptions = {
     providers: [
+        // Google OAuth
+        GoogleProvider({  
+            clientId: process.env.GOOGLE_CLIENT_ID || '',
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
+        }),
+        // GitHub OAuth
+        GitHubProvider({
+            clientId: process.env.GITHUB_CLIENT_ID || '',
+            clientSecret: process.env.GITHUB_CLIENT_SECRET || '',
+        }),
+        // 기존 이메일/비밀번호 로그인
         CredentialsProvider({
             name: 'Credentials',
             credentials: {
@@ -58,7 +71,58 @@ export const authOptions: NextAuthOptions = {
         }),
     ],
     callbacks: {
-        async jwt({ token, user }) {
+        async signIn({ user, account, profile }) {
+            // OAuth 로그인 시 사용자 정보 저장 또는 업데이트
+            if (account?.provider === 'google' || account?.provider === 'github') {
+                const { data: existingUser } = await supabase
+                    .from('User')
+                    .select('id, email, grade, activity_score')
+                    .eq('email', user.email)
+                    .single();
+
+                if (!existingUser) {
+                    // 신규 사용자 생성
+                    const { error } = await supabase
+                        .from('User')
+                        .insert({
+                            email: user.email,
+                            name: user.name || profile?.name || user.email?.split('@')[0],
+                            grade: 'bronze',
+                            activity_score: 1,
+                        });
+
+                    if (error) {
+                        console.error('사용자 생성 오류:', error);
+                        return false;
+                    }
+                } else {
+                    // 기존 사용자 로그인 활동 기록
+                    await supabase
+                        .from('User')
+                        .update({
+                            activity_score: existingUser.activity_score + 1,
+                            updatedAt: new Date().toISOString()
+                        })
+                        .eq('id', existingUser.id);
+                }
+            }
+            return true;
+        },
+        async jwt({ token, user, account }) {
+            // OAuth 로그인 시 DB에서 사용자 정보 조회
+            if (account?.provider === 'google' || account?.provider === 'github') {
+                const { data: dbUser } = await supabase
+                    .from('User')
+                    .select('id, email, name, grade')
+                    .eq('email', token.email)
+                    .single();
+
+                if (dbUser) {
+                    token.id = dbUser.id;
+                    token.grade = dbUser.grade;
+                }
+            }
+            
             if (user) {
                 token.id = user.id;
                 token.email = user.email;

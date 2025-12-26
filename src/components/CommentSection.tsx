@@ -2,6 +2,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import { useAuth } from '@/hooks/useAuth';
 import { isAdmin } from '@/lib/permissions';
 import type { Comment, CommentSubmissionPayload } from '@/types';
@@ -108,75 +109,157 @@ export default function CommentSection({ boardId }: CommentSectionProps) {
 
     return (
         <div className="space-y-6">
-            <h3 className="text-xl font-bold">댓글 ({comments.length})</h3>
+            <h3 className="text-[24px] font-bold mb-6" style={{ color: 'var(--text-dark)' }}>
+                댓글 ({comments.length})
+            </h3>
 
             {/* 댓글 작성 폼 */}
-            <form onSubmit={handleSubmit} className="space-y-4">
-                {error && (
-                    <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
-                        {error}
+            <motion.form 
+                onSubmit={handleSubmit} 
+                className="bg-white card-shadow p-6 space-y-4"
+                style={{ borderRadius: '20px' }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+            >
+                <AnimatePresence>
+                    {error && (
+                        <motion.div 
+                            className="p-4 rounded-[12px]"
+                            style={{ backgroundColor: '#fef2f2', border: '1px solid #fecaca' }}
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -10 }}
+                        >
+                            <p className="text-[14px]" style={{ color: '#dc2626' }}>
+                                {error}
+                            </p>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+
+                {!isAuthenticated && (
+                    <div>
+                        <label className="block text-[14px] font-medium mb-2" style={{ color: 'var(--text-dark)' }}>
+                            이름 *
+                        </label>
+                        <input
+                            type="text"
+                            value={formData.author_name}
+                            onChange={(e) => setFormData(prev => ({ ...prev, author_name: e.target.value }))}
+                            placeholder="이름을 입력하세요"
+                            className="w-full px-4 py-3 border-2 rounded-[12px] focus:outline-none transition-all"
+                            style={{
+                                borderColor: formData.author_name ? 'var(--primary-blue)' : 'rgba(0, 0, 0, 0.1)',
+                                color: 'var(--text-dark)'
+                            }}
+                        />
                     </div>
                 )}
 
-                {!isAuthenticated && (
-                    <input
-                        type="text"
-                        value={formData.author_name}
-                        onChange={(e) => setFormData(prev => ({ ...prev, author_name: e.target.value }))}
-                        placeholder="이름"
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                <div>
+                    <label className="block text-[14px] font-medium mb-2" style={{ color: 'var(--text-dark)' }}>
+                        댓글 내용 *
+                    </label>
+                    <textarea
+                        value={formData.content}
+                        onChange={(e) => setFormData(prev => ({ ...prev, content: e.target.value }))}
+                        placeholder="댓글을 입력하세요"
+                        rows={3}
+                        className="w-full px-4 py-3 border-2 rounded-[12px] focus:outline-none resize-none transition-all"
+                        style={{
+                            borderColor: formData.content ? 'var(--primary-blue)' : 'rgba(0, 0, 0, 0.1)',
+                            color: 'var(--text-dark)'
+                        }}
                     />
-                )}
+                </div>
 
-                <textarea
-                    value={formData.content}
-                    onChange={(e) => setFormData(prev => ({ ...prev, content: e.target.value }))}
-                    placeholder="댓글을 입력하세요"
-                    rows={3}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-                />
-
-                <button
+                <motion.button
                     type="submit"
                     disabled={isSubmitting}
-                    className="px-6 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-6 py-3 text-white font-semibold rounded-[12px] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    style={{ 
+                        backgroundColor: 'var(--primary-blue)',
+                        boxShadow: 'var(--shadow-blue)'
+                    }}
+                    whileHover={{ scale: isSubmitting ? 1 : 1.02, y: isSubmitting ? 0 : -2 }}
+                    whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
                 >
                     {isSubmitting ? '작성 중...' : '댓글 작성'}
-                </button>
-            </form>
+                </motion.button>
+            </motion.form>
 
             {/* 댓글 목록 */}
             {loading ? (
-                <div className="text-center text-gray-500">로딩 중...</div>
+                <motion.div 
+                    className="text-center py-8"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                >
+                    <div className="inline-block w-8 h-8 border-4 border-t-transparent rounded-full animate-spin" style={{ borderColor: 'var(--primary-blue)', borderTopColor: 'transparent' }}></div>
+                    <p className="mt-3 text-[14px]" style={{ color: 'var(--text-gray)' }}>로딩 중...</p>
+                </motion.div>
             ) : comments.length === 0 ? (
-                <div className="text-center text-gray-500 py-8">첫 댓글을 작성해보세요</div>
+                <motion.div 
+                    className="bg-white card-shadow text-center py-12 rounded-[20px]"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                >
+                    <div className="text-[48px] mb-3 opacity-30">💬</div>
+                    <p className="text-[16px]" style={{ color: 'var(--text-gray)' }}>
+                        첫 댓글을 작성해보세요
+                    </p>
+                </motion.div>
             ) : (
                 <div className="space-y-4">
-                    {comments.map((comment) => (
-                        <div key={comment.id} className="bg-gray-50 rounded-lg p-4">
-                            <div className="flex items-start justify-between mb-2">
-                                <div>
-                                    <span className="font-medium text-gray-900">
-                                        {comment.author?.name || comment.author_name}
-                                    </span>
-                                    {comment.author?.grade && (
-                                        <span className="ml-2 text-xs text-gray-500">({comment.author.grade})</span>
-                                    )}
-                                    <span className="ml-3 text-sm text-gray-500">
-                                        {new Date(comment.created_at).toLocaleString('ko-KR')}
-                                    </span>
+                    {comments.map((comment, index) => (
+                        <motion.div 
+                            key={comment.id} 
+                            className="bg-white card-shadow rounded-[20px] p-6"
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.3, delay: index * 0.05 }}
+                        >
+                            <div className="flex items-start justify-between mb-3">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: 'var(--primary-blue)15' }}>
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <circle cx="12" cy="8" r="4" stroke="var(--primary-blue)" strokeWidth="2"/>
+                                            <path d="M6 21C6 17.134 8.686 14 12 14C15.314 14 18 17.134 18 21" stroke="var(--primary-blue)" strokeWidth="2"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div className="flex items-center gap-2">
+                                            <span className="font-semibold text-[15px]" style={{ color: 'var(--text-dark)' }}>
+                                                {comment.author?.name || comment.author_name}
+                                            </span>
+                                            {comment.author?.grade && (
+                                                <span className="px-2 py-0.5 text-[11px] font-medium rounded-full" style={{ backgroundColor: 'var(--primary-blue)15', color: 'var(--primary-blue)' }}>
+                                                    {comment.author.grade}
+                                                </span>
+                                            )}
+                                        </div>
+                                        <span className="text-[13px]" style={{ color: 'var(--text-gray)' }}>
+                                            {new Date(comment.created_at).toLocaleString('ko-KR')}
+                                        </span>
+                                    </div>
                                 </div>
                                 {canDeleteComment(comment) && (
-                                    <button
+                                    <motion.button
                                         onClick={() => handleDelete(comment.id)}
-                                        className="text-sm text-red-600 hover:text-red-700"
+                                        className="text-[13px] px-3 py-1 rounded-full transition-colors"
+                                        style={{ color: '#ef4444', backgroundColor: '#fef2f2' }}
+                                        whileHover={{ scale: 1.05, backgroundColor: '#fee2e2' }}
+                                        whileTap={{ scale: 0.95 }}
                                     >
                                         삭제
-                                    </button>
+                                    </motion.button>
                                 )}
                             </div>
-                            <p className="text-gray-700 whitespace-pre-wrap">{comment.content}</p>
-                        </div>
+                            <p className="text-[15px] whitespace-pre-wrap leading-relaxed" style={{ color: 'var(--text-dark)' }}>
+                                {comment.content}
+                            </p>
+                        </motion.div>
                     ))}
                 </div>
             )}
