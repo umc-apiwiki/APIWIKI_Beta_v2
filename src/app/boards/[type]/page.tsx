@@ -2,8 +2,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { motion } from 'motion/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Header from '@/components/Header';
 import BoardForm from '@/components/BoardForm';
 import type { Board, BoardType } from '@/types';
 
@@ -11,6 +13,24 @@ const BOARD_TITLES: Record<BoardType, string> = {
     inquiry: '문의 게시판',
     qna: 'Q&A 게시판',
     free: '자유 게시판',
+};
+
+const BOARD_CONFIGS: Record<BoardType, { icon: string; gradient: string; description: string }> = {
+    inquiry: {
+        icon: '❓',
+        gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        description: '서비스 이용 중 궁금한 점을 문의하세요'
+    },
+    qna: {
+        icon: '💬',
+        gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+        description: 'API 사용법과 기술적인 질문을 나누세요'
+    },
+    free: {
+        icon: '✨',
+        gradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+        description: '자유롭게 의견을 나누는 공간입니다'
+    },
 };
 
 export default function BoardTypePage({ params }: { params: { type: BoardType } }) {
@@ -42,76 +62,230 @@ export default function BoardTypePage({ params }: { params: { type: BoardType } 
         }
     };
 
+    const config = BOARD_CONFIGS[params.type] || BOARD_CONFIGS.free;
+
     return (
-        <div className="min-h-screen bg-gray-50 py-8 px-4">
-            <div className="max-w-5xl mx-auto">
-                <div className="flex items-center justify-between mb-6">
-                    <div>
-                        <Link href="/boards" className="text-sm text-gray-600 hover:text-gray-900 mb-2 inline-block">
-                            ← 게시판 목록
-                        </Link>
-                        <h1 className="text-3xl font-bold text-gray-900">{BOARD_TITLES[params.type]}</h1>
-                    </div>
-                    <button
-                        onClick={() => setShowForm(!showForm)}
-                        className="px-6 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600 transition-colors"
+        <motion.div 
+            className="min-h-screen relative overflow-hidden" 
+            style={{ backgroundColor: 'var(--bg-light)' }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.5, ease: "easeInOut" }}
+        >
+            {/* Background Gradient Effect */}
+            <motion.div
+                className="bg-glow"
+                style={{
+                    x: '-50%',
+                    y: '-50%'
+                }}
+                animate={{
+                    scale: [1, 1.2, 1],
+                    opacity: [0.8, 1, 0.8]
+                }}
+                transition={{
+                    duration: 8,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                }}
+            />
+
+            <Header />
+            
+            <div className="grid-container pt-32 pb-20 relative z-10">
+                {/* Header */}
+                <div className="col-12 mb-8">
+                    <Link 
+                        href="/boards" 
+                        className="text-[14px] mb-4 inline-flex items-center gap-2 transition-colors hover:text-[var(--primary-blue)]"
+                        style={{ color: 'var(--text-gray)' }}
                     >
-                        {showForm ? '목록으로' : '글쓰기'}
-                    </button>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                        게시판 목록으로
+                    </Link>
+                    <h1 className="text-[48px] font-bold" style={{ color: 'var(--text-dark)' }}>
+                        {BOARD_TITLES[params.type]}
+                    </h1>
                 </div>
 
-                {showForm ? (
-                    <div className="bg-white rounded-lg shadow p-6">
-                        <BoardForm type={params.type} onCancel={() => setShowForm(false)} />
+                {/* Action Bar */}
+                <motion.div 
+                    className="col-12 flex justify-between items-center mb-8"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.2 }}
+                >
+                    <div className="flex items-center gap-4">
+                        <span className="text-[16px] font-semibold" style={{ color: 'var(--text-dark)' }}>
+                            총 {boards.length}개의 게시글
+                        </span>
                     </div>
+                    <motion.button
+                        onClick={() => setShowForm(!showForm)}
+                        className="px-8 py-3 text-white font-semibold text-[16px] flex items-center gap-2"
+                        style={{ 
+                            backgroundColor: 'var(--primary-blue)',
+                            borderRadius: '15px',
+                            boxShadow: 'var(--shadow-blue)'
+                        }}
+                        whileHover={{ scale: 1.05, y: -2 }}
+                        whileTap={{ scale: 0.98 }}
+                    >
+                        {showForm ? (
+                            <>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M6 6L18 18M6 18L18 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                                </svg>
+                                목록으로
+                            </>
+                        ) : (
+                            <>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M12 5V19M5 12H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                                </svg>
+                                글쓰기
+                            </>
+                        )}
+                    </motion.button>
+                </motion.div>
+
+                {showForm ? (
+                    <motion.div 
+                        className="bg-white card-shadow col-12 p-8" 
+                        style={{ borderRadius: '20px' }}
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.3 }}
+                    >
+                        <BoardForm type={params.type} onCancel={() => setShowForm(false)} />
+                    </motion.div>
                 ) : (
                     <>
                         {loading ? (
-                            <div className="text-center py-12 text-gray-500">로딩 중...</div>
+                            <motion.div 
+                                className="text-center py-20 col-12"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                            >
+                                <div className="inline-block w-12 h-12 border-4 border-t-transparent rounded-full animate-spin" style={{ borderColor: 'var(--primary-blue)', borderTopColor: 'transparent' }}></div>
+                                <p className="mt-4 text-[16px]" style={{ color: 'var(--text-gray)' }}>로딩 중...</p>
+                            </motion.div>
                         ) : boards.length === 0 ? (
-                            <div className="bg-white rounded-lg shadow p-12 text-center text-gray-500">
-                                첫 게시글을 작성해보세요
-                            </div>
+                            <motion.div 
+                                className="bg-white card-shadow col-12 py-20 text-center"
+                                style={{ borderRadius: '20px' }}
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                            >
+                                <div className="text-[64px] mb-4 opacity-30">📝</div>
+                                <h3 className="text-[24px] font-semibold mb-2" style={{ color: 'var(--text-dark)' }}>
+                                    아직 게시글이 없습니다
+                                </h3>
+                                <p className="text-[16px] mb-6" style={{ color: 'var(--text-gray)' }}>
+                                    첫 게시글을 작성해보세요!
+                                </p>
+                                <motion.button
+                                    onClick={() => setShowForm(true)}
+                                    className="px-8 py-3 text-white font-semibold"
+                                    style={{ 
+                                        backgroundColor: 'var(--primary-blue)',
+                                        borderRadius: '15px',
+                                        boxShadow: 'var(--shadow-blue)'
+                                    }}
+                                    whileHover={{ scale: 1.05, y: -2 }}
+                                    whileTap={{ scale: 0.98 }}
+                                >
+                                    글쓰기
+                                </motion.button>
+                            </motion.div>
                         ) : (
                             <>
-                                <div className="bg-white rounded-lg shadow divide-y">
-                                    {boards.map((board) => (
-                                        <Link
+                                <div className="bg-white card-shadow col-12" style={{ borderRadius: '20px', overflow: 'hidden' }}>
+                                    {boards.map((board, index) => (
+                                        <motion.div
                                             key={board.id}
-                                            href={`/boards/${params.type}/${board.id}`}
-                                            className="block p-4 hover:bg-gray-50 transition-colors"
+                                            initial={{ opacity: 0, x: -20 }}
+                                            animate={{ opacity: 1, x: 0 }}
+                                            transition={{ duration: 0.3, delay: index * 0.05 }}
                                         >
-                                            <h3 className="text-lg font-semibold text-gray-900 mb-1">{board.title}</h3>
-                                            <div className="flex items-center gap-4 text-sm text-gray-600">
-                                                <span>{board.author?.name || board.author_name}</span>
-                                                <span>{new Date(board.created_at).toLocaleDateString('ko-KR')}</span>
-                                            </div>
-                                        </Link>
+                                            <Link
+                                                href={`/boards/${params.type}/${board.id}`}
+                                                className="block p-6 border-b transition-all hover:bg-gray-50 group"
+                                                style={{ borderColor: 'rgba(0, 0, 0, 0.05)' }}
+                                            >
+                                                <div className="flex items-start justify-between gap-4">
+                                                    <div className="flex-1">
+                                                        <h3 className="text-[20px] font-semibold mb-2 group-hover:text-[var(--primary-blue)] transition-colors" style={{ color: 'var(--text-dark)' }}>
+                                                            {board.title}
+                                                        </h3>
+                                                        <div className="flex items-center gap-4 text-[14px]" style={{ color: 'var(--text-gray)' }}>
+                                                            <div className="flex items-center gap-2">
+                                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                    <circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="2"/>
+                                                                    <path d="M6 21C6 17.134 8.686 14 12 14C15.314 14 18 17.134 18 21" stroke="currentColor" strokeWidth="2"/>
+                                                                </svg>
+                                                                <span>{board.author?.name || board.author_name}</span>
+                                                            </div>
+                                                            <div className="flex items-center gap-2">
+                                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                    <rect x="3" y="6" width="18" height="15" rx="2" stroke="currentColor" strokeWidth="2"/>
+                                                                    <path d="M3 10H21M7 3V6M17 3V6" stroke="currentColor" strokeWidth="2"/>
+                                                                </svg>
+                                                                <span>{new Date(board.created_at).toLocaleDateString('ko-KR')}</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <motion.svg 
+                                                        width="24" 
+                                                        height="24" 
+                                                        viewBox="0 0 24 24" 
+                                                        fill="none" 
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        className="opacity-0 group-hover:opacity-100 transition-opacity"
+                                                        style={{ color: 'var(--primary-blue)' }}
+                                                    >
+                                                        <path d="M9 5L16 12L9 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                                    </motion.svg>
+                                                </div>
+                                            </Link>
+                                        </motion.div>
                                     ))}
                                 </div>
 
                                 {/* 페이지네이션 */}
                                 {totalPages > 1 && (
-                                    <div className="flex justify-center gap-2 mt-6">
+                                    <motion.div 
+                                        className="flex justify-center gap-2 mt-8 col-12"
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ duration: 0.5, delay: 0.3 }}
+                                    >
                                         {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-                                            <button
+                                            <motion.button
                                                 key={p}
                                                 onClick={() => setPage(p)}
-                                                className={`px-4 py-2 rounded ${p === page
-                                                        ? 'bg-teal-500 text-white'
-                                                        : 'bg-white text-gray-700 hover:bg-gray-100'
-                                                    }`}
+                                                className="w-12 h-12 rounded-full font-semibold transition-all"
+                                                style={{
+                                                    backgroundColor: p === page ? 'var(--primary-blue)' : 'white',
+                                                    color: p === page ? 'white' : 'var(--text-gray)',
+                                                    boxShadow: p === page ? 'var(--shadow-blue)' : '0 2px 8px rgba(0, 0, 0, 0.1)'
+                                                }}
+                                                whileHover={{ scale: 1.1, y: -2 }}
+                                                whileTap={{ scale: 0.95 }}
                                             >
                                                 {p}
-                                            </button>
+                                            </motion.button>
                                         ))}
-                                    </div>
+                                    </motion.div>
                                 )}
                             </>
                         )}
                     </>
                 )}
             </div>
-        </div>
+        </motion.div>
     );
 }

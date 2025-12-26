@@ -4,6 +4,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import type { FeedbackType } from '@/types';
 
 // ============================================
@@ -26,21 +27,21 @@ const FEEDBACK_TYPES = [
         label: '오류 제보',
         icon: '🐛',
         placeholder: '발견하신 오류나 버그를 자세히 설명해주세요...',
-        color: 'red',
+        color: '#ef4444',
     },
     {
         type: 'feature' as FeedbackType,
         label: '기능 제안',
         icon: '💡',
         placeholder: '추가되었으면 하는 기능을 제안해주세요...',
-        color: 'blue',
+        color: '#2196F3',
     },
     {
         type: 'idea' as FeedbackType,
         label: '아이디어 공유',
         icon: '✨',
         placeholder: '서비스 개선을 위한 아이디어를 공유해주세요...',
-        color: 'purple',
+        color: '#a855f7',
     },
 ];
 
@@ -123,118 +124,177 @@ export default function FeedbackModal({ isOpen, onClose, userId }: FeedbackModal
         }
     };
 
-    if (!isOpen) return null;
-
     const selectedOption = FEEDBACK_TYPES.find((t) => t.type === selectedType)!;
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
-            {/* 배경 오버레이 */}
-            <div
-                className="absolute inset-0 bg-black bg-opacity-50"
-                onClick={onClose}
-            />
-
-            {/* 모달 컨텐츠 */}
-            <div className="relative bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
-                {/* 헤더 */}
-                <div className="flex items-center justify-between p-6 border-b">
-                    <h2 className="text-2xl font-bold text-gray-900">피드백 보내기</h2>
-                    <button
+        <AnimatePresence>
+            {isOpen && (
+                <div className="fixed inset-0 z-[2000] flex items-center justify-center p-4">
+                    {/* 배경 오버레이 */}
+                    <motion.div
+                        className="absolute inset-0 bg-black"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 0.5 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.3 }}
                         onClick={onClose}
-                        className="text-gray-400 hover:text-gray-600 transition-colors"
-                        aria-label="닫기"
+                    />
+
+                    {/* 모달 컨텐츠 */}
+                    <motion.div 
+                        className="relative bg-white max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+                        style={{ borderRadius: '20px' }}
+                        initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                        transition={{ type: 'spring', damping: 25, stiffness: 300 }}
                     >
-                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </button>
-                </div>
-
-                {/* 폼 */}
-                <form onSubmit={handleSubmit} className="p-6">
-                    {/* 피드백 타입 선택 */}
-                    <div className="mb-6">
-                        <label className="block text-sm font-medium text-gray-700 mb-3">
-                            피드백 타입을 선택해주세요
-                        </label>
-                        <div className="grid grid-cols-3 gap-3">
-                            {FEEDBACK_TYPES.map((option) => (
-                                <button
-                                    key={option.type}
-                                    type="button"
-                                    onClick={() => setSelectedType(option.type)}
-                                    className={`
-                    p-4 rounded-lg border-2 transition-all
-                    ${selectedType === option.type
-                                            ? `border-${option.color}-500 bg-${option.color}-50`
-                                            : 'border-gray-200 hover:border-gray-300'
-                                        }
-                  `}
-                                >
-                                    <div className="text-3xl mb-2">{option.icon}</div>
-                                    <div className="text-sm font-medium text-gray-900">{option.label}</div>
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* 내용 입력 */}
-                    <div className="mb-6">
-                        <label htmlFor="content" className="block text-sm font-medium text-gray-700 mb-2">
-                            내용
-                        </label>
-                        <textarea
-                            id="content"
-                            value={content}
-                            onChange={(e) => setContent(e.target.value)}
-                            placeholder={selectedOption.placeholder}
-                            rows={8}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
-                            required
-                        />
-                        <div className="flex justify-between items-center mt-2">
-                            <span className="text-xs text-gray-500">최소 10자, 최대 1000자</span>
-                            <span
-                                className={`text-xs ${content.length > 1000
-                                        ? 'text-red-600'
-                                        : content.length >= 10
-                                            ? 'text-green-600'
-                                            : 'text-gray-500'
-                                    }`}
+                        {/* 헤더 */}
+                        <div className="flex items-center justify-between p-8 border-b" style={{ borderColor: 'rgba(0, 0, 0, 0.1)' }}>
+                            <h2 className="text-[32px] font-bold" style={{ color: 'var(--text-dark)' }}>
+                                피드백 보내기
+                            </h2>
+                            <motion.button
+                                onClick={onClose}
+                                className="text-gray-400 hover:text-gray-600 transition-colors"
+                                whileHover={{ scale: 1.1, rotate: 90 }}
+                                whileTap={{ scale: 0.9 }}
+                                aria-label="닫기"
                             >
-                                {content.length} / 1000
-                            </span>
+                                <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </motion.button>
                         </div>
-                    </div>
 
-                    {/* 에러 메시지 */}
-                    {error && (
-                        <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-                            <p className="text-sm text-red-600">{error}</p>
-                        </div>
-                    )}
+                        {/* 폼 */}
+                        <form onSubmit={handleSubmit} className="p-8">
+                            {/* 피드백 타입 선택 */}
+                            <div className="mb-8">
+                                <label className="block text-[16px] font-semibold mb-4" style={{ color: 'var(--text-dark)' }}>
+                                    피드백 타입을 선택해주세요
+                                </label>
+                                <div className="grid grid-cols-3 gap-4">
+                                    {FEEDBACK_TYPES.map((option) => (
+                                        <motion.button
+                                            key={option.type}
+                                            type="button"
+                                            onClick={() => setSelectedType(option.type)}
+                                            className="p-5 rounded-[15px] border-2 transition-all"
+                                            style={{
+                                                borderColor: selectedType === option.type ? option.color : 'rgba(0, 0, 0, 0.1)',
+                                                backgroundColor: selectedType === option.type ? `${option.color}15` : 'white'
+                                            }}
+                                            whileHover={{ scale: 1.05, y: -3 }}
+                                            whileTap={{ scale: 0.98 }}
+                                        >
+                                            <motion.div 
+                                                className="text-[40px] mb-2"
+                                                animate={{ 
+                                                    scale: selectedType === option.type ? 1.1 : 1,
+                                                    rotate: selectedType === option.type ? [0, -10, 10, 0] : 0
+                                                }}
+                                                transition={{ duration: 0.3 }}
+                                            >
+                                                {option.icon}
+                                            </motion.div>
+                                            <div className="text-[14px] font-medium" style={{ color: 'var(--text-dark)' }}>
+                                                {option.label}
+                                            </div>
+                                        </motion.button>
+                                    ))}
+                                </div>
+                            </div>
 
-                    {/* 버튼 */}
-                    <div className="flex gap-3">
-                        <button
-                            type="button"
-                            onClick={onClose}
-                            className="flex-1 px-6 py-3 border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition-colors"
-                            disabled={isSubmitting}
-                        >
-                            취소
-                        </button>
-                        <button
-                            type="submit"
-                            className="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                            disabled={isSubmitting || content.length < 10 || content.length > 1000}
-                        >
-                            {isSubmitting ? '제출 중...' : '피드백 제출'}
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
+                            {/* 내용 입력 */}
+                            <div className="mb-6">
+                                <label htmlFor="content" className="block text-[16px] font-semibold mb-3" style={{ color: 'var(--text-dark)' }}>
+                                    내용
+                                </label>
+                                <textarea
+                                    id="content"
+                                    value={content}
+                                    onChange={(e) => setContent(e.target.value)}
+                                    placeholder={selectedOption.placeholder}
+                                    rows={8}
+                                    className="w-full px-5 py-4 border-2 rounded-[15px] focus:outline-none resize-none transition-all text-[15px]"
+                                    style={{
+                                        borderColor: content.length >= 10 ? 'var(--primary-blue)' : 'rgba(0, 0, 0, 0.1)',
+                                        color: 'var(--text-dark)'
+                                    }}
+                                    required
+                                />
+                                <div className="flex justify-between items-center mt-3">
+                                    <span className="text-[13px]" style={{ color: 'var(--text-gray)' }}>
+                                        최소 10자, 최대 1000자
+                                    </span>
+                                    <span
+                                        className="text-[13px] font-medium"
+                                        style={{
+                                            color: content.length > 1000
+                                                ? '#ef4444'
+                                                : content.length >= 10
+                                                    ? '#22c55e'
+                                                    : 'var(--text-gray)'
+                                        }}
+                                    >
+                                        {content.length} / 1000
+                                    </span>
+                                </div>
+                            </div>
+
+                            {/* 에러 메시지 */}
+                            <AnimatePresence>
+                                {error && (
+                                    <motion.div 
+                                        className="mb-6 p-4 rounded-[12px]"
+                                        style={{ backgroundColor: '#fef2f2', border: '1px solid #fecaca' }}
+                                        initial={{ opacity: 0, y: -10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, y: -10 }}
+                                    >
+                                        <p className="text-[14px]" style={{ color: '#dc2626' }}>
+                                            {error}
+                                        </p>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+
+                            {/* 버튼 */}
+                            <div className="flex gap-4">
+                                <motion.button
+                                    type="button"
+                                    onClick={onClose}
+                                    className="flex-1 px-6 py-4 rounded-[15px] font-semibold text-[16px] transition-colors"
+                                    style={{ 
+                                        border: '2px solid rgba(0, 0, 0, 0.1)',
+                                        color: 'var(--text-gray)',
+                                        backgroundColor: 'white'
+                                    }}
+                                    disabled={isSubmitting}
+                                    whileHover={{ scale: 1.02, y: -2 }}
+                                    whileTap={{ scale: 0.98 }}
+                                >
+                                    취소
+                                </motion.button>
+                                <motion.button
+                                    type="submit"
+                                    className="flex-1 px-6 py-4 rounded-[15px] text-white font-semibold text-[16px] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                    style={{ 
+                                        backgroundColor: 'var(--primary-blue)',
+                                        boxShadow: 'var(--shadow-blue)'
+                                    }}
+                                    disabled={isSubmitting || content.length < 10 || content.length > 1000}
+                                    whileHover={{ scale: isSubmitting ? 1 : 1.02, y: isSubmitting ? 0 : -2 }}
+                                    whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
+                                >
+                                    {isSubmitting ? '제출 중...' : '피드백 제출'}
+                                </motion.button>
+                            </div>
+                        </form>
+                    </motion.div>
+                </div>
+            )}
+        </AnimatePresence>
     );
 }

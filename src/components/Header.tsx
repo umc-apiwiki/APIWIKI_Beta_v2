@@ -2,19 +2,23 @@
 'use client';
 
 import { useState } from 'react';
+import { motion } from 'motion/react';
 import { useAuth } from '@/hooks/useAuth';
 import { isAdmin, canSubmitAPI } from '@/lib/permissions';
 import LoginModal from './LoginModal';
 import SignupModal from './SignupModal';
 import APIRegistrationModal from './APIRegistrationModal';
-import FeedbackModal from './FeedbackModal';
 
-export default function Header() {
+interface HeaderProps {
+    transparent?: boolean;
+    className?: string;
+}
+
+export default function Header({ transparent = false, className = '' }: HeaderProps) {
     const { user, isAuthenticated, signOut } = useAuth();
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
     const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
     const [isAPIRegistrationModalOpen, setIsAPIRegistrationModalOpen] = useState(false);
-    const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
 
     const handleSwitchToSignup = () => {
         setIsLoginModalOpen(false);
@@ -28,72 +32,127 @@ export default function Header() {
 
     return (
         <>
-            <header className="border-b border-gray-200 py-3 px-6">
-                <div className="max-w-7xl mx-auto flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                        <a
-                            href="/"
-                            className="text-xl font-bold"
-                            style={{
-                                fontFamily: 'Orbitron, sans-serif',
-                                background: 'linear-gradient(90deg, #81FFEF, #F067B4)',
-                                WebkitBackgroundClip: 'text',
-                                WebkitTextFillColor: 'transparent'
-                            }}
-                        >
-                            API WIKI
-                        </a>
-                        <a href="/about" className="text-sm text-gray-700 hover:text-gray-900">About Us</a>
-                    </div>
+            <nav 
+                className={`fixed top-0 left-0 right-0 z-[1000] transition-all duration-300 ${className}`}
+                style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(12, 1fr)',
+                    gap: 'var(--grid-gutter)',
+                    padding: '20px var(--grid-margin)',
+                    alignItems: 'center',
+                    backgroundColor: transparent ? 'transparent' : 'var(--bg-light)'
+                }}
+            >
+                {/* Logo Area - 3 columns */}
+                <a 
+                    href="/"
+                    className="flex items-center gap-3 text-[28px] font-normal cursor-pointer"
+                    style={{ 
+                        gridColumn: 'span 3',
+                        color: 'var(--primary-blue)'
+                    }}
+                >
+                    <img 
+                        src="/logo.svg" 
+                        alt="API Wiki Logo" 
+                        className="h-[40px] w-auto"
+                    />
+                    <span>API Wiki</span>
+                </a>
 
-                    <nav className="flex items-center gap-6">
-                        <a href="/explore" className="text-sm text-gray-700 hover:text-gray-900">탐색</a>
-                        <a href="/boards" className="text-sm text-gray-700 hover:text-gray-900">커뮤니티</a>
-                        <button
-                            onClick={() => setIsFeedbackModalOpen(true)}
-                            className="text-sm text-gray-700 hover:text-gray-900 flex items-center gap-1"
-                        >
-                            💬 피드백
-                        </button>
-
-                        {isAuthenticated ? (
-                            <>
-                                {canSubmitAPI(user) && (
-                                    <button
-                                        onClick={() => setIsAPIRegistrationModalOpen(true)}
-                                        className="text-sm text-teal-600 hover:text-teal-700 font-medium"
-                                    >
-                                        API 등록
-                                    </button>
-                                )}
-                                {isAdmin(user) && (
-                                    <a href="/admin" className="text-sm text-purple-600 hover:text-purple-700 font-medium">
-                                        관리자
-                                    </a>
-                                )}
-                                <div className="flex items-center gap-4">
-                                    <span className="text-sm text-gray-700">
-                                        {user?.name}님 ({user?.grade})
-                                    </span>
-                                    <button
-                                        onClick={signOut}
-                                        className="px-5 py-1.5 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors text-sm"
-                                    >
-                                        로그아웃
-                                    </button>
-                                </div>
-                            </>
-                        ) : (
-                            <button
-                                onClick={() => setIsLoginModalOpen(true)}
-                                className="px-5 py-1.5 bg-teal-500 text-white rounded-lg hover:bg-teal-600 transition-colors text-sm"
-                            >
-                                로그인
-                            </button>
-                        )}
-                    </nav>
+                {/* Nav Links - 6 columns */}
+                <div 
+                    className="flex justify-center gap-10"
+                    style={{ gridColumn: 'span 6' }}
+                >
+                    <a 
+                        href="/boards/community" 
+                        className="text-[18px] font-medium transition-colors whitespace-nowrap"
+                        style={{ color: 'var(--text-gray)' }}
+                        onMouseEnter={(e) => e.currentTarget.style.color = 'var(--primary-blue)'}
+                        onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-gray)'}
+                    >
+                        Community
+                    </a>
+                    <a 
+                        href="/explore" 
+                        className="text-[18px] font-medium transition-colors whitespace-nowrap"
+                        style={{ color: 'var(--text-gray)' }}
+                        onMouseEnter={(e) => e.currentTarget.style.color = 'var(--primary-blue)'}
+                        onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-gray)'}
+                    >
+                        Explore
+                    </a>
+                    <a 
+                        href="/about" 
+                        className="text-[18px] font-medium transition-colors whitespace-nowrap"
+                        style={{ color: 'var(--text-gray)' }}
+                        onMouseEnter={(e) => e.currentTarget.style.color = 'var(--primary-blue)'}
+                        onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-gray)'}
+                    >
+                        About Us
+                    </a>
                 </div>
-            </header>
+
+                {/* Login/User Area - 3 columns */}
+                <div 
+                    className="flex items-center justify-end gap-4"
+                    style={{ gridColumn: 'span 3' }}
+                >
+                    {isAuthenticated ? (
+                        <>
+                            {canSubmitAPI(user) && (
+                                <button
+                                    onClick={() => setIsAPIRegistrationModalOpen(true)}
+                                    className="text-[16px] font-medium transition-colors"
+                                    style={{ color: 'var(--text-gray)' }}
+                                    onMouseEnter={(e) => e.currentTarget.style.color = 'var(--primary-blue)'}
+                                    onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-gray)'}
+                                >
+                                    API 등록
+                                </button>
+                            )}
+                            {isAdmin(user) && (
+                                <a 
+                                    href="/admin" 
+                                    className="text-[16px] font-medium transition-colors"
+                                    style={{ color: 'var(--text-gray)' }}
+                                    onMouseEnter={(e) => e.currentTarget.style.color = 'var(--primary-blue)'}
+                                    onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-gray)'}
+                                >
+                                    관리자
+                                </a>
+                            )}
+                            <span className="text-[16px]" style={{ color: 'var(--text-gray)' }}>
+                                {user?.name}
+                            </span>
+                            <button
+                                onClick={signOut}
+                                className="text-[20px] font-semibold cursor-pointer transition-colors"
+                                style={{ color: 'var(--text-gray)' }}
+                                onMouseEnter={(e) => e.currentTarget.style.color = 'var(--primary-blue)'}
+                                onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-gray)'}
+                            >
+                                로그아웃
+                            </button>
+                        </>
+                    ) : (
+                        <motion.button
+                            onClick={() => setIsLoginModalOpen(true)}
+                            className="text-[20px] font-semibold cursor-pointer"
+                            style={{ color: 'var(--text-gray)' }}
+                            whileHover={{ 
+                                scale: 1.05,
+                                color: 'var(--primary-blue)'
+                            }}
+                            whileTap={{ scale: 0.95 }}
+                            transition={{ duration: 0.2 }}
+                        >
+                            Login
+                        </motion.button>
+                    )}
+                </div>
+            </nav>
 
             <LoginModal
                 isOpen={isLoginModalOpen}
@@ -110,12 +169,6 @@ export default function Header() {
             <APIRegistrationModal
                 isOpen={isAPIRegistrationModalOpen}
                 onClose={() => setIsAPIRegistrationModalOpen(false)}
-            />
-
-            <FeedbackModal
-                isOpen={isFeedbackModalOpen}
-                onClose={() => setIsFeedbackModalOpen(false)}
-                userId={user?.id}
             />
         </>
     );
