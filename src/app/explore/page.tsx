@@ -161,7 +161,8 @@ function ExploreContent() {
 
     // Company filter
     if (companyFilter.length > 0) {
-      result = result.filter(api => companyFilter.includes(api.company));
+      // Ignore entries without company to satisfy type expectations and avoid false matches
+      result = result.filter(api => api.company && companyFilter.includes(api.company));
     }
 
     // Sort
