@@ -64,13 +64,15 @@ export default function CategoryCarousel() {
   };
 
   return (
-    <div className="relative max-w-3xl mx-auto mt-0 px-12">
+    <div className="relative max-w-3xl mx-auto mt-0 px-12 select-none" style={{ userSelect: 'none', WebkitUserSelect: 'none' }}>
       <button
         onClick={() => scroll('left')}
-        className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white rounded-full shadow-md hover:bg-gray-50 hover:scale-110 transition-all flex items-center justify-center"
+        className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white rounded-full shadow-md hover:bg-gray-50 hover:scale-110 transition-all flex items-center justify-center select-none"
         style={{
           border: '0.5px solid var(--primary-blue)',
-          boxShadow: 'var(--shadow-blue)'
+          boxShadow: 'var(--shadow-blue)',
+          userSelect: 'none',
+          WebkitUserSelect: 'none'
         }}
         aria-label="이전 카테고리"
       >
@@ -79,8 +81,12 @@ export default function CategoryCarousel() {
       
       <div 
         ref={scrollRef}
-        className={`flex gap-3 overflow-x-auto scrollbar-hide py-2 ${isDown ? 'cursor-grabbing' : 'cursor-grab'}`}
-        style={{ touchAction: 'pan-y' }}
+        className={`flex gap-3 overflow-x-auto scrollbar-hide py-2 select-none ${isDown ? 'cursor-grabbing' : 'cursor-grab'}`}
+        style={{ 
+          touchAction: 'pan-y',
+          userSelect: 'none',
+          WebkitUserSelect: 'none'
+        }}
         onMouseDown={onMouseDown}
         onMouseMove={onMouseMove}
         onMouseLeave={() => setIsDown(false)}
@@ -92,11 +98,13 @@ export default function CategoryCarousel() {
           <button
             key={category}
             onClick={() => router.push(`/explore?category=${encodeURIComponent(category)}`)}
-            className="px-5 py-2 bg-white rounded-full transition-all whitespace-nowrap text-base font-medium"
+            className="px-5 py-2 bg-white rounded-full transition-all whitespace-nowrap text-base font-medium select-none"
             style={{
               border: '0.5px solid var(--primary-blue)',
               boxShadow: 'var(--shadow-blue)',
-              color: 'var(--primary-blue)'
+              color: 'var(--primary-blue)',
+              userSelect: 'none',
+              WebkitUserSelect: 'none'
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.background = 'var(--primary-blue)';

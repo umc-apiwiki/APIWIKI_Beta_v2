@@ -117,8 +117,14 @@ export default function HomePage() {
         }}
       >
         <motion.h1 
-          className="text-[80px] font-bold m-0"
-          style={{ color: 'var(--text-dark)' }}
+          className="text-[80px] font-bold m-0 select-none"
+          style={{ 
+            color: 'var(--text-dark)',
+            userSelect: 'none',
+            WebkitUserSelect: 'none',
+            MozUserSelect: 'none',
+            msUserSelect: 'none'
+          }}
           initial={{ opacity: 0, y: -20 }}
           animate={{ 
             opacity: 1, 
@@ -129,10 +135,14 @@ export default function HomePage() {
           API Wiki
         </motion.h1>
         <motion.p 
-          className="text-[22px] mt-[10px] mb-[50px]"
+          className="text-[22px] mt-[10px] mb-[50px] select-none"
           style={{ 
             color: 'rgba(0, 0, 0, 0.6)',
-            pointerEvents: searchFocused ? 'none' : 'auto'
+            pointerEvents: searchFocused ? 'none' : 'auto',
+            userSelect: 'none',
+            WebkitUserSelect: 'none',
+            MozUserSelect: 'none',
+            msUserSelect: 'none'
           }}
           initial={{ opacity: 0 }}
           animate={{

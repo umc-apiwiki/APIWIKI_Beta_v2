@@ -1,7 +1,7 @@
 // src/components/LoginModal.tsx
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
@@ -16,6 +16,17 @@ export default function LoginModal({ isOpen, onClose, onSwitchToSignup }: LoginM
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
     const [showBetaMessage, setShowBetaMessage] = useState(false);
+
+    useEffect(() => {
+        if (isOpen) {
+            document.body.classList.add('modal-open');
+        } else {
+            document.body.classList.remove('modal-open');
+        }
+        return () => {
+            document.body.classList.remove('modal-open');
+        };
+    }, [isOpen]);
 
     if (!isOpen) return null;
 
