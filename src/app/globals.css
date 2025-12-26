@@ -9,6 +9,7 @@
 :root {
   /* 와이어프레임 디자인 시스템 */
   --primary-blue: #2196F3;
+  --primary-blue-rgb: 33, 150, 243;
   --bg-light: #F9FBFE;
   --text-dark: rgba(0, 0, 0, 0.70);
   --text-gray: #565656;
