@@ -74,16 +74,9 @@ export default function AboutPage() {
             <motion.h2 
               className="text-[45px] font-bold mb-6" 
               style={{ color: 'var(--primary-blue)' }}
-              animate={{ 
-                background: [
-                  'linear-gradient(to right, #2196F3 0%, #2196F3 100%)',
-                  'linear-gradient(to right, #2196F3 0%, #64B5F6 50%, #2196F3 100%)',
-                  'linear-gradient(to right, #2196F3 0%, #2196F3 100%)'
-                ],
-                backgroundClip: 'text',
-                WebkitBackgroundClip: 'text'
-              }}
-              transition={{ duration: 3, repeat: Infinity }}
+              initial={{ opacity: 0.8, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 2, repeat: Infinity, repeatType: 'reverse' }}
             >
               우리의 미션
             </motion.h2>
@@ -341,14 +334,12 @@ export default function AboutPage() {
                   className="w-14 h-14 flex items-center justify-center" 
                   style={{ backgroundColor: 'rgba(33, 150, 243, 0.1)', borderRadius: '12px' }}
                   whileHover={{ rotate: 360, scale: 1.2 }}
-                  transition={{ duration: 0.6 }}
                   animate={{
                     rotate: [0, 5, -5, 0],
                   }}
                   transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    ease: 'easeInOut'
+                    rotate: { duration: 2, repeat: Infinity, ease: 'easeInOut' },
+                    default: { duration: 0.6 }
                   }}
                 >
                   <svg className="w-7 h-7" style={{ color: 'var(--primary-blue)' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -423,11 +414,12 @@ export default function AboutPage() {
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    transition={{ duration: 0.6, delay: stat.delay + 0.2 }}
                     animate={{
                       scale: [1, 1.1, 1]
                     }}
                     transition={{
+                      opacity: { duration: 0.6, delay: stat.delay + 0.2 },
+                      y: { duration: 0.6, delay: stat.delay + 0.2 },
                       scale: {
                         duration: 2,
                         repeat: Infinity,
