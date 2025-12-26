@@ -4,31 +4,85 @@
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import { motion, AnimatePresence } from 'motion/react';
 
 interface SearchBarProps {
   initialQuery?: string;
   placeholder?: string;
   onSearch?: (query: string) => void;
   showDropdown?: boolean;
-  recentSearches?: string[];
-  trendingSearches?: string[];
   onFocusChange?: (isFocused: boolean) => void;
 }
+
+const RECENT_SEARCHES_KEY = 'recent_searches';
+const MAX_RECENT_SEARCHES = 5;
 
 export default function SearchBar({ 
   initialQuery = '',
   placeholder = "궁금한 API를 검색해보세요",
   onSearch,
   showDropdown = true,
-  recentSearches = ['AWS API', 'Google Maps'],
-  trendingSearches = ['AWS API', 'OpenAI', 'Stripe', 'Twilio', 'SendGrid', 'Firebase'],
   onFocusChange
 }: SearchBarProps) {
   const [query, setQuery] = useState(initialQuery);
   const [isFocused, setIsFocused] = useState(false);
   const [showResults, setShowResults] = useState(false);
+  const [recentSearches, setRecentSearches] = useState<string[]>([]);
+  const [trendingAPIs, setTrendingAPIs] = useState<string[]>([]);
   const router = useRouter();
   const wrapperRef = useRef<HTMLDivElement>(null);
+
+  // Load recent searches from localStorage
+  useEffect(() => {
+    const stored = localStorage.getItem(RECENT_SEARCHES_KEY);
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored);
+        setRecentSearches(parsed);
+      } catch (error) {
+        console.error('Failed to parse recent searches:', error);
+      }
+    }
+  }, []);
+
+  // Fetch trending APIs
+  useEffect(() => {
+    const fetchTrending = async () => {
+      try {
+        const response = await fetch('/api/apis?sort=popular&limit=6');
+        const result = await response.json();
+        if (result.success && result.data) {
+          const apiNames = result.data.map((api: any) => api.name);
+          setTrendingAPIs(apiNames);
+        }
+      } catch (error) {
+        console.error('Failed to fetch trending APIs:', error);
+        // Fallback to default trending
+        setTrendingAPIs(['AWS API', 'OpenAI', 'Stripe', 'Twilio', 'SendGrid', 'Firebase']);
+      }
+    };
+
+    if (showDropdown) {
+      fetchTrending();
+    }
+  }, [showDropdown]);
+
+  // Save search to recent searches
+  const saveRecentSearch = (searchTerm: string) => {
+    if (!searchTerm.trim()) return;
+
+    const updated = [searchTerm, ...recentSearches.filter(s => s !== searchTerm)]
+      .slice(0, MAX_RECENT_SEARCHES);
+    
+    setRecentSearches(updated);
+    localStorage.setItem(RECENT_SEARCHES_KEY, JSON.stringify(updated));
+  };
+
+  // Clear recent searches
+  const clearRecentSearches = () => {
+    setRecentSearches([]);
+    localStorage.removeItem(RECENT_SEARCHES_KEY);
+  };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -44,6 +98,10 @@ export default function SearchBar({
   }, [onFocusChange]);
 
   const handleSearch = () => {
+    if (query.trim()) {
+      saveRecentSearch(query.trim());
+    }
+
     if (onSearch) {
       onSearch(query);
     } else {
@@ -75,6 +133,8 @@ export default function SearchBar({
 
   const handleItemClick = (searchTerm: string) => {
     setQuery(searchTerm);
+    saveRecentSearch(searchTerm);
+    
     if (onSearch) {
       onSearch(searchTerm);
     } else {
@@ -116,63 +176,108 @@ export default function SearchBar({
       </div>
 
       {showResults && showDropdown && (
-        <div 
-          className="mt-[10px] relative z-[120]"
-          style={{
-            background: 'transparent',
-            borderRadius: 0,
-            padding: '20px 0 0 0',
-            textAlign: 'left'
-          }}
-        >
-          {recentSearches && recentSearches.length > 0 && (
-            <div className="px-[40px] py-[10px]">
-              <div 
-                className="text-[16px] font-semibold mb-[15px]" 
-                style={{ color: '#1769AA' }}
-              >
-                Recent
-              </div>
-              {recentSearches.map((item, idx) => (
-                <div
-                  key={`recent-${idx}`}
-                  className="flex items-center py-[10px] text-[18px] cursor-pointer transition-colors gap-[8px]"
-                  style={{ color: '#071E31' }}
-                  onClick={() => handleItemClick(item)}
-                  onMouseEnter={(e) => e.currentTarget.style.color = 'var(--primary-blue)'}
-                  onMouseLeave={(e) => e.currentTarget.style.color = '#071E31'}
-                >
-                  <Image src="/mdi_recent.svg" alt="Recent" width={20} height={20} />
-                  {item}
+        <AnimatePresence>
+          <motion.div 
+            className="absolute top-full left-0 right-0 mt-[10px] bg-white rounded-[20px] overflow-hidden z-[120]"
+            style={{
+              boxShadow: 'var(--shadow-blue)'
+            }}
+            initial={{ opacity: 0, y: -10, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -10, scale: 0.95 }}
+            transition={{ duration: 0.2 }}
+          >
+            {recentSearches && recentSearches.length > 0 && (
+              <div className="px-[30px] py-[20px] border-b" style={{ borderColor: 'rgba(0, 0, 0, 0.05)' }}>
+                <div className="flex items-center justify-between mb-[15px]">
+                  <div 
+                    className="text-[16px] font-semibold flex items-center gap-2" 
+                    style={{ color: 'var(--primary-blue)' }}
+                  >
+                    <Image src="/mdi_recent.svg" alt="Recent" width={20} height={20} />
+                    Recent
+                  </div>
+                  <motion.button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      clearRecentSearches();
+                    }}
+                    className="text-[13px] px-3 py-1 rounded-lg transition-colors"
+                    style={{ color: 'var(--text-gray)' }}
+                    whileHover={{ 
+                      backgroundColor: 'rgba(0, 0, 0, 0.05)',
+                      color: 'var(--text-dark)'
+                    }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    모두 지우기
+                  </motion.button>
                 </div>
-              ))}
-            </div>
-          )}
-
-          {trendingSearches && trendingSearches.length > 0 && (
-            <div className="px-[40px] py-[10px]">
-              <div 
-                className="text-[16px] font-semibold mb-[15px]" 
-                style={{ color: '#1769AA' }}
-              >
-                Trending
+                {recentSearches.map((item, idx) => (
+                  <motion.div
+                    key={`recent-${idx}`}
+                    className="flex items-center py-[10px] text-[16px] cursor-pointer transition-colors gap-[10px] rounded-lg px-3 -mx-3"
+                    style={{ color: 'var(--text-dark)' }}
+                    onClick={() => handleItemClick(item)}
+                    whileHover={{ 
+                      backgroundColor: 'rgba(var(--primary-blue-rgb), 0.05)',
+                      color: 'var(--primary-blue)',
+                      x: 5
+                    }}
+                    whileTap={{ scale: 0.98 }}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: idx * 0.05 }}
+                  >
+                    <Image src="/mingcute_search-line.svg" alt="Search" width={18} height={18} />
+                    {item}
+                  </motion.div>
+                ))}
               </div>
-              {trendingSearches.map((item, idx) => (
-                <div
-                  key={`trending-${idx}`}
-                  className="flex items-center py-[10px] text-[18px] cursor-pointer transition-colors gap-[8px]"
-                  style={{ color: '#071E31' }}
-                  onClick={() => handleItemClick(item)}
-                  onMouseEnter={(e) => e.currentTarget.style.color = 'var(--primary-blue)'}
-                  onMouseLeave={(e) => e.currentTarget.style.color = '#071E31'}
+            )}
+
+            {trendingAPIs && trendingAPIs.length > 0 && (
+              <div className="px-[30px] py-[20px]">
+                <div 
+                  className="text-[16px] font-semibold mb-[15px] flex items-center gap-2" 
+                  style={{ color: 'var(--primary-blue)' }}
                 >
                   <Image src="/ph_trend-up-bold.svg" alt="Trending" width={20} height={20} />
-                  {item}
+                  Trending
                 </div>
-              ))}
-            </div>
-          )}
-        </div>
+                {trendingAPIs.map((item, idx) => (
+                  <motion.div
+                    key={`trending-${idx}`}
+                    className="flex items-center py-[10px] text-[16px] cursor-pointer transition-colors gap-[10px] rounded-lg px-3 -mx-3"
+                    style={{ color: 'var(--text-dark)' }}
+                    onClick={() => handleItemClick(item)}
+                    whileHover={{ 
+                      backgroundColor: 'rgba(var(--primary-blue-rgb), 0.05)',
+                      color: 'var(--primary-blue)',
+                      x: 5
+                    }}
+                    whileTap={{ scale: 0.98 }}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: idx * 0.05 }}
+                  >
+                    <Image src="/ph_trend-up-bold.svg" alt="Trending" width={18} height={18} />
+                    {item}
+                  </motion.div>
+                ))}
+              </div>
+            )}
+
+            {(!recentSearches || recentSearches.length === 0) && (!trendingAPIs || trendingAPIs.length === 0) && (
+              <div className="px-[30px] py-[40px] text-center">
+                <div className="text-[48px] mb-3 opacity-20">🔍</div>
+                <p className="text-[14px]" style={{ color: 'var(--text-gray)' }}>
+                  검색 기록이 없습니다
+                </p>
+              </div>
+            )}
+          </motion.div>
+        </AnimatePresence>
       )}
     </div>
   );
