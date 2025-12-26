@@ -168,7 +168,8 @@ function ExploreContent() {
     // Sort
     switch (sortBy) {
       case '인기순':
-        result.sort((a, b) => b.rating - a.rating);
+        // Treat missing ratings as 0 to keep comparator safe
+        result.sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
         break;
       case '최신순':
         break;
