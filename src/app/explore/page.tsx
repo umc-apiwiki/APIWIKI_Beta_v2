@@ -104,7 +104,7 @@ function ExploreContent() {
       result = result.filter(api =>
         api.name.toLowerCase().includes(query) ||
         api.description.toLowerCase().includes(query) ||
-        api.company.toLowerCase().includes(query) ||
+        (api.company && api.company.toLowerCase().includes(query)) ||
         api.categories.some(cat => cat.toLowerCase().includes(query)) ||
         (api.tags && api.tags.some(tag => tag.toLowerCase().includes(query))) ||
         (api.features && api.features.some(f => f.toLowerCase().includes(query)))
