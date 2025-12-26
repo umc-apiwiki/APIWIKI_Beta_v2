@@ -174,12 +174,15 @@ function ExploreContent() {
       case '최신순':
         break;
       case '후기lectedCategory, se 많은 순':
-        result.sort((a, b) => parseFloat(b.users) - parseFloat(a.users));
+        // Fallback to 0 when users count is missing to keep comparator safe
+        result.sort((a, b) => parseFloat(b.users || '0') - parseFloat(a.users || '0'));
         break;
       case '비용 낮은 순':
         result.sort((a, b) => {
           const order = { free: 0, mixed: 1, paid: 2 };
-          return order[a.price] - order[b.price];
+          const aPrice = a.price ?? 'paid';
+          const bPrice = b.price ?? 'paid';
+          return order[aPrice] - order[bPrice];
         });
         break;
     }
