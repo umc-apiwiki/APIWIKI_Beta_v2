@@ -1,16 +1,20 @@
-```typescript
 // src/app/explore/page.tsx
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useState, useEffect, useRef, useCallback, Suspense } from 'react';
+import { motion } from 'motion/react';
+import { useSearchParams, useRouter } from 'next/navigation';
+import Link from 'next/link';
 import APICard from '@/components/APICard';
 import Header from '@/components/Header';
+import SearchBar from '@/components/SearchBar';
+import CompareModal from '@/components/CompareModal';
 import { searchAPIs, getAllCategories, type SearchFilters } from '@/lib/apiService';
 import type { API } from '@/types';
 
-export default function ExplorePage() {
+function ExploreContent() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const [apis, setApis] = useState<API[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
@@ -37,9 +41,28 @@ export default function ExplorePage() {
   const observerTarget = useRef(null);
   const ITEMS_PER_PAGE = 9;
 
+  // API 데이터 로드
+  useEffect(() => {
+    const fetchAPIs = async () => {
+      try {
+        const response = await fetch('/api/apis?status=approved');
+        if (response.ok) {
+          const data = await response.json();
+          setApis(data);
+        }
+      } catch (error) {
+        console.error('Error fetching APIs:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAPIs();
+  }, []);
+
   // 필터 및 정렬 적용
   useEffect(() => {
-    let result = [...mockAPIs];
+    let result = [...apis];
 
     // Search filter
     if (searchQuery) {
@@ -129,7 +152,7 @@ export default function ExplorePage() {
     setDisplayedAPIs(result.slice(0, ITEMS_PER_PAGE));
     setPage(1);
     setHasMore(result.length > ITEMS_PER_PAGE);
-  }, [searchQuery, sortBy, priceFilter, ratingFilter, countryFilter, authMethodFilter, docLanguageFilter, companyFilter]);
+  }, [apis, searchQuery, sortBy, priceFilter, ratingFilter, countryFilter, authMethodFilter, docLanguageFilter, companyFilter]);
 
   // 무한 스크롤 로드
   const loadMore = useCallback(() => {
@@ -197,7 +220,7 @@ export default function ExplorePage() {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      router.push(`/ explore ? q = ${ encodeURIComponent(searchQuery) } `);
+      router.push(`/explore?q=${encodeURIComponent(searchQuery)}`);
     }
   };
 
@@ -248,72 +271,46 @@ export default function ExplorePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <motion.div 
+      className="min-h-screen" 
+      style={{ backgroundColor: 'var(--bg-light)' }}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      transition={{ duration: 0.5, ease: "easeInOut" }}
+    >
       {/* Header */}
-      <header className="bg-white border-b border-gray-200 py-3 px-6 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto">
-          {/* 첫 번째 줄: 로고 + 검색바 + 메뉴 */}
-          <div className="flex items-center justify-between gap-6">
-            <div className="flex items-center gap-4">
-              <Link
-                href="/"
-                className="text-xl font-bold whitespace-nowrap"
-                style={{
-                  fontFamily: 'Orbitron, sans-serif',
-                  background: 'linear-gradient(90deg, #81FFEF, #F067B4)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent'
-                }}
-              >
-                API WIKI
-              </Link>
-              <Link href="/about" className="text-sm text-gray-700 hover:text-gray-900 whitespace-nowrap">About Us</Link>
-            </div>
+      <Header />
 
-            <form onSubmit={handleSearch} className="flex-1 max-w-2xl">
-              <div className="flex items-center border border-gray-300 rounded-full px-4 py-2 hover:shadow-md transition-shadow bg-white">
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="API 이름, 카테고리, 기능으로 빠른 검색"
-                  className="flex-1 outline-none text-sm"
-                />
-                <button type="submit" className="ml-2 text-gray-500 hover:text-gray-700">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                  </svg>
-                </button>
-              </div>
-            </form>
+      {/* 배경 그라데이션 효과 */}
+      <div className="bg-glow" />
 
-            <nav className="flex items-center gap-6">
-              {/* <Link href="/about" className="text-sm text-gray-700 hover:text-gray-900 whitespace-nowrap">
-                About Us
-              </Link> */}
-              <Link href="#" className="text-sm text-gray-700 hover:text-gray-900 whitespace-nowrap">
-                커뮤니티
-              </Link>
-              <Link href="#" className="px-5 py-1.5 bg-teal-500 text-white rounded-lg hover:bg-teal-600 transition-colors text-sm whitespace-nowrap">
-                로그인
-              </Link>
-            </nav>
+      <div className="grid-container py-6" style={{ paddingTop: '100px' }}>
+        {/* 검색바 */}
+        <div className="mb-12 col-12 flex justify-center">
+          <div style={{ width: '732px', maxWidth: '90vw' }}>
+            <SearchBar 
+              initialQuery={searchQuery}
+              onSearch={(query) => {
+                setSearchQuery(query);
+                if (query.trim()) {
+                  router.push(`/explore?q=${encodeURIComponent(query)}`);
+                }
+              }}
+              showDropdown={false}
+            />
           </div>
         </div>
-      </header>
 
-      <div className="max-w-7xl mx-auto px-6 py-6">
-        <div className="flex gap-6">
-          {/* 왼쪽 필터 영역 */}
-          <aside className="w-64 flex-shrink-0">
-            {/* Make the filter container sticky and limit its internal height with its own scroll */}
-            <div className="bg-white rounded-lg border border-gray-200 p-4 sticky top-24">
+        {/* 왼쪽 필터 영역 */}
+        <aside className="col-3">
+          <div className="bg-white rounded-[15px] p-5 sticky top-24 card-shadow" style={{ border: '0.5px solid var(--primary-blue)' }}>
               <div className="overflow-auto max-h-[70vh] pr-2">
-              <h2 className="font-bold text-lg mb-4">필터 옵션</h2>
+              <h2 className="font-bold text-[18px] mb-4" style={{ color: 'var(--text-dark)' }}>필터 옵션</h2>
 
               {/* 가격대 필터 */}
               <div className="mb-6">
-                <h3 className="font-semibold text-sm mb-3 text-gray-700">요청당 가격</h3>
+                <h3 className="font-semibold text-[14px] mb-3" style={{ color: 'var(--text-gray)' }}>요청당 가격</h3>
                 <div className="space-y-2">
                   <label className="flex items-center gap-2 cursor-pointer">
                     <input
@@ -323,8 +320,8 @@ export default function ExplorePage() {
                       onChange={() => togglePriceFilter('free')}
                     />
                     <span className="text-sm flex items-center gap-2">
-                      <span className="px-2 py-0.5 bg-teal-100 text-teal-800 rounded-full text-xs">무료</span>
-                      <span className="text-sm">무료</span>
+                      <span className="px-2 py-0.5 rounded-full text-xs" style={{ backgroundColor: 'rgba(33, 150, 243, 0.1)', color: 'var(--primary-blue)' }}>무료</span>
+                      <span className="text-sm" style={{ color: 'var(--text-dark)' }}>무료</span>
                     </span>
                   </label>
                   <label className="flex items-center gap-2 cursor-pointer">
@@ -356,7 +353,7 @@ export default function ExplorePage() {
 
               {/* 평점 필터 */}
               <div className="mb-6">
-                <h3 className="font-semibold text-sm mb-3 text-gray-700">평점</h3>
+                <h3 className="font-semibold text-[14px] mb-3" style={{ color: 'var(--text-gray)' }}>평점</h3>
                 <div className="space-y-2">
                   <label className="flex items-center gap-2 cursor-pointer">
                     <input
@@ -366,7 +363,7 @@ export default function ExplorePage() {
                       checked={ratingFilter === 0}
                       onChange={() => setRatingFilter(0)}
                     />
-                    <span className="text-sm">전체</span>
+                    <span className="text-sm" style={{ color: 'var(--text-dark)' }}>전체</span>
                   </label>
                   <label className="flex items-center gap-2 cursor-pointer">
                     <input
@@ -376,7 +373,7 @@ export default function ExplorePage() {
                       checked={ratingFilter === 2}
                       onChange={() => setRatingFilter(2)}
                     />
-                    <span className="text-sm">⭐ 2점 이상</span>
+                    <span className="text-sm" style={{ color: 'var(--text-dark)' }}>⭐ 2점 이상</span>
                   </label>
                   <label className="flex items-center gap-2 cursor-pointer">
                     <input
@@ -386,7 +383,7 @@ export default function ExplorePage() {
                       checked={ratingFilter === 3}
                       onChange={() => setRatingFilter(3)}
                     />
-                    <span className="text-sm">⭐ 3점 이상</span>
+                    <span className="text-sm" style={{ color: 'var(--text-dark)' }}>⭐ 3점 이상</span>
                   </label>
                   <label className="flex items-center gap-2 cursor-pointer">
                     <input
@@ -396,14 +393,14 @@ export default function ExplorePage() {
                       checked={ratingFilter === 4}
                       onChange={() => setRatingFilter(4)}
                     />
-                    <span className="text-sm">⭐ 4점 이상</span>
+                    <span className="text-sm" style={{ color: 'var(--text-dark)' }}>⭐ 4점 이상</span>
                   </label>
                 </div>
               </div>
 
               {/* 제공국가 필터 */}
               <div className="mb-6">
-                <h3 className="font-semibold text-sm mb-3 text-gray-700">제공 국가</h3>
+                <h3 className="font-semibold text-[14px] mb-3" style={{ color: 'var(--text-gray)' }}>제공 국가</h3>
                 <div className="space-y-2">
                   <label className="flex items-center gap-2 cursor-pointer">
                     <input
@@ -412,7 +409,7 @@ export default function ExplorePage() {
                       checked={countryFilter.includes('한국')}
                       onChange={() => toggleCountryFilter('한국')}
                     />
-                    <span className="text-sm">한국</span>
+                    <span className="text-sm" style={{ color: 'var(--text-dark)' }}>한국</span>
                   </label>
                   <label className="flex items-center gap-2 cursor-pointer">
                     <input
@@ -421,7 +418,7 @@ export default function ExplorePage() {
                       checked={countryFilter.includes('미국')}
                       onChange={() => toggleCountryFilter('미국')}
                     />
-                    <span className="text-sm">미국</span>
+                    <span className="text-sm" style={{ color: 'var(--text-dark)' }}>미국</span>
                   </label>
                   <label className="flex items-center gap-2 cursor-pointer">
                     <input
@@ -430,7 +427,7 @@ export default function ExplorePage() {
                       checked={countryFilter.includes('일본')}
                       onChange={() => toggleCountryFilter('일본')}
                     />
-                    <span className="text-sm">일본</span>
+                    <span className="text-sm" style={{ color: 'var(--text-dark)' }}>일본</span>
                   </label>
                   <label className="flex items-center gap-2 cursor-pointer">
                     <input
@@ -439,14 +436,14 @@ export default function ExplorePage() {
                       checked={countryFilter.includes('중국')}
                       onChange={() => toggleCountryFilter('중국')}
                     />
-                    <span className="text-sm">중국</span>
+                    <span className="text-sm" style={{ color: 'var(--text-dark)' }}>중국</span>
                   </label>
                 </div>
               </div>
 
               {/* API 인증방식 필터 */}
               <div className="mb-6">
-                <h3 className="font-semibold text-sm mb-3 text-gray-700">API 인증 방식</h3>
+                <h3 className="font-semibold text-[14px] mb-3" style={{ color: 'var(--text-gray)' }}>API 인증 방식</h3>
                 <div className="space-y-2">
                   <label className="flex items-center gap-2 cursor-pointer">
                     <input
@@ -455,7 +452,7 @@ export default function ExplorePage() {
                       checked={authMethodFilter.includes('OAuth2')}
                       onChange={() => toggleAuthMethodFilter('OAuth2')}
                     />
-                    <span className="text-sm text-xs">OAuth 2.0</span>
+                    <span className="text-xs">OAuth 2.0</span>
                   </label>
                   <label className="flex items-center gap-2 cursor-pointer">
                     <input
@@ -464,7 +461,7 @@ export default function ExplorePage() {
                       checked={authMethodFilter.includes('APIKey')}
                       onChange={() => toggleAuthMethodFilter('APIKey')}
                     />
-                    <span className="text-sm text-xs">API Key 인증</span>
+                    <span className="text-xs">API Key 인증</span>
                   </label>
                   <label className="flex items-center gap-2 cursor-pointer">
                     <input
@@ -473,7 +470,7 @@ export default function ExplorePage() {
                       checked={authMethodFilter.includes('JWT')}
                       onChange={() => toggleAuthMethodFilter('JWT')}
                     />
-                    <span className="text-sm text-xs">JWT</span>
+                    <span className="text-xs">JWT</span>
                   </label>
                   <label className="flex items-center gap-2 cursor-pointer">
                     <input
@@ -482,7 +479,7 @@ export default function ExplorePage() {
                       checked={authMethodFilter.includes('Basic')}
                       onChange={() => toggleAuthMethodFilter('Basic')}
                     />
-                    <span className="text-sm text-xs">기본 인증</span>
+                    <span className="text-xs">기본 인증</span>
                   </label>
                 </div>
               </div>
@@ -532,7 +529,7 @@ export default function ExplorePage() {
 
               {/* 제작회사 필터 */}
               <div className="mb-4">
-                <h3 className="font-semibold text-sm mb-3 text-gray-700">제작 회사</h3>
+                <h3 className="font-semibold text-[14px] mb-3" style={{ color: 'var(--text-gray)' }}>제작 회사</h3>
                 <div className="space-y-2">
                   <label className="flex items-center gap-2 cursor-pointer">
                     <input
@@ -541,7 +538,7 @@ export default function ExplorePage() {
                       checked={companyFilter.includes('Google')}
                       onChange={() => toggleCompanyFilter('Google')}
                     />
-                    <span className="text-sm">구글</span>
+                    <span className="text-sm" style={{ color: 'var(--text-dark)' }}>구글</span>
                   </label>
                   <label className="flex items-center gap-2 cursor-pointer">
                     <input
@@ -550,7 +547,7 @@ export default function ExplorePage() {
                       checked={companyFilter.includes('Kakao')}
                       onChange={() => toggleCompanyFilter('Kakao')}
                     />
-                    <span className="text-sm">카카오</span>
+                    <span className="text-sm" style={{ color: 'var(--text-dark)' }}>카카오</span>
                   </label>
                   <label className="flex items-center gap-2 cursor-pointer">
                     <input
@@ -559,7 +556,7 @@ export default function ExplorePage() {
                       checked={companyFilter.includes('Naver')}
                       onChange={() => toggleCompanyFilter('Naver')}
                     />
-                    <span className="text-sm">네이버</span>
+                    <span className="text-sm" style={{ color: 'var(--text-dark)' }}>네이버</span>
                   </label>
                   <label className="flex items-center gap-2 cursor-pointer">
                     <input
@@ -568,7 +565,7 @@ export default function ExplorePage() {
                       checked={companyFilter.includes('Samsung')}
                       onChange={() => toggleCompanyFilter('Samsung')}
                     />
-                    <span className="text-sm">삼성</span>
+                    <span className="text-sm" style={{ color: 'var(--text-dark)' }}>삼성</span>
                   </label>
                 </div>
               </div>
@@ -577,17 +574,21 @@ export default function ExplorePage() {
           </aside>
 
           {/* 오른쪽 콘텐츠 영역 */}
-          <main className="flex-1">
+          <main className="col-9">
             {/* 정렬 옵션 및 결과 수 */}
-            <div className="flex items-center justify-between mb-4">
-              <p className="text-sm text-gray-600">
+            <div className="flex items-center justify-between mb-6">
+              <p className="text-[14px]" style={{ color: 'var(--text-gray)' }}>
                 {searchQuery && `"${searchQuery}" 에 대한`}검색결과 약 {filteredAPIs.length.toLocaleString()}개
               </p>
               <div className="flex items-center gap-4">
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
-                  className="px-4 py-2 text-sm border border-gray-300 rounded-lg bg-white cursor-pointer hover:border-gray-400 transition-colors"
+                  className="px-4 py-2 text-sm rounded-[20px] bg-white cursor-pointer transition-all card-shadow"
+                  style={{ 
+                    border: '0.5px solid var(--primary-blue)',
+                    color: 'var(--text-dark)'
+                  }}
                 >
                   <option value="인기순">인기순</option>
                   <option value="최신순">최신순</option>
@@ -599,20 +600,25 @@ export default function ExplorePage() {
 
             {/* 비교하기 컨트롤 */}
             {compareList.length > 0 && (
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4 flex items-center justify-between">
-                <span className="text-sm text-blue-900">
+              <div className="rounded-[15px] p-4 mb-6 flex items-center justify-between card-shadow" style={{ 
+                backgroundColor: 'rgba(33, 150, 243, 0.1)',
+                border: '0.5px solid var(--primary-blue)'
+              }}>
+                <span className="text-sm" style={{ color: 'var(--primary-blue)' }}>
                   {compareList.length}개 선택됨 (최대 4개)
                 </span>
                 <div className="flex gap-2">
                   <button
                     onClick={() => setCompareList([])}
-                    className="px-4 py-2 text-sm bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                    className="px-4 py-2 text-sm bg-white rounded-[20px] transition-all card-shadow"
+                    style={{ border: '0.5px solid var(--primary-blue)', color: 'var(--text-dark)' }}
                   >
                     초기화
                   </button>
                   <button
                     onClick={() => setIsCompareOpen(true)}
-                    className="px-4 py-2 text-sm bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                    className="px-4 py-2 text-sm text-white rounded-[20px] transition-all"
+                    style={{ backgroundColor: 'var(--primary-blue)' }}
                     disabled={compareList.length < 2}
                   >
                     선택 비교하기
@@ -622,11 +628,11 @@ export default function ExplorePage() {
             )}
 
             {/* API 카드 그리드 */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-12 grid-gap-24">
               {displayedAPIs.map((api) => (
                 <div
                   key={api.id}
-                  className="bg-white rounded-lg border border-gray-200 p-4 hover:shadow-lg transition-shadow relative flex flex-col h-full"
+                  className="col-3 bg-white rounded-lg border border-gray-200 p-4 hover:shadow-lg transition-shadow relative flex flex-col h-full"
                 >
                   {/* 즐겨찾기 버튼 */}
                   <button
@@ -640,7 +646,7 @@ export default function ExplorePage() {
                   </button>
 
                   {/* API 카드 내용 */}
-                  <Link href={`/ api / ${ api.id } `} className="block flex-1">
+                  <Link href={`/api/${api.id}`} className="block flex-1">
                     <div className="text-4xl mb-3">{api.logo}</div>
                     <h3 className="font-bold text-lg mb-2 pr-8">{api.name}</h3>
                     <p className="text-sm text-gray-600 mb-3 line-clamp-3">
@@ -710,17 +716,15 @@ export default function ExplorePage() {
               </div>
             )}
           </main>
-        </div>
       </div>
+
       {/* Compare Modal */}
-      {/* Dynamically resolve selected APIs */}
-      {/* @ts-ignore */}
       <CompareModal
         isOpen={isCompareOpen}
         onClose={() => setIsCompareOpen(false)}
-        apis={compareList.map(id => getAPIById(id)).filter(Boolean) as any}
+        apis={compareList.map(id => displayedAPIs.find(api => api.id === id)).filter(Boolean) as API[]}
       />
-    </div>
+    </motion.div>
   );
 }
 

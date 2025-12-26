@@ -1,20 +1,30 @@
 /* src/app/globals.css */
 
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Noto+Sans+KR:wght@400;500;700&family=Orbitron:wght@700&display=swap');
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css");
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --primary-color: #4A90E2;
+  /* 와이어프레임 디자인 시스템 */
+  --primary-blue: #2196F3;
+  --bg-light: #F9FBFE;
+  --text-dark: rgba(0, 0, 0, 0.70);
+  --text-gray: #565656;
+  --shadow-blue: 1px 1px 10px 2px rgba(33, 150, 243, 0.25);
+  --grid-margin: 24px;
+  --grid-gutter: 24px;
+  
+  /* 기존 호환성을 위한 변수 유지 */
+  --primary-color: #2196F3;
   --gradient-start: #81FFEF;
   --gradient-end: #F067B4;
-  --background-color: #FFFFFF;
-  --font-color: #2c3e50;
-  --secondary-font-color: #7f8c8d;
-  --border-color: #ecf0f1;
-  --shadow-color: rgba(44, 62, 80, 0.1);
+  --background-color: #F9FBFE;
+  --font-color: rgba(0, 0, 0, 0.70);
+  --secondary-font-color: #565656;
+  --border-color: #2196F3;
+  --shadow-color: rgba(33, 150, 243, 0.25);
 }
 
 * {
@@ -24,9 +34,9 @@
 }
 
 body {
-  font-family: 'Roboto', 'Noto Sans KR', sans-serif;
-  background-color: var(--background-color);
-  color: var(--font-color);
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+  background-color: var(--bg-light);
+  color: var(--text-dark);
   line-height: 1.6;
   overflow-x: hidden;
 }
@@ -34,11 +44,11 @@ body {
 a {
   text-decoration: none;
   color: inherit;
-  transition: color 0.2s ease;
+  transition: color 0.3s ease;
 }
 
 a:hover {
-  color: var(--primary-color);
+  color: var(--primary-blue);
 }
 
 @keyframes fadeInUp {
@@ -95,18 +105,70 @@ a:hover {
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
+  
+  /* 12열 그리드 시스템 */
+  .grid-container {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: var(--grid-gutter);
+    padding: 0 var(--grid-margin);
+    max-width: 1440px;
+    margin: 0 auto;
+  }
+  
+  .col-1 { grid-column: span 1; }
+  .col-2 { grid-column: span 2; }
+  .col-3 { grid-column: span 3; }
+  .col-4 { grid-column: span 4; }
+  .col-5 { grid-column: span 5; }
+  .col-6 { grid-column: span 6; }
+  .col-7 { grid-column: span 7; }
+  .col-8 { grid-column: span 8; }
+  .col-9 { grid-column: span 9; }
+  .col-10 { grid-column: span 10; }
+  .col-11 { grid-column: span 11; }
+  .col-12 { grid-column: span 12; }
+  
+  .grid-gap-24 {
+    gap: var(--grid-gutter);
+  }
+  
+  .margin-24 {
+    padding: 0 var(--grid-margin);
+  }
+}
+
+/* 배경 그라데이션 효과 */
+.bg-glow {
+  position: fixed;
+  width: 500px;
+  height: 500px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 149, 255, 0.2);
+  border-radius: 50%;
+  filter: blur(120px);
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* 카드 스타일 */
+.card-shadow {
+  box-shadow: var(--shadow-blue);
+  border: 0.5px solid var(--primary-blue);
+  transition: all 0.3s ease;
+}
+
+.card-shadow:hover {
+  transform: translateY(-5px);
+  box-shadow: 2px 2px 20px 4px rgba(33, 150, 243, 0.3);
 }
 
 @layer base {
   :root {
     --gradient-start: #81FFEF;
     --gradient-end: #F067B4;
-    --primary-color: #4A90E2;
-    --background-color: #FFFFFF;
-    --font-color: #2c3e50;
-    --secondary-font-color: #7f8c8d;
-    --border-color: #ecf0f1;
-    --shadow-color: rgba(44, 62, 80, 0.1);
   }
 
   body {

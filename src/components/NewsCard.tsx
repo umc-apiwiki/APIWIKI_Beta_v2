@@ -10,11 +10,47 @@ export default function NewsCard({ news }: NewsCardProps) {
   return (
     <a 
       href="#" 
-      className="block flex-shrink-0 w-full h-full bg-gray-50 border border-gray-200 rounded-xl p-6 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col"
+      className="block bg-white rounded-[15px] overflow-hidden transition-all duration-300 cursor-pointer card-shadow hover:-translate-y-[5px]"
+      style={{
+        border: '0.5px solid var(--primary-blue)',
+        boxShadow: 'var(--shadow-blue)'
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.boxShadow = '2px 2px 20px 4px rgba(33, 150, 243, 0.3)';
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.boxShadow = 'var(--shadow-blue)';
+      }}
     >
-      <h4 className="font-semibold text-lg text-gray-900 mb-2">{news.title}</h4>
-      <p className="text-sm text-gray-600 mb-4 line-clamp-3">{news.content}</p>
-      <span className="text-sm text-gray-500 mt-auto">by {news.author}</span>
+      {/* 이미지 영역 */}
+      <div 
+        className="w-full h-[180px] bg-[#e0e0e0]"
+        style={{ objectFit: 'cover' }}
+      />
+
+      {/* 컨텐츠 영역 */}
+      <div className="p-5">
+        <h4 
+          className="text-[16px] font-semibold mb-2 leading-[1.4] line-clamp-2"
+          style={{ color: 'var(--text-dark)' }}
+        >
+          {news.title}
+        </h4>
+        
+        <p 
+          className="text-[14px] mb-3 line-clamp-2"
+          style={{ color: 'var(--text-gray)' }}
+        >
+          {news.content}
+        </p>
+        
+        <div 
+          className="text-[12px]"
+          style={{ color: 'rgba(0, 0, 0, 0.5)' }}
+        >
+          {news.author}
+        </div>
+      </div>
     </a>
   );
 }
