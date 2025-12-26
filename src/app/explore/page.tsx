@@ -60,6 +60,23 @@ function ExploreContent() {
     fetchAPIs();
   }, []);
 
+  // 카테고리 데이터 로드
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch('/api/apis/categories');
+        if (response.ok) {
+          const data = await response.json();
+          setCategories(data);
+        }
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
   // 필터 및 정렬 적용
   useEffect(() => {
     let result = [...apis];

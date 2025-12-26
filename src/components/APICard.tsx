@@ -16,7 +16,8 @@ export default function APICard({ api }: APICardProps) {
   };
 
   // 사용자 수 포맷팅
-  const formatUsers = (users: string) => {
+  const formatUsers = (users?: string) => {
+    if (!users) return 'N/A';
     const num = parseFloat(users.replace(/[^\d.]/g, ''));
     if (users.includes('B')) return `${num}B`;
     if (users.includes('M')) return `${num}M`;
@@ -44,7 +45,7 @@ export default function APICard({ api }: APICardProps) {
         className="w-[60px] h-[60px] rounded-[12px] flex items-center justify-center text-[24px] flex-shrink-0"
         style={{ background: '#f0f0f0' }}
       >
-        {api.logo}
+        {api.logo || '📦'}
       </div>
 
       {/* API 정보 */}
@@ -59,7 +60,9 @@ export default function APICard({ api }: APICardProps) {
           className="text-[14px]"
           style={{ color: 'var(--text-gray)' }}
         >
-          Star {api.rating} • Used by {formatUsers(api.users)} people • {priceLabels[api.price]}
+          {api.rating !== undefined && `Star ${api.rating} • `}
+          {api.users && `Used by ${formatUsers(api.users)} people • `}
+          {api.price && priceLabels[api.price]}
         </p>
       </div>
     </Link>
