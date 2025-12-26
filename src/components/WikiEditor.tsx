@@ -28,7 +28,9 @@ export default function WikiEditor({ apiId }: WikiEditorProps) {
   };
 
   const insertMarkdown = (syntax: string, placeholder: string = '') => {
-    const textarea = document.querySelector('textarea');
+    if (!editing) return; // 편집 모드가 아니면 실행하지 않음
+    
+    const textarea = document.querySelector('textarea[data-wiki-editor="true"]') as HTMLTextAreaElement;
     if (!textarea) return;
 
     const start = textarea.selectionStart;

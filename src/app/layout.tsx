@@ -15,6 +15,10 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <head>
+        <title>API Wiki - 개발자가 함께 만드는 API 지식</title>
+        <meta name="description" content="개발자가 함께 만드는 API 지식, 실시간으로 업데이트됩니다" />
+        <link rel="icon" href="/logo.svg" type="image/svg+xml" />
+        <link rel="apple-touch-icon" href="/logo.svg" />
         <link rel="stylesheet" as="style" crossOrigin="anonymous" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
       </head>
       <body className="font-sans" style={{ backgroundColor: 'var(--bg-light)' }}>
