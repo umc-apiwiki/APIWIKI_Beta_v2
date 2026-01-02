@@ -117,7 +117,7 @@ export default function HomePage() {
         }}
       >
         <motion.h1 
-          className="text-[80px] font-bold m-0 select-none"
+          className="text-[50px] font-bold m-0 select-none"
           style={{ 
             color: 'var(--text-dark)',
             userSelect: 'none',
@@ -135,7 +135,7 @@ export default function HomePage() {
           API Wiki
         </motion.h1>
         <motion.p 
-          className="text-[22px] mt-[10px] mb-[50px] select-none"
+          className="text-[16px] mt-[10px] mb-[50px] select-none"
           style={{ 
             color: 'rgba(0, 0, 0, 0.6)',
             pointerEvents: searchFocused ? 'none' : 'auto',
@@ -155,7 +155,7 @@ export default function HomePage() {
         </motion.p>
 
         <motion.div 
-          className="w-[732px] mb-[40px] max-w-[90vw]"
+          className="w-[600px] mb-[40px] max-w-[90vw]"
           animate={{
             marginTop: searchFocused ? -50 : 0
           }}
@@ -225,7 +225,7 @@ export default function HomePage() {
           <div className="grid-container mt-[50px] pb-[50px]">
           {/* Sticky Title */}
           <motion.div 
-            className="col-12 text-[45px] font-bold text-center mb-[50px]"
+            className="col-12 text-[30px] font-bold text-center mb-[50px]"
             style={{ color: 'var(--text-dark)' }}
             animate={{ opacity: isActive ? 1 : 0 }}
             transition={{ duration: 0.5 }}
@@ -269,7 +269,7 @@ export default function HomePage() {
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="text-[32px] font-semibold mb-[30px]" style={{ color: 'var(--text-dark)' }}>
+            <h2 className="text-[24px] font-semibold mb-[30px]" style={{ color: 'var(--text-dark)' }}>
               Latest News
             </h2>
             <div className="grid grid-cols-12 grid-gap-24">
@@ -296,7 +296,7 @@ export default function HomePage() {
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="text-[32px] font-semibold mb-[30px]" style={{ color: 'var(--text-dark)' }}>
+            <h2 className="text-[24px] font-semibold mb-[30px]" style={{ color: 'var(--text-dark)' }}>
               Recent Popular
             </h2>
             <div className="grid grid-cols-12 grid-gap-24">
@@ -323,7 +323,7 @@ export default function HomePage() {
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="text-[32px] font-semibold mb-[30px]" style={{ color: 'var(--text-dark)' }}>
+            <h2 className="text-[24px] font-semibold mb-[30px]" style={{ color: 'var(--text-dark)' }}>
               Suggest API
             </h2>
             <div className="grid grid-cols-12 grid-gap-24">

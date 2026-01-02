@@ -46,7 +46,7 @@ export default function Header({ transparent = false, className = '' }: HeaderPr
                 {/* Logo Area - 3 columns */}
                 <a 
                     href="/"
-                    className="flex items-center gap-3 text-[28px] font-normal cursor-pointer select-none"
+                    className="flex items-center gap-3 text-[25px] font-normal cursor-pointer select-none"
                     style={{ 
                         gridColumn: 'span 3',
                         color: 'var(--primary-blue)',
@@ -74,7 +74,7 @@ export default function Header({ transparent = false, className = '' }: HeaderPr
                 >
                     <a 
                         href="/boards/community" 
-                        className="text-[18px] font-medium transition-colors whitespace-nowrap"
+                        className="text-[20px] font-medium transition-colors whitespace-nowrap"
                         style={{ color: 'var(--text-gray)' }}
                         onMouseEnter={(e) => e.currentTarget.style.color = 'var(--primary-blue)'}
                         onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-gray)'}
@@ -83,7 +83,7 @@ export default function Header({ transparent = false, className = '' }: HeaderPr
                     </a>
                     <a 
                         href="/explore" 
-                        className="text-[18px] font-medium transition-colors whitespace-nowrap"
+                        className="text-[20px] font-medium transition-colors whitespace-nowrap"
                         style={{ color: 'var(--text-gray)' }}
                         onMouseEnter={(e) => e.currentTarget.style.color = 'var(--primary-blue)'}
                         onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-gray)'}
@@ -92,7 +92,7 @@ export default function Header({ transparent = false, className = '' }: HeaderPr
                     </a>
                     <a 
                         href="/about" 
-                        className="text-[18px] font-medium transition-colors whitespace-nowrap"
+                        className="text-[20px] font-medium transition-colors whitespace-nowrap"
                         style={{ color: 'var(--text-gray)' }}
                         onMouseEnter={(e) => e.currentTarget.style.color = 'var(--primary-blue)'}
                         onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-gray)'}
