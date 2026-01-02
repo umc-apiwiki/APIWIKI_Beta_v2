@@ -146,7 +146,7 @@ export default function SearchBar({
   return (
     <div ref={wrapperRef} className="relative w-full">
       <div 
-        className={`relative bg-white rounded-[30px] transition-all duration-500 ${
+        className={`relative bg-white rounded-[25px] transition-all duration-500 ${
           isFocused ? 'card-shadow' : 'border border-[var(--primary-blue)] shadow-[var(--shadow-blue)]'
         }`}
         style={{
@@ -161,16 +161,16 @@ export default function SearchBar({
           onKeyDown={handleKeyPress}
           onFocus={handleFocus}
           placeholder={placeholder}
-          className="w-full h-[60px] px-[30px] pr-[60px] border-0 bg-transparent text-[18px] outline-none relative z-[140]"
+          className="w-full h-[50px] px-[24px] pr-[50px] border-0 bg-transparent text-[16px] outline-none relative z-[140]"
           style={{ color: 'var(--text-dark)' }}
         />
         
-        <div className="absolute right-[25px] top-1/2 -translate-y-1/2 w-[28px] h-[28px] z-[150] pointer-events-none">
+        <div className="absolute right-[20px] top-1/2 -translate-y-1/2 w-[24px] h-[24px] z-[150] pointer-events-none">
           <Image 
             src="/mingcute_search-line.svg" 
             alt="Search" 
-            width={28} 
-            height={28}
+            width={24} 
+            height={24}
           />
         </div>
       </div>
