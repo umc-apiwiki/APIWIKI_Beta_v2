@@ -146,7 +146,7 @@ export default function SearchBar({
   return (
     <div ref={wrapperRef} className="relative w-full">
       <div 
-        className={`relative bg-white rounded-[25px] transition-all duration-500 ${
+        className={`relative bg-white rounded-[1.5625rem] transition-all duration-500 ${
           isFocused ? 'card-shadow' : 'border border-[var(--primary-blue)] shadow-[var(--shadow-blue)]'
         }`}
         style={{
@@ -161,11 +161,11 @@ export default function SearchBar({
           onKeyDown={handleKeyPress}
           onFocus={handleFocus}
           placeholder={placeholder}
-          className="w-full h-[50px] px-[24px] pr-[50px] border-0 bg-transparent text-[16px] outline-none relative z-[140]"
+          className="w-full h-[3.125rem] px-6 pr-[3.125rem] border-0 bg-transparent text-base outline-none relative z-[140]"
           style={{ color: 'var(--text-dark)' }}
         />
         
-        <div className="absolute right-[20px] top-1/2 -translate-y-1/2 w-[24px] h-[24px] z-[150] pointer-events-none">
+        <div className="absolute right-5 top-1/2 -translate-y-1/2 w-6 h-6 z-[150] pointer-events-none">
           <Image 
             src="/mingcute_search-line.svg" 
             alt="Search" 
@@ -178,7 +178,7 @@ export default function SearchBar({
       {showResults && showDropdown && (
         <AnimatePresence>
           <motion.div 
-            className="absolute top-full left-0 right-0 mt-[10px] bg-white rounded-[20px] overflow-hidden z-[120]"
+            className="absolute top-full left-0 right-0 mt-2.5 bg-white rounded-[1.25rem] overflow-hidden z-[120]"
             style={{
               boxShadow: 'var(--shadow-blue)'
             }}
@@ -189,9 +189,9 @@ export default function SearchBar({
           >
             {recentSearches && recentSearches.length > 0 && (
               <div className="px-[30px] py-[20px] border-b" style={{ borderColor: 'rgba(0, 0, 0, 0.05)' }}>
-                <div className="flex items-center justify-between mb-[15px]">
+                <div className="flex items-center justify-between mb-[0.9375rem]">
                   <div 
-                    className="text-[16px] font-semibold flex items-center gap-2" 
+                    className="text-base font-semibold flex items-center gap-2" 
                     style={{ color: 'var(--primary-blue)' }}
                   >
                     <Image src="/mdi_recent.svg" alt="Recent" width={20} height={20} />
@@ -216,7 +216,7 @@ export default function SearchBar({
                 {recentSearches.map((item, idx) => (
                   <motion.div
                     key={`recent-${idx}`}
-                    className="flex items-center py-[10px] text-[16px] cursor-pointer transition-colors gap-[10px] rounded-lg px-3 -mx-3"
+                    className="flex items-center py-[0.625rem] text-base cursor-pointer transition-colors gap-[0.625rem] rounded-lg px-3 -mx-3"
                     style={{ color: 'var(--text-dark)' }}
                     onClick={() => handleItemClick(item)}
                     whileHover={{ 
@@ -269,9 +269,9 @@ export default function SearchBar({
             )}
 
             {(!recentSearches || recentSearches.length === 0) && (!trendingAPIs || trendingAPIs.length === 0) && (
-              <div className="px-[30px] py-[40px] text-center">
-                <div className="text-[48px] mb-3 opacity-20">🔍</div>
-                <p className="text-[14px]" style={{ color: 'var(--text-gray)' }}>
+              <div className="px-[1.875rem] py-10 text-center">
+                <div className="text-[3rem] mb-3 opacity-20">🔍</div>
+                <p className="text-sm" style={{ color: 'var(--text-gray)' }}>
                   검색 기록이 없습니다
                 </p>
               </div>

@@ -38,7 +38,7 @@ export default function Header({ transparent = false, className = '' }: HeaderPr
                     display: 'grid',
                     gridTemplateColumns: 'repeat(12, 1fr)',
                     gap: 'var(--grid-gutter)',
-                    padding: '20px var(--grid-margin)',
+                    padding: '1.25rem var(--grid-margin)',
                     alignItems: 'center',
                     backgroundColor: transparent ? 'transparent' : 'rgba(255, 255, 255, 0.7)',
                     backdropFilter: 'blur(10px)',
@@ -48,7 +48,7 @@ export default function Header({ transparent = false, className = '' }: HeaderPr
                 {/* Logo Area - 3 columns */}
                 <a 
                     href="/"
-                    className="flex items-center gap-3 text-[25px] font-normal cursor-pointer select-none"
+                    className="flex items-center gap-3 text-[1.5625rem] font-normal cursor-pointer select-none"
                     style={{ 
                         gridColumn: 'span 3',
                         color: 'var(--primary-blue)',
@@ -59,7 +59,7 @@ export default function Header({ transparent = false, className = '' }: HeaderPr
                     <img 
                         src="/logo.svg" 
                         alt="API Wiki Logo" 
-                        className="h-[40px] w-auto"
+                        className="h-10 w-auto"
                         draggable="false"
                     />
                     <span>API Wiki</span>
@@ -76,7 +76,7 @@ export default function Header({ transparent = false, className = '' }: HeaderPr
                 >
                     <a 
                         href="/boards/community" 
-                        className="text-[20px] font-medium transition-colors whitespace-nowrap"
+                        className="text-xl font-medium transition-colors whitespace-nowrap"
                         style={{ color: 'var(--text-gray)' }}
                         onMouseEnter={(e) => e.currentTarget.style.color = 'var(--primary-blue)'}
                         onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-gray)'}
@@ -85,7 +85,7 @@ export default function Header({ transparent = false, className = '' }: HeaderPr
                     </a>
                     <a 
                         href="/explore" 
-                        className="text-[20px] font-medium transition-colors whitespace-nowrap"
+                        className="text-xl font-medium transition-colors whitespace-nowrap"
                         style={{ color: 'var(--text-gray)' }}
                         onMouseEnter={(e) => e.currentTarget.style.color = 'var(--primary-blue)'}
                         onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-gray)'}
@@ -94,7 +94,7 @@ export default function Header({ transparent = false, className = '' }: HeaderPr
                     </a>
                     <a 
                         href="/about" 
-                        className="text-[20px] font-medium transition-colors whitespace-nowrap"
+                        className="text-xl font-medium transition-colors whitespace-nowrap"
                         style={{ color: 'var(--text-gray)' }}
                         onMouseEnter={(e) => e.currentTarget.style.color = 'var(--primary-blue)'}
                         onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-gray)'}
@@ -117,7 +117,7 @@ export default function Header({ transparent = false, className = '' }: HeaderPr
                             {canSubmitAPI(user) && (
                                 <button
                                     onClick={() => setIsAPIRegistrationModalOpen(true)}
-                                    className="text-[16px] font-medium transition-colors"
+                                    className="text-base font-medium transition-colors"
                                     style={{ color: 'var(--text-gray)' }}
                                     onMouseEnter={(e) => e.currentTarget.style.color = 'var(--primary-blue)'}
                                     onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-gray)'}
@@ -128,7 +128,7 @@ export default function Header({ transparent = false, className = '' }: HeaderPr
                             {isAdmin(user) && (
                                 <a 
                                     href="/admin" 
-                                    className="text-[16px] font-medium transition-colors"
+                                    className="text-base font-medium transition-colors"
                                     style={{ color: 'var(--text-gray)' }}
                                     onMouseEnter={(e) => e.currentTarget.style.color = 'var(--primary-blue)'}
                                     onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-gray)'}
@@ -136,12 +136,12 @@ export default function Header({ transparent = false, className = '' }: HeaderPr
                                     관리자
                                 </a>
                             )}
-                            <span className="text-[16px]" style={{ color: 'var(--text-gray)' }}>
+                            <span className="text-base" style={{ color: 'var(--text-gray)' }}>
                                 {user?.name}
                             </span>
                             <button
                                 onClick={signOut}
-                                className="text-[20px] font-semibold cursor-pointer transition-colors"
+                                className="text-xl font-semibold cursor-pointer transition-colors"
                                 style={{ color: 'var(--text-gray)' }}
                                 onMouseEnter={(e) => e.currentTarget.style.color = 'var(--primary-blue)'}
                                 onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-gray)'}
@@ -152,7 +152,7 @@ export default function Header({ transparent = false, className = '' }: HeaderPr
                     ) : (
                         <motion.button
                             onClick={() => setIsLoginModalOpen(true)}
-                            className="text-[20px] font-semibold cursor-pointer"
+                            className="text-xl font-semibold cursor-pointer"
                             style={{ color: 'var(--text-gray)' }}
                             whileHover={{ 
                                 scale: 1.05,

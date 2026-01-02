@@ -9,7 +9,7 @@ const config: Config = {
   theme: {
     container: {
       center: true,
-      padding: "120px", // 좌우 여백 120px 고정
+      padding: "7.5rem", // 120px -> 7.5rem
     },
     extend: {
       colors: {
@@ -60,27 +60,27 @@ const config: Config = {
 
       // 모서리 둥글기
       borderRadius: {
-        sm: "5px", // 작은 컨테이너 테두리
-        md: "10px", // 이미지, 일반 요소
-        lg: "16px", // 카드 (rounded-2xl과 동일)
-        xl: "20px", // 버튼
-        "2xl": "16px", // 카드용 (Tailwind 기본값 재정의)
-        "3xl": "24px", // 태그/칩용 완전히 둥근 모양
+        sm: "0.3125rem", // 5px
+        md: "0.625rem", // 10px
+        lg: "1rem", // 16px
+        xl: "1.25rem", // 20px
+        "2xl": "1rem", // 16px (카드용)
+        "3xl": "1.5rem", // 24px
       },
 
       // 그림자 효과
       boxShadow: {
-        card: "1px 5px 10px 0px rgba(33, 150, 243, 0.25)", // 카드에 적용되는 그림자
-        image: "1px 4px 6px 0px rgba(33, 150, 243, 0.25)", // 이미지에 적용되는 그림자
-        button: "0px 2px 4px 0px rgba(33, 150, 243, 0.25)", // 버튼에 적용되는 그림자
-        tag: "1px 1px 5px 1px rgba(33, 150, 243, 0.10)", // 태그/칩에 적용되는 그림자 (더 연함)
+        card: "0.0625rem 0.3125rem 0.625rem 0rem rgba(33, 150, 243, 0.25)", // 1px 5px 10px...
+        image: "0.0625rem 0.25rem 0.375rem 0rem rgba(33, 150, 243, 0.25)", // 1px 4px 6px...
+        button: "0rem 0.125rem 0.25rem 0rem rgba(33, 150, 243, 0.25)", // 0px 2px 4px...
+        tag: "0.0625rem 0.0625rem 0.3125rem 0.0625rem rgba(33, 150, 243, 0.10)", // 1px 1px 5px 1px...
       },
 
       // 테두리 두께
       borderWidth: {
-        thin: "0.25px", // 매우 얇은 테두리 (카드, 이미지용)
-        "0.25": "0.25px", // 0.25px 테두리 (직접 사용 가능)
-        "0.5": "0.50px", // 0.5px 테두리 (일부 이미지용)
+        thin: "0.0156rem", // 0.25px approx 0.0156rem
+        "0.25": "0.0156rem",
+        "0.5": "0.03125rem", // 0.5px
       },
 
       // 폰트 패밀리
@@ -90,16 +90,16 @@ const config: Config = {
 
       // 폰트 크기
       fontSize: {
-        xs: "12px", // 매우 작은 텍스트 (Paid, Free 라벨)
-        sm: "14px", // 작은 텍스트 (Star, Used by, 설명)
-        base: "16px", // 기본 텍스트 (중간 버튼)
-        lg: "18px", // 큰 텍스트 (큰 버튼)
-        xl: "20px", // 제목, compare 버튼 텍스트
+        xs: "0.75rem", // 12px
+        sm: "0.875rem", // 14px
+        base: "1rem", // 16px
+        lg: "1.125rem", // 18px
+        xl: "1.25rem", // 20px
       },
 
       // 줄 간격
       lineHeight: {
-        "5": "20px", // 버튼 텍스트용 줄 간격 (leading-5)
+        "5": "1.25rem", // 20px
       },
 
       // 그라디언트 배경

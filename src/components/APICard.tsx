@@ -30,22 +30,14 @@ export default function APICard({ api, onToggleCompare, isCompareSelected }: API
   return (
     <Link 
       href={`/api/${api.id}`}
-      className="block w-full h-full min-h-[256px] relative bg-white rounded-2xl transition-all duration-300 hover:translate-y-[-5px]"
-      style={{
-        boxShadow: '1px 5px 10px 0px rgba(33,150,243,0.25)',
-        border: '0.25px solid #0ea5e9' // sky-500
-      }}
+      className="block w-full h-full min-h-[16rem] relative bg-white rounded-2xl transition-all duration-300 hover:translate-y-[-0.3125rem] shadow-card border-thin border-sky-500"
     >
       <div className="relative p-8 h-full flex flex-col">
         {/* Top Section: Image and Info */}
         <div className="flex gap-6 mb-4">
           {/* Logo Image */}
           <div 
-            className="w-20 h-20 rounded-[10px] flex-shrink-0 bg-white flex items-center justify-center overflow-hidden"
-            style={{
-              boxShadow: '1px 4px 6px 0px rgba(33,150,243,0.25)',
-              border: '0.25px solid #0ea5e9'
-            }}
+            className="w-20 h-20 rounded-[10px] flex-shrink-0 bg-white flex items-center justify-center overflow-hidden shadow-image border-thin border-sky-500"
           >
             {api.logo ? (
                // eslint-disable-next-line @next/next/no-img-element
@@ -96,11 +88,7 @@ export default function APICard({ api, onToggleCompare, isCompareSelected }: API
           }
         }}>
           <div className="w-28 h-8 relative group cursor-pointer">
-            <div className={`w-28 h-8 absolute rounded-full transition-all ${isCompareSelected ? 'bg-sky-500' : 'bg-white group-hover:bg-sky-50'}`}
-                 style={{
-                   boxShadow: '0px 2px 4px 0px rgba(33,150,243,0.15)',
-                   border: '1px solid #0ea5e9'
-                 }} 
+            <div className={`w-28 h-8 absolute rounded-full transition-all shadow-button border-sky-500 border ${isCompareSelected ? 'bg-sky-500' : 'bg-white group-hover:bg-sky-50'}`}
             />
             <div className={`w-full h-full absolute flex items-center justify-center text-sm font-semibold font-sans leading-none ${isCompareSelected ? 'text-white' : 'text-sky-500'}`}>
               {isCompareSelected ? 'Selected' : 'Compare'}

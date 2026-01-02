@@ -336,10 +336,10 @@ function ExploreContent() {
       {/* 배경 그라데이션 효과 */}
       <div className="bg-glow" />
 
-      <div className="grid-container py-6" style={{ paddingTop: '100px' }}>
+      <div className="grid-container py-6 pt-[6.25rem]">
         {/* 검색바 */}
         <div className="mb-12 col-12 flex justify-center">
-          <div style={{ width: '732px', maxWidth: '90vw' }}>
+          <div className="max-w-[90vw] w-[45.75rem]">
             <SearchBar 
               initialQuery={searchQuery}
               onSearch={(query) => {
