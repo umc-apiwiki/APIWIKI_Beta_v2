@@ -40,7 +40,9 @@ export default function Header({ transparent = false, className = '' }: HeaderPr
                     gap: 'var(--grid-gutter)',
                     padding: '20px var(--grid-margin)',
                     alignItems: 'center',
-                    backgroundColor: transparent ? 'transparent' : 'var(--bg-light)'
+                    backgroundColor: transparent ? 'transparent' : 'rgba(255, 255, 255, 0.7)',
+                    backdropFilter: 'blur(10px)',
+                    WebkitBackdropFilter: 'blur(10px)'
                 }}
             >
                 {/* Logo Area - 3 columns */}
