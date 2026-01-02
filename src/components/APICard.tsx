@@ -30,27 +30,27 @@ export default function APICard({ api, onToggleCompare, isCompareSelected }: API
   return (
     <Link 
       href={`/api/${api.id}`}
-      className="block w-full h-full min-h-[16rem] relative bg-white rounded-2xl transition-all duration-300 hover:translate-y-[-0.3125rem] shadow-card border-thin border-sky-500"
+      className="block w-full h-full min-h-[13rem] relative bg-white rounded-2xl transition-all duration-300 hover:translate-y-[-0.25rem] shadow-card border-thin border-sky-500"
     >
-      <div className="relative p-8 h-full flex flex-col">
+      <div className="relative p-5 h-full flex flex-col">
         {/* Top Section: Image and Info */}
-        <div className="flex gap-6 mb-4">
+        <div className="flex gap-4 mb-3">
           {/* Logo Image */}
           <div 
-            className="w-20 h-20 rounded-[10px] flex-shrink-0 bg-white flex items-center justify-center overflow-hidden shadow-image border-thin border-sky-500"
+            className="w-14 h-14 rounded-[10px] flex-shrink-0 bg-white flex items-center justify-center overflow-hidden shadow-image border-thin border-sky-500"
           >
             {api.logo ? (
                // eslint-disable-next-line @next/next/no-img-element
               <img src={api.logo} alt={api.name} className="w-full h-full object-cover" />
             ) : (
-              <span className="text-3xl">📦</span>
+              <span className="text-xl">📦</span>
             )}
           </div>
 
           {/* Right Info Column */}
-          <div className="flex flex-col gap-1.5 min-w-0 flex-1 justify-center">
+          <div className="flex flex-col gap-1 min-w-0 flex-1 justify-center">
             {/* Title */}
-            <div className="text-gray-900 text-lg font-bold font-sans truncate leading-tight">
+            <div className="text-gray-900 text-base font-bold font-sans truncate leading-tight">
               {api.name}
             </div>
             
@@ -76,21 +76,21 @@ export default function APICard({ api, onToggleCompare, isCompareSelected }: API
         </div>
 
         {/* Description */}
-        <div className="text-slate-600 text-xs font-normal font-sans line-clamp-2 mb-10 leading-relaxed h-8">
+        <div className="text-slate-600 text-xs font-normal font-sans line-clamp-2 mb-8 leading-relaxed h-[2.25rem]">
           {api.description}
         </div>
 
         {/* Compare Button (Absolute bottom positioning to match design intent) */}
-        <div className="absolute bottom-5 left-1/2 -translate-x-1/2" onClick={(e) => {
+        <div className="absolute bottom-4 left-1/2 -translate-x-1/2" onClick={(e) => {
           if (onToggleCompare) {
             e.preventDefault();
             onToggleCompare();
           }
         }}>
-          <div className="w-28 h-8 relative group cursor-pointer">
-            <div className={`w-28 h-8 absolute rounded-full transition-all shadow-button border-sky-500 border ${isCompareSelected ? 'bg-sky-500' : 'bg-white group-hover:bg-sky-50'}`}
+          <div className="w-24 h-7 relative group cursor-pointer">
+            <div className={`w-24 h-7 absolute rounded-full transition-all shadow-button border-sky-500 border ${isCompareSelected ? 'bg-sky-500' : 'bg-white group-hover:bg-sky-50'}`}
             />
-            <div className={`w-full h-full absolute flex items-center justify-center text-sm font-semibold font-sans leading-none ${isCompareSelected ? 'text-white' : 'text-sky-500'}`}>
+            <div className={`w-full h-full absolute flex items-center justify-center text-xs font-semibold font-sans leading-none ${isCompareSelected ? 'text-white' : 'text-sky-500'}`}>
               {isCompareSelected ? 'Selected' : 'Compare'}
             </div>
           </div>

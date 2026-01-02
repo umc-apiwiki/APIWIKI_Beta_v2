@@ -697,7 +697,7 @@ function ExploreContent() {
             )}
 
             {/* API 카드 그리드 */}
-            <div className="grid grid-cols-12 grid-gap-24">
+            <div className="grid grid-cols-12 gap-4">
               {displayedAPIs.map((api) => (
                 <div key={api.id} className={isFiltersVisible ? "col-4" : "col-3"}>
                   <APICard 
