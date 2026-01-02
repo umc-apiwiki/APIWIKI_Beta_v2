@@ -224,14 +224,14 @@ export default function HomePage() {
         >
           <div className="grid-container mt-[50px] pb-[50px]">
           {/* Sticky Title */}
-          <motion.div 
+          {/* <motion.div 
             className="col-12 text-[30px] font-bold text-center mb-[50px]"
             style={{ color: 'var(--text-dark)' }}
             animate={{ opacity: isActive ? 1 : 0 }}
             transition={{ duration: 0.5 }}
           >
             API Wiki
-          </motion.div>
+          </motion.div> */}
 
           {/* 내릴 때: 역삼각형 (아래쪽 화살표) */}
           <motion.div 
