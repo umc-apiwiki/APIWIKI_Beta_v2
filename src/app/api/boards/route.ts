@@ -108,6 +108,14 @@ export async function POST(request: NextRequest) {
             );
         }
 
+        // 커뮤니티 게시판은 로그인 필수
+        if (body.type === 'community' && !userUser) {
+            return NextResponse.json(
+                { success: false, error: '로그인이 필요합니다', requiresAuth: true },
+                { status: 401 }
+            );
+        }
+
         // 회원/비회원 구분
         let boardData: any = {
             type: body.type,

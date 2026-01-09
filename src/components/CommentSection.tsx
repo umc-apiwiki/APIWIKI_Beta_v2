@@ -71,11 +71,11 @@ export default function CommentSection({ boardId }: CommentSectionProps) {
             const result = await response.json();
 
             if (!response.ok) {
-                if (result.error?.includes('작성자 이름')) {
-                     // 서버가 비회원(작성자 이름 필)으로 인식함 -> 현재 세션이 만료/무효함
-                     alert('보안 업데이트로 인해 로그아웃되었습니다. 다시 로그인해주세요.');
-                     window.location.reload(); // 강제 새로고침으로 세션 상태 동기화
-                     throw new Error('재로그인이 필요합니다.');
+                if (result.requiresAuth || response.status === 401) {
+                     // 로그인이 필요한 경우
+                     alert('로그인이 필요합니다. 다시 로그인해주세요.');
+                     window.location.reload();
+                     throw new Error('로그인이 필요합니다.');
                 }
                 throw new Error(result.error || '댓글 작성에 실패했습니다');
             }
@@ -84,13 +84,9 @@ export default function CommentSection({ boardId }: CommentSectionProps) {
             setFormData({ board_id: boardId, content: '', author_name: '' });
             await fetchComments();
         } catch (err: any) {
-            // "작성자 이름" 에러일 경우 상위 로직에서 세션 처리가 되었을 것임.
-            // 하지만 signOut() 호출을 위해 여기서 처리 필.
-            if (err.message === '인증 오류: 재로그인이 필요합니다.') {
-                 // 리로드하면 NextAuth가 세션을 다시 체크할 것임.
-                 // 확실하게 하기 위해 signOut 호출 권장.
+            if (err.message !== '로그인이 필요합니다.') {
+                setError(err.message);
             }
-            setError(err.message);
         } finally {
             setIsSubmitting(false);
         }

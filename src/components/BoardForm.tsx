@@ -57,11 +57,11 @@ export default function BoardForm({ type, onCancel }: BoardFormProps) {
             const result = await response.json();
 
             if (!response.ok) {
-                if (result.error?.includes('작성자 이름')) {
-                    // 서버가 비회원(작성자 이름 필)으로 인식함 -> 현재 세션이 만료/무효함
-                    alert('보안 업데이트로 인해 로그아웃되었습니다. 다시 로그인해주세요.');
-                    window.location.reload(); // 강제 새로고침으로 세션 상태 동기화
-                    throw new Error('재로그인이 필요합니다.');
+                if (result.requiresAuth || response.status === 401) {
+                    // 로그인이 필요한 경우
+                    alert('로그인이 필요합니다. 다시 로그인해주세요.');
+                    window.location.reload();
+                    throw new Error('로그인이 필요합니다.');
                 }
                 throw new Error(result.error || '게시글 작성에 실패했습니다');
             }

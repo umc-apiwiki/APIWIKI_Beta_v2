@@ -113,14 +113,10 @@ function ExploreContent() {
     }
 
     // Price filter
-    // Note: priceFilter is not defined in the snippet I saw, assuming it was missing or part of the 'lines 39-86' block?
-    // Wait. In lines 87-808, I see `priceFilter` used in useEffect (Line 244 deps, Line 165 usage).
-    // BUT `priceFilter` definition was NOT in lines 87+ (starts with `ratingFilter`).
-    // AND it was NOT in lines 1-36.
-    // So `priceFilter` state definition was LOST in the corrupted block.
-    // I MUST ADD IT BACK.
-    // Also check other missing invalidations.
-    
+    if (priceFilter.length > 0) {
+      result = result.filter(api => api.price && priceFilter.includes(api.price));
+    }
+
     // Rating filter
     if (ratingFilter > 0) {
       result = result.filter(api => api.rating !== undefined && api.rating >= ratingFilter);
@@ -196,8 +192,7 @@ function ExploreContent() {
     setDisplayedAPIs(result.slice(0, ITEMS_PER_PAGE));
     setPage(1);
     setHasMore(result.length > ITEMS_PER_PAGE);
-  // Note: deps list included priceFilter, but it was undefined. I need to define it.
-  }, [apis, searchQuery, sortBy, ratingFilter, countryFilter, authMethodFilter, docLanguageFilter, companyFilter]); // Temporarily removed priceFilter from deps until I define it, but I will define it.
+  }, [apis, searchQuery, selectedCategory, sortBy, priceFilter, ratingFilter, countryFilter, authMethodFilter, docLanguageFilter, companyFilter]);
 
   // 무한 스크롤 로드
   const loadMore = useCallback(() => {
@@ -292,34 +287,21 @@ function ExploreContent() {
   // Define priceFilter state which was lost
   const [priceFilter, setPriceFilter] = useState<string[]>([]);
 
-  const togglePriceFilter = (price: string) => {
-    setPriceFilter(prev =>
-      prev.includes(price) ? prev.filter(p => p !== price) : [...prev, price]
-    );
-  };
-
-  const toggleCountryFilter = (country: string) => {
-    setCountryFilter(prev =>
-      prev.includes(country) ? prev.filter(c => c !== country) : [...prev, country]
-    );
-  };
-
-  const toggleAuthMethodFilter = (method: string) => {
-    setAuthMethodFilter(prev =>
-      prev.includes(method) ? prev.filter(m => m !== method) : [...prev, method]
-    );
-  };
-
-  const toggleDocLanguageFilter = (lang: string) => {
-    setDocLanguageFilter(prev =>
-      prev.includes(lang) ? prev.filter(l => l !== lang) : [...prev, lang]
-    );
-  };
-
-  const toggleCompanyFilter = (company: string) => {
-    setCompanyFilter(prev =>
-      prev.includes(company) ? prev.filter(c => c !== company) : [...prev, company]
-    );
+  // 필터 적용 핸들러
+  const handleApplyFilters = (filters: {
+    priceFilter: string[];
+    ratingFilter: number;
+    countryFilter: string[];
+    authMethodFilter: string[];
+    docLanguageFilter: string[];
+    companyFilter: string[];
+  }) => {
+    setPriceFilter(filters.priceFilter);
+    setRatingFilter(filters.ratingFilter);
+    setCountryFilter(filters.countryFilter);
+    setAuthMethodFilter(filters.authMethodFilter);
+    setDocLanguageFilter(filters.docLanguageFilter);
+    setCompanyFilter(filters.companyFilter);
   };
 
   return (
@@ -483,21 +465,16 @@ function ExploreContent() {
       </div>
 
       {/* Filter Modal */}
-      <FilterModal 
+      <FilterModal
         isOpen={isFiltersVisible}
         onClose={() => setIsFiltersVisible(false)}
         priceFilter={priceFilter}
-        togglePriceFilter={togglePriceFilter}
         ratingFilter={ratingFilter}
-        setRatingFilter={setRatingFilter}
         countryFilter={countryFilter}
-        toggleCountryFilter={toggleCountryFilter}
         authMethodFilter={authMethodFilter}
-        toggleAuthMethodFilter={toggleAuthMethodFilter}
         docLanguageFilter={docLanguageFilter}
-        toggleDocLanguageFilter={toggleDocLanguageFilter}
         companyFilter={companyFilter}
-        toggleCompanyFilter={toggleCompanyFilter}
+        onApplyFilters={handleApplyFilters}
         resultCount={filteredAPIs.length}
       />
 

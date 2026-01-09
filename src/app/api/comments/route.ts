@@ -91,6 +91,20 @@ export async function POST(request: NextRequest) {
             );
         }
 
+        // 커뮤니티 게시판은 로그인 필수
+        const { data: board } = await supabase
+            .from('boards')
+            .select('type')
+            .eq('id', body.board_id)
+            .single();
+
+        if (board?.type === 'community' && !userUser) {
+            return NextResponse.json(
+                { success: false, error: '로그인이 필요합니다', requiresAuth: true },
+                { status: 401 }
+            );
+        }
+
         // 회원/비회원 구분
         let commentData: any = {
             board_id: body.board_id,
