@@ -9,6 +9,7 @@ import APICard from '@/components/APICard';
 import Header from '@/components/Header';
 import SearchBar from '@/components/SearchBar';
 import CompareModal from '@/components/CompareModal';
+import FilterModal from '@/components/FilterModal';
 import { searchAPIs, getAllCategories, type SearchFilters } from '@/lib/apiService';
 import type { API } from '@/types';
 
@@ -32,7 +33,7 @@ function ExploreContent() {
   const [isCompareOpen, setIsCompareOpen] = useState(false);
   const [favorites, setFavorites] = useState<string[]>([]);
 
-  const [isFiltersVisible, setIsFiltersVisible] = useState(true);
+  const [isFiltersVisible, setIsFiltersVisible] = useState(false);
 
   const [ratingFilter, setRatingFilter] = useState<number>(0);
   const [countryFilter, setCountryFilter] = useState<string[]>([]);
@@ -353,396 +354,152 @@ function ExploreContent() {
           </div>
         </div>
 
-        {/* 왼쪽 필터 영역 */}
-        {isFiltersVisible && (
-        <aside className="col-3">
-          <div className="bg-white rounded-[15px] p-5 sticky top-24 card-shadow" style={{ border: '0.5px solid var(--primary-blue)' }}>
-              <div className="overflow-auto max-h-[70vh] pr-2">
-              <h2 className="font-bold text-[18px] mb-4" style={{ color: 'var(--text-dark)' }}>필터 옵션</h2>
+        {/* 메인 콘텐츠 영역 (Full width now) */}
+        <main className="col-12">
+          {/* 정렬 옵션 및 결과 수 */}
+          <div className="flex items-center justify-between mb-6">
+            <p className="text-[14px]" style={{ color: 'var(--text-gray)' }}>
+              {searchQuery && `"${searchQuery}" 에 대한`}검색결과 약 {filteredAPIs.length.toLocaleString()}개
+            </p>
+            <div className="flex items-center gap-4 relative">
+              {/* Filter Button */}
+              <button 
+                onClick={() => setIsFiltersVisible(true)}
+                className="flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors"
+              >
+                <span>Hide Filters</span>
+                {/* Keeping the text 'Hide Filters' as per screenshot reference if intended, 
+                    but logic suggests 'Filters' is better for a modal trigger. 
+                    However, user sent screenshot showing 'Hide Filters X'. 
+                    Wait, if it's a MODAL, 'Hide Filters' on the page makes no sense. 
+                    I will change it to 'Filters' or keep it if user implies the screenshot is the desired look.
+                    The screenshot 'uploaded_image_1...' shows 'Hide Filters 3 X' next to 'Sort By'.
+                    Actually that looks like 'active filters' or separate functionality.
+                    But user said "Change filter to modal". 
+                    So on the page, there should be a button to OPEN the modal.
+                    I'll name it "Filters" for clarity, or "All Filters". 
+                */}
+                <span>Filters</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 3h18v18H3z"/><path d="M9 3v18"/></svg>
+              </button>
 
-              {/* 가격대 필터 */}
-              <div className="mb-6">
-                <h3 className="font-semibold text-[14px] mb-3" style={{ color: 'var(--text-gray)' }}>요청당 가격</h3>
-                <div className="space-y-2">
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      className="w-4 h-4 rounded border-gray-300"
-                      checked={priceFilter.includes('free')}
-                      onChange={() => togglePriceFilter('free')}
-                    />
-                    <span className="text-sm flex items-center gap-2">
-                      <span className="px-2 py-0.5 rounded-full text-xs" style={{ backgroundColor: 'rgba(33, 150, 243, 0.1)', color: 'var(--primary-blue)' }}>무료</span>
-                      <span className="text-sm" style={{ color: 'var(--text-dark)' }}>무료</span>
-                    </span>
-                  </label>
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      className="w-4 h-4 rounded border-gray-300"
-                      checked={priceFilter.includes('mixed')}
-                      onChange={() => togglePriceFilter('mixed')}
-                    />
-                    <span className="text-sm flex items-center gap-2">
-                      <span className="px-2 py-0.5 bg-amber-100 text-amber-800 rounded-full text-xs">혼합</span>
-                      <span className="text-sm">혼합 (무료 & 유료)</span>
-                    </span>
-                  </label>
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      className="w-4 h-4 rounded border-gray-300"
-                      checked={priceFilter.includes('paid')}
-                      onChange={() => togglePriceFilter('paid')}
-                    />
-                    <span className="text-sm flex items-center gap-2">
-                      <span className="px-2 py-0.5 bg-red-100 text-red-800 rounded-full text-xs">유료</span>
-                      <span className="text-sm">유료</span>
-                    </span>
-                  </label>
-                </div>
-              </div>
-
-              {/* 평점 필터 */}
-              <div className="mb-6">
-                <h3 className="font-semibold text-[14px] mb-3" style={{ color: 'var(--text-gray)' }}>평점</h3>
-                <div className="space-y-2">
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="radio"
-                      name="rating"
-                      className="w-4 h-4"
-                      checked={ratingFilter === 0}
-                      onChange={() => setRatingFilter(0)}
-                    />
-                    <span className="text-sm" style={{ color: 'var(--text-dark)' }}>전체</span>
-                  </label>
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="radio"
-                      name="rating"
-                      className="w-4 h-4"
-                      checked={ratingFilter === 2}
-                      onChange={() => setRatingFilter(2)}
-                    />
-                    <span className="text-sm" style={{ color: 'var(--text-dark)' }}>⭐ 2점 이상</span>
-                  </label>
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="radio"
-                      name="rating"
-                      className="w-4 h-4"
-                      checked={ratingFilter === 3}
-                      onChange={() => setRatingFilter(3)}
-                    />
-                    <span className="text-sm" style={{ color: 'var(--text-dark)' }}>⭐ 3점 이상</span>
-                  </label>
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="radio"
-                      name="rating"
-                      className="w-4 h-4"
-                      checked={ratingFilter === 4}
-                      onChange={() => setRatingFilter(4)}
-                    />
-                    <span className="text-sm" style={{ color: 'var(--text-dark)' }}>⭐ 4점 이상</span>
-                  </label>
-                </div>
-              </div>
-
-              {/* 제공국가 필터 */}
-              <div className="mb-6">
-                <h3 className="font-semibold text-[14px] mb-3" style={{ color: 'var(--text-gray)' }}>제공 국가</h3>
-                <div className="space-y-2">
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      className="w-4 h-4 rounded border-gray-300"
-                      checked={countryFilter.includes('한국')}
-                      onChange={() => toggleCountryFilter('한국')}
-                    />
-                    <span className="text-sm" style={{ color: 'var(--text-dark)' }}>한국</span>
-                  </label>
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      className="w-4 h-4 rounded border-gray-300"
-                      checked={countryFilter.includes('미국')}
-                      onChange={() => toggleCountryFilter('미국')}
-                    />
-                    <span className="text-sm" style={{ color: 'var(--text-dark)' }}>미국</span>
-                  </label>
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      className="w-4 h-4 rounded border-gray-300"
-                      checked={countryFilter.includes('일본')}
-                      onChange={() => toggleCountryFilter('일본')}
-                    />
-                    <span className="text-sm" style={{ color: 'var(--text-dark)' }}>일본</span>
-                  </label>
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      className="w-4 h-4 rounded border-gray-300"
-                      checked={countryFilter.includes('중국')}
-                      onChange={() => toggleCountryFilter('중국')}
-                    />
-                    <span className="text-sm" style={{ color: 'var(--text-dark)' }}>중국</span>
-                  </label>
-                </div>
-              </div>
-
-              {/* API 인증방식 필터 */}
-              <div className="mb-6">
-                <h3 className="font-semibold text-[14px] mb-3" style={{ color: 'var(--text-gray)' }}>API 인증 방식</h3>
-                <div className="space-y-2">
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      className="w-4 h-4 rounded border-gray-300"
-                      checked={authMethodFilter.includes('OAuth2')}
-                      onChange={() => toggleAuthMethodFilter('OAuth2')}
-                    />
-                    <span className="text-xs">OAuth 2.0</span>
-                  </label>
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      className="w-4 h-4 rounded border-gray-300"
-                      checked={authMethodFilter.includes('APIKey')}
-                      onChange={() => toggleAuthMethodFilter('APIKey')}
-                    />
-                    <span className="text-xs">API Key 인증</span>
-                  </label>
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      className="w-4 h-4 rounded border-gray-300"
-                      checked={authMethodFilter.includes('JWT')}
-                      onChange={() => toggleAuthMethodFilter('JWT')}
-                    />
-                    <span className="text-xs">JWT</span>
-                  </label>
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      className="w-4 h-4 rounded border-gray-300"
-                      checked={authMethodFilter.includes('Basic')}
-                      onChange={() => toggleAuthMethodFilter('Basic')}
-                    />
-                    <span className="text-xs">기본 인증</span>
-                  </label>
-                </div>
-              </div>
-
-              {/* 제공문서 필터 */}
-              <div className="mb-6">
-                <h3 className="font-semibold text-sm mb-3 text-gray-700">제공 문서</h3>
-                <div className="space-y-2">
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      className="w-4 h-4 rounded border-gray-300"
-                      checked={docLanguageFilter.includes('한국어')}
-                      onChange={() => toggleDocLanguageFilter('한국어')}
-                    />
-                    <span className="text-sm">한국어</span>
-                  </label>
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      className="w-4 h-4 rounded border-gray-300"
-                      checked={docLanguageFilter.includes('영어')}
-                      onChange={() => toggleDocLanguageFilter('영어')}
-                    />
-                    <span className="text-sm">영어</span>
-                  </label>
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      className="w-4 h-4 rounded border-gray-300"
-                      checked={docLanguageFilter.includes('일본어')}
-                      onChange={() => toggleDocLanguageFilter('일본어')}
-                    />
-                    <span className="text-sm">일본어</span>
-                  </label>
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      className="w-4 h-4 rounded border-gray-300"
-                      checked={docLanguageFilter.includes('중국어')}
-                      onChange={() => toggleDocLanguageFilter('중국어')}
-                    />
-                    <span className="text-sm">중국어</span>
-                  </label>
-                </div>
-              </div>
-
-              {/* 제작회사 필터 */}
-              <div className="mb-4">
-                <h3 className="font-semibold text-[14px] mb-3" style={{ color: 'var(--text-gray)' }}>제작 회사</h3>
-                <div className="space-y-2">
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      className="w-4 h-4 rounded border-gray-300"
-                      checked={companyFilter.includes('Google')}
-                      onChange={() => toggleCompanyFilter('Google')}
-                    />
-                    <span className="text-sm" style={{ color: 'var(--text-dark)' }}>구글</span>
-                  </label>
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      className="w-4 h-4 rounded border-gray-300"
-                      checked={companyFilter.includes('Kakao')}
-                      onChange={() => toggleCompanyFilter('Kakao')}
-                    />
-                    <span className="text-sm" style={{ color: 'var(--text-dark)' }}>카카오</span>
-                  </label>
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      className="w-4 h-4 rounded border-gray-300"
-                      checked={companyFilter.includes('Naver')}
-                      onChange={() => toggleCompanyFilter('Naver')}
-                    />
-                    <span className="text-sm" style={{ color: 'var(--text-dark)' }}>네이버</span>
-                  </label>
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      className="w-4 h-4 rounded border-gray-300"
-                      checked={companyFilter.includes('Samsung')}
-                      onChange={() => toggleCompanyFilter('Samsung')}
-                    />
-                    <span className="text-sm" style={{ color: 'var(--text-dark)' }}>삼성</span>
-                  </label>
-                </div>
-              </div>
-            </div>
-            </div>
-          </aside>
-        )}
-
-          {/* 오른쪽 콘텐츠 영역 */}
-          <main className={isFiltersVisible ? "col-9" : "col-12"}>
-            {/* 정렬 옵션 및 결과 수 */}
-            <div className="flex items-center justify-between mb-6">
-              <p className="text-[14px]" style={{ color: 'var(--text-gray)' }}>
-                {searchQuery && `"${searchQuery}" 에 대한`}검색결과 약 {filteredAPIs.length.toLocaleString()}개
-              </p>
-              <div className="flex items-center gap-4">
-                <button 
-                  onClick={() => setIsFiltersVisible(!isFiltersVisible)}
-                  className="flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-blue-500 transition-colors"
-                >
-                  {isFiltersVisible ? (
-                    <>
-                      <span>Hide Filters</span>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 3h18v18H3zM9 3v18"/></svg>
-                    </>
-                  ) : (
-                    <>
-                      <span>Show Filters</span>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 3h18v18H3z"/><path d="M9 3v18"/></svg>
-                    </>
-                  )}
+              {/* Sort By Dropdown (Custom) */}
+              <div className="relative group">
+                <button className="flex items-center gap-1 text-sm font-medium text-gray-600 hover:text-blue-600">
+                  Sort By
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
                 </button>
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
-                  className="px-4 py-2 text-sm rounded-[20px] bg-white cursor-pointer transition-all card-shadow"
-                  style={{ 
-                    border: '0.5px solid var(--primary-blue)',
-                    color: 'var(--text-dark)'
-                  }}
+                {/* Dropdown Menu */}
+                <div className="absolute right-0 top-full mt-2 w-40 bg-white rounded-lg shadow-xl border border-gray-100 hidden group-hover:block z-50">
+                   <div className="py-2">
+                     {['인기순', '최신순', '후기 많은 순', '비용 낮은 순'].map(option => (
+                       <button
+                         key={option}
+                         onClick={() => setSortBy(option)}
+                         className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${sortBy === option ? 'text-blue-600 font-medium' : 'text-gray-700'}`}
+                       >
+                         {option}
+                       </button>
+                     ))}
+                   </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 비교하기 컨트롤 */}
+          {compareList.length > 0 && (
+            <div className="rounded-[15px] p-4 mb-6 flex items-center justify-between card-shadow" style={{ 
+              backgroundColor: 'rgba(33, 150, 243, 0.1)',
+              border: '0.5px solid var(--primary-blue)'
+            }}>
+              <span className="text-sm" style={{ color: 'var(--primary-blue)' }}>
+                {compareList.length}개 선택됨 (최대 4개)
+              </span>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setCompareList([])}
+                  className="px-4 py-2 text-sm bg-white rounded-[20px] transition-all card-shadow"
+                  style={{ border: '0.5px solid var(--primary-blue)', color: 'var(--text-dark)' }}
                 >
-                  <option value="인기순">인기순</option>
-                  <option value="최신순">최신순</option>
-                  <option value="후기 많은 순">후기 많은 순</option>
-                  <option value="비용 낮은 순">비용 낮은 순</option>
-                </select>
+                  초기화
+                </button>
+                <button
+                  onClick={() => setIsCompareOpen(true)}
+                  className="px-4 py-2 text-sm text-white rounded-[20px] transition-all"
+                  style={{ backgroundColor: 'var(--primary-blue)' }}
+                  disabled={compareList.length < 2}
+                >
+                  선택 비교하기
+                </button>
               </div>
             </div>
+          )}
 
-            {/* 비교하기 컨트롤 */}
-            {compareList.length > 0 && (
-              <div className="rounded-[15px] p-4 mb-6 flex items-center justify-between card-shadow" style={{ 
-                backgroundColor: 'rgba(33, 150, 243, 0.1)',
-                border: '0.5px solid var(--primary-blue)'
-              }}>
-                <span className="text-sm" style={{ color: 'var(--primary-blue)' }}>
-                  {compareList.length}개 선택됨 (최대 4개)
-                </span>
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => setCompareList([])}
-                    className="px-4 py-2 text-sm bg-white rounded-[20px] transition-all card-shadow"
-                    style={{ border: '0.5px solid var(--primary-blue)', color: 'var(--text-dark)' }}
-                  >
-                    초기화
-                  </button>
-                  <button
-                    onClick={() => setIsCompareOpen(true)}
-                    className="px-4 py-2 text-sm text-white rounded-[20px] transition-all"
-                    style={{ backgroundColor: 'var(--primary-blue)' }}
-                    disabled={compareList.length < 2}
-                  >
-                    선택 비교하기
-                  </button>
-                </div>
+          {/* API 카드 그리드 */}
+          <div className="grid grid-cols-12 gap-4">
+            {displayedAPIs.map((api) => (
+              <div key={api.id} className="col-3">
+                <APICard 
+                  api={api} 
+                  onToggleCompare={() => toggleCompare(api.id)}
+                  isCompareSelected={compareList.includes(api.id)}
+                />
+                 <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    toggleFavorite(api.id);
+                  }}
+                  className="absolute top-4 right-4 text-2xl hover:scale-110 transition-transform z-10"
+                >
+                  {favorites.includes(api.id) ? '⭐' : '☆'}
+                </button>
               </div>
-            )}
+            ))}
+          </div>
 
-            {/* API 카드 그리드 */}
-            <div className="grid grid-cols-12 gap-4">
-              {displayedAPIs.map((api) => (
-                <div key={api.id} className={isFiltersVisible ? "col-4" : "col-3"}>
-                  <APICard 
-                    api={api} 
-                    onToggleCompare={() => toggleCompare(api.id)}
-                    isCompareSelected={compareList.includes(api.id)}
-                  />
-                  {/* 즐겨찾기 버튼 (Overlay using absolute positioning if needed, or integrate into APICard later) */}
-                  {/* For now keeping layout clean as per user request to use the specific component design */}
-                   <button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      toggleFavorite(api.id);
-                    }}
-                    className="absolute top-4 right-4 text-2xl hover:scale-110 transition-transform z-10"
-                  >
-                    {favorites.includes(api.id) ? '⭐' : '☆'}
-                  </button>
-                </div>
-              ))}
+          {/* 로딩 및 결과 없음 UI ... (Existing) */}
+          {hasMore && (
+            <div ref={observerTarget} className="flex justify-center py-8">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
             </div>
+          )}
 
-            {/* 로딩 인디케이터 */}
-            {hasMore && (
-              <div ref={observerTarget} className="flex justify-center py-8">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
-              </div>
-            )}
+          {displayedAPIs.length === 0 && (
+            <div className="text-center py-16 bg-white rounded-lg border border-gray-200">
+              <p className="text-gray-500 text-lg">검색 결과가 없습니다.</p>
+              <p className="text-gray-400 text-sm mt-2">다른 검색어를 시도해보세요.</p>
+            </div>
+          )}
 
-            {/* 검색 결과 없음 */}
-            {displayedAPIs.length === 0 && (
-              <div className="text-center py-16 bg-white rounded-lg border border-gray-200">
-                <p className="text-gray-500 text-lg">검색 결과가 없습니다.</p>
-                <p className="text-gray-400 text-sm mt-2">다른 검색어를 시도해보세요.</p>
-              </div>
-            )}
-
-            {/* 끝 메시지 */}
-            {!hasMore && displayedAPIs.length > 0 && (
-              <div className="text-center py-8">
-                <p className="text-gray-400 text-sm">모든 결과를 불러왔습니다.</p>
-              </div>
-            )}
-          </main>
+          {!hasMore && displayedAPIs.length > 0 && (
+            <div className="text-center py-8">
+              <p className="text-gray-400 text-sm">모든 결과를 불러왔습니다.</p>
+            </div>
+          )}
+        </main>
       </div>
+
+      {/* Filter Modal */}
+      <FilterModal 
+        isOpen={isFiltersVisible}
+        onClose={() => setIsFiltersVisible(false)}
+        priceFilter={priceFilter}
+        togglePriceFilter={togglePriceFilter}
+        ratingFilter={ratingFilter}
+        setRatingFilter={setRatingFilter}
+        countryFilter={countryFilter}
+        toggleCountryFilter={toggleCountryFilter}
+        authMethodFilter={authMethodFilter}
+        toggleAuthMethodFilter={toggleAuthMethodFilter}
+        docLanguageFilter={docLanguageFilter}
+        toggleDocLanguageFilter={toggleDocLanguageFilter}
+        companyFilter={companyFilter}
+        toggleCompanyFilter={toggleCompanyFilter}
+        resultCount={filteredAPIs.length}
+      />
 
       {/* Compare Modal */}
       <CompareModal

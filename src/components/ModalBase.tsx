@@ -34,7 +34,7 @@ export default function ModalBase({ isOpen, onClose, title, children }: Props) {
         onClick={onClose}
         aria-hidden="true"
       />
-      <div role="dialog" aria-modal="true" aria-label={title} className="relative z-10 w-full max-w-4xl mx-4">
+      <div role="dialog" aria-modal="true" aria-label={title} className="relative z-10 w-full max-w-lg mx-4">
         <div className="bg-white rounded-lg shadow-lg overflow-hidden">
           <div className="p-4 border-b flex items-center justify-between">
             <h3 className="font-bold">{title}</h3>

@@ -30,14 +30,14 @@ export default function APICard({ api, onToggleCompare, isCompareSelected }: API
   return (
     <Link 
       href={`/api/${api.id}`}
-      className="block w-full h-full min-h-[13rem] relative bg-white rounded-2xl transition-all duration-300 hover:translate-y-[-0.25rem] shadow-card border-thin border-sky-500"
+      className="block w-full h-full min-h-[13rem] relative bg-white rounded-2xl transition-all duration-300 hover:translate-y-[-0.25rem] shadow-card"
     >
       <div className="relative p-5 h-full flex flex-col">
         {/* Top Section: Image and Info */}
         <div className="flex gap-4 mb-3">
           {/* Logo Image */}
           <div 
-            className="w-14 h-14 rounded-[10px] flex-shrink-0 bg-white flex items-center justify-center overflow-hidden shadow-image border-thin border-sky-500"
+            className="w-24 h-24 min-w-[6rem] rounded-[10px] flex-shrink-0 bg-white flex items-center justify-center overflow-hidden shadow-image"
           >
             {api.logo ? (
                // eslint-disable-next-line @next/next/no-img-element
