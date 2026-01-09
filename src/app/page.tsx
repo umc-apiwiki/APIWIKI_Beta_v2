@@ -120,8 +120,8 @@ export default function HomePage() {
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ 
             opacity: searchFocused ? 0 : 1, 
-            scale: searchFocused ? 0.8 : 1,
-            y: searchFocused ? -20 : 0
+            scale: 1,
+            y: 0
           }}
           transition={{ duration: 0.5 }}
           className="mb-2 relative w-[93px] h-[93px]"
@@ -146,7 +146,7 @@ export default function HomePage() {
           initial={{ opacity: 0, y: -20 }}
           animate={{ 
             opacity: searchFocused ? 0 : 1, 
-            y: searchFocused ? -20 : 0 
+            y: 0 
           }}
           transition={{ duration: 0.6, delay: searchFocused ? 0 : 0.1 }}
         >
@@ -165,9 +165,9 @@ export default function HomePage() {
           initial={{ opacity: 0 }}
           animate={{
             opacity: searchFocused ? 0 : 1,
-            y: searchFocused ? -10 : 0
+            y: 0
           }}
-          transition={{ duration: 0.3 }}
+          transition={{ duration: 0.2 }}
         >
           개발자가 함께 만드는 API 지식, 실시간으로 업데이트됩니다
         </motion.p>
@@ -175,9 +175,9 @@ export default function HomePage() {
         <motion.div 
           className="w-[800px] mb-[20px] max-w-[90vw]"
           animate={{
-            marginTop: searchFocused ? -540 : 0
+            y: searchFocused ? -300 : 0
           }}
-          transition={{ duration: 0.3 }}
+          transition={{ duration: 0.5 }}
         >
           <SearchBar onFocusChange={setSearchFocused} />
         </motion.div>
@@ -192,7 +192,7 @@ export default function HomePage() {
             opacity: searchFocused ? 0 : 1,
             y: searchFocused ? -10 : 0
           }}
-          transition={{ duration: 0.3 }}
+          transition={{ duration: 0.2 }}
         >
           <CategoryCarousel />
         </motion.div>
