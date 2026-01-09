@@ -119,9 +119,9 @@ export default function HomePage() {
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ 
-            opacity: 1, 
-            scale: 1,
-            y: searchFocused ? 10 : 0
+            opacity: searchFocused ? 0 : 1, 
+            scale: searchFocused ? 0.8 : 1,
+            y: searchFocused ? -20 : 0
           }}
           transition={{ duration: 0.5 }}
           className="mb-2 relative w-[93px] h-[93px]"
@@ -145,8 +145,8 @@ export default function HomePage() {
           }}
           initial={{ opacity: 0, y: -20 }}
           animate={{ 
-            opacity: 1, 
-            y: searchFocused ? 10 : 0 
+            opacity: searchFocused ? 0 : 1, 
+            y: searchFocused ? -20 : 0 
           }}
           transition={{ duration: 0.6, delay: searchFocused ? 0 : 0.1 }}
         >
@@ -175,7 +175,7 @@ export default function HomePage() {
         <motion.div 
           className="w-[800px] mb-[20px] max-w-[90vw]"
           animate={{
-            marginTop: searchFocused ? -50 : 0
+            marginTop: searchFocused ? -540 : 0
           }}
           transition={{ duration: 0.3 }}
         >
