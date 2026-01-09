@@ -8,9 +8,10 @@ interface APICardProps {
   api: API;
   onToggleCompare?: () => void;
   isCompareSelected?: boolean;
+  hideCompare?: boolean;
 }
 
-export default function APICard({ api, onToggleCompare, isCompareSelected }: APICardProps) {
+export default function APICard({ api, onToggleCompare, isCompareSelected, hideCompare = false }: APICardProps) {
   const priceLabels = {
     free: 'Free',
     paid: 'Paid',
@@ -76,25 +77,27 @@ export default function APICard({ api, onToggleCompare, isCompareSelected }: API
         </div>
 
         {/* Description */}
-        <div className="text-slate-600 text-xs font-normal font-sans line-clamp-2 mb-8 leading-relaxed h-[2.25rem]">
+        <div className={`text-slate-600 text-xs font-normal font-sans line-clamp-2 leading-relaxed h-[2.25rem] ${hideCompare ? 'mb-4' : 'mb-8'}`}>
           {api.description}
         </div>
 
         {/* Compare Button (Absolute bottom positioning to match design intent) */}
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2" onClick={(e) => {
-          if (onToggleCompare) {
-            e.preventDefault();
-            onToggleCompare();
-          }
-        }}>
-          <div className="w-24 h-7 relative group cursor-pointer">
-            <div className={`w-24 h-7 absolute rounded-full transition-all shadow-button border-sky-500 border ${isCompareSelected ? 'bg-sky-500' : 'bg-white group-hover:bg-sky-50'}`}
-            />
-            <div className={`w-full h-full absolute flex items-center justify-center text-xs font-semibold font-sans leading-none ${isCompareSelected ? 'text-white' : 'text-sky-500'}`}>
-              {isCompareSelected ? 'Selected' : 'Compare'}
+        {!hideCompare && (
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2" onClick={(e) => {
+            if (onToggleCompare) {
+              e.preventDefault();
+              onToggleCompare();
+            }
+          }}>
+            <div className="w-24 h-7 relative group cursor-pointer">
+              <div className={`w-24 h-7 absolute rounded-full transition-all shadow-button border-sky-500 border ${isCompareSelected ? 'bg-sky-500' : 'bg-white group-hover:bg-sky-50'}`}
+              />
+              <div className={`w-full h-full absolute flex items-center justify-center text-xs font-semibold font-sans leading-none ${isCompareSelected ? 'text-white' : 'text-sky-500'}`}>
+                {isCompareSelected ? 'Selected' : 'Compare'}
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
     </Link>
   );

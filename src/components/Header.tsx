@@ -92,30 +92,30 @@ export default function Header({ transparent = false, className = '' }: HeaderPr
                         WebkitUserSelect: 'none'
                     }}
                 >
-                    <a 
-                        href="/boards/community" 
+                    <a
+                        href="/boards/community"
                         className="text-xl font-medium transition-colors whitespace-nowrap"
-                        style={{ color: 'var(--text-gray)' }}
+                        style={{ color: '#0D3C61' }}
                         onMouseEnter={(e) => e.currentTarget.style.color = 'var(--primary-blue)'}
-                        onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-gray)'}
+                        onMouseLeave={(e) => e.currentTarget.style.color = '#0D3C61'}
                     >
                         Community
                     </a>
-                    <a 
-                        href="/explore" 
+                    <a
+                        href="/explore"
                         className="text-xl font-medium transition-colors whitespace-nowrap"
-                        style={{ color: 'var(--text-gray)' }}
+                        style={{ color: '#0D3C61' }}
                         onMouseEnter={(e) => e.currentTarget.style.color = 'var(--primary-blue)'}
-                        onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-gray)'}
+                        onMouseLeave={(e) => e.currentTarget.style.color = '#0D3C61'}
                     >
                         Explore
                     </a>
-                    <a 
-                        href="/about" 
+                    <a
+                        href="/about"
                         className="text-xl font-medium transition-colors whitespace-nowrap"
-                        style={{ color: 'var(--text-gray)' }}
+                        style={{ color: '#0D3C61' }}
                         onMouseEnter={(e) => e.currentTarget.style.color = 'var(--primary-blue)'}
-                        onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-gray)'}
+                        onMouseLeave={(e) => e.currentTarget.style.color = '#0D3C61'}
                     >
                         About Us
                     </a>
@@ -211,8 +211,8 @@ export default function Header({ transparent = false, className = '' }: HeaderPr
                         <motion.button
                             onClick={() => setIsLoginModalOpen(true)}
                             className="text-xl font-semibold cursor-pointer"
-                            style={{ color: 'var(--text-gray)' }}
-                            whileHover={{ 
+                            style={{ color: '#0D3C61' }}
+                            whileHover={{
                                 scale: 1.05,
                                 color: 'var(--primary-blue)'
                             }}

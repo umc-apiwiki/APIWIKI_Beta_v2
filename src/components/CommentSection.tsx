@@ -238,9 +238,9 @@ export default function CommentSection({ boardId }: CommentSectionProps) {
                                             <span className="font-semibold text-[15px]" style={{ color: 'var(--text-dark)' }}>
                                                 {comment.author?.name || comment.author_name}
                                             </span>
-                                            {comment.author?.grade && (
-                                                <span className="px-2 py-0.5 text-[11px] font-medium rounded-full" style={{ backgroundColor: 'var(--primary-blue)15', color: 'var(--primary-blue)' }}>
-                                                    {comment.author.grade}
+                                            {comment.author?.grade === 'admin' && (
+                                                <span className="px-2 py-0.5 text-[11px] font-bold rounded-full" style={{ backgroundColor: '#E3F2FD', color: '#1976D2', border: '1px solid #BBDEFB' }}>
+                                                    운영진
                                                 </span>
                                             )}
                                         </div>

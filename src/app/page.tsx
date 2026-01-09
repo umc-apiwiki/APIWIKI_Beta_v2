@@ -327,14 +327,14 @@ export default function HomePage() {
                   viewport={{ once: true }}
                   transition={{ duration: 0.4, delay: index * 0.1 }}
                 >
-                  <APICard api={api} />
+                  <APICard api={api} hideCompare={true} />
                 </motion.div>
               ))}
             </div>
           </motion.section>
 
           {/* Suggest API */}
-          <motion.section 
+          <motion.section
             className="mb-16 col-12"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -346,15 +346,15 @@ export default function HomePage() {
             </h2>
             <div className="grid grid-cols-12 grid-gap-24">
               {suggestedAPIs.map((api, index) => (
-                <motion.div 
-                  key={api.id} 
+                <motion.div
+                  key={api.id}
                   className="col-3"
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.4, delay: index * 0.1 }}
                 >
-                  <APICard api={api} />
+                  <APICard api={api} hideCompare={true} />
                 </motion.div>
               ))}
             </div>

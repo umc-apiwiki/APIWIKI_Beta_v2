@@ -35,6 +35,8 @@ function ExploreContent() {
 
   const [isFiltersVisible, setIsFiltersVisible] = useState(false);
 
+  // 필터 상태들
+  const [priceFilter, setPriceFilter] = useState<string[]>([]);
   const [ratingFilter, setRatingFilter] = useState<number>(0);
   const [countryFilter, setCountryFilter] = useState<string[]>([]);
   const [authMethodFilter, setAuthMethodFilter] = useState<string[]>([]);
@@ -86,6 +88,14 @@ function ExploreContent() {
     const queryParam = searchParams.get('q') || '';
     setSelectedCategory(categoryParam);
     setSearchQuery(queryParam);
+    
+    // 검색어가 있으면 기본 정렬을 '정확도순'으로 변경
+    if (queryParam) {
+      setSortBy('정확도순');
+    } else if (sortBy === '정확도순') {
+      // 검색어가 사라지면 다시 '인기순'으로 복귀 (선택사항)
+      setSortBy('인기순');
+    }
   }, [searchParams]);
 
   // 필터 및 정렬 적용
@@ -168,11 +178,46 @@ function ExploreContent() {
 
     // Sort
     switch (sortBy) {
+      case '정확도순':
+        if (searchQuery) {
+            const query = searchQuery.toLowerCase();
+            result.sort((a, b) => {
+                const getScore = (api: API) => {
+                    let score = 0;
+                    const name = api.name.toLowerCase();
+                    const desc = api.description.toLowerCase();
+                    const company = api.company ? api.company.toLowerCase() : '';
+                    
+                    if (name === query) score += 100;
+                    else if (name.startsWith(query)) score += 80;
+                    else if (name.includes(query)) score += 60;
+                    
+                    if (company.includes(query)) score += 50;
+                    if (desc.includes(query)) score += 40;
+                    
+                    if (api.categories.some(c => c.toLowerCase().includes(query))) score += 20;
+                    if (api.tags && api.tags.some(t => t.toLowerCase().includes(query))) score += 20;
+                    
+                    // Add rating as a tie-breaker
+                    score += (api.rating || 0);
+
+                    return score;
+                };
+                return getScore(b) - getScore(a);
+            });
+        } else {
+            // Fallback if no query
+             result.sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
+        }
+        break;
       case '인기순':
         // Treat missing ratings as 0 to keep comparator safe
         result.sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
         break;
       case '최신순':
+        // Assuming createdat exists, if not fallback to nothing (or id)
+        // @ts-ignore
+        result.sort((a, b) => new Date(b.createdat || 0).getTime() - new Date(a.createdat || 0).getTime());
         break;
       case '후기 많은 순':
         // Fallback to 0 when users count is missing to keep comparator safe
@@ -280,13 +325,6 @@ function ExploreContent() {
     );
   };
 
-  interface PriceFilter {
-     // placeholder
-  }
-
-  // Define priceFilter state which was lost
-  const [priceFilter, setPriceFilter] = useState<string[]>([]);
-
   // 필터 적용 핸들러
   const handleApplyFilters = (filters: {
     priceFilter: string[];
@@ -319,23 +357,23 @@ function ExploreContent() {
       {/* 배경 그라데이션 효과 */}
       <div className="bg-glow" />
 
-      <div className="grid-container py-6 pt-[6.25rem]">
-        {/* 검색바 */}
-        <div className="mb-12 col-12 flex justify-center">
-          <div className="max-w-[90vw] w-[45.75rem]">
-            <SearchBar 
-              initialQuery={searchQuery}
-              onSearch={(query) => {
-                setSearchQuery(query);
-                if (query.trim()) {
-                  router.push(`/explore?q=${encodeURIComponent(query)}`);
-                }
-              }}
-              showDropdown={false}
-            />
-          </div>
+      {/* 검색바 - 페이지 최상단 */}
+      <div className="w-full flex justify-center" style={{ marginTop: '120px', marginBottom: '2rem' }}>
+        <div className="w-[800px] max-w-[90vw]">
+          <SearchBar
+            initialQuery={searchQuery}
+            onSearch={(query) => {
+              setSearchQuery(query);
+              if (query.trim()) {
+                router.push(`/explore?q=${encodeURIComponent(query)}`);
+              }
+            }}
+            showDropdown={true}
+          />
         </div>
+      </div>
 
+      <div className="grid-container py-6">
         {/* 메인 콘텐츠 영역 (Full width now) */}
         <main className="col-12">
           {/* 정렬 옵션 및 결과 수 */}
@@ -376,7 +414,7 @@ function ExploreContent() {
                 {/* Dropdown Menu */}
                 <div className="absolute right-0 top-full mt-2 w-40 bg-white rounded-lg shadow-xl border border-gray-100 hidden group-hover:block z-50">
                    <div className="py-2">
-                     {['인기순', '최신순', '후기 많은 순', '비용 낮은 순'].map(option => (
+                     {['정확도순', '인기순', '최신순', '후기 많은 순', '비용 낮은 순'].map(option => (
                        <button
                          key={option}
                          onClick={() => setSortBy(option)}

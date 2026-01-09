@@ -57,7 +57,7 @@ export default function APIDetailPage({ params }: { params: { id: string } }) {
   ];
 
   return (
-    <div className="min-h-screen bg-[#F5F7FA] font-sans">
+    <div className="min-h-screen" style={{ backgroundColor: 'var(--bg-light)' }}>
       <Header />
       
       <div className="max-w-6xl mx-auto px-6 py-8 pt-28 relative">
@@ -154,48 +154,16 @@ export default function APIDetailPage({ params }: { params: { id: string } }) {
         </div>
 
         {/* Similar APIs */}
-        <div className="mt-24 pb-16">
-          <h3 className="text-xl font-medium text-[#0c4a6e] mb-6">비슷한 API</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-             {relatedAPIs.length > 0 ? relatedAPIs.map(item => (
-               <APICard key={item.id} api={item} />
-             )) : (
-               // Mock Data
-               [
-                 { 
-                   id: '1', name: '국토부 2D지도API', rating: 4.8, users: '1.2B', price: 'free', 
-                   logo: 'https://placehold.co/70x70', description: 'Sample description' 
-                 },
-                 { 
-                   id: '2', name: 'Naver', rating: 4.3, users: '820M', price: 'mixed', 
-                   logo: 'https://placehold.co/70x70', description: 'Sample description' 
-                 },
-                 { 
-                   id: '3', name: '카카오페이', rating: 3.6, users: '120M', price: 'free', 
-                   logo: 'https://placehold.co/70x70', description: 'Sample description' 
-                 },
-                 { 
-                   id: '4', name: 'AWS API', rating: 4.8, users: '990M', price: 'paid', 
-                   logo: 'https://placehold.co/70x70', description: 'Sample description' 
-                 }
-               ].map((mockApi) => (
-                  <div key={mockApi.id} className="relative group">
-                    <div className="bg-white rounded-2xl shadow-[1px_3px_8px_0px_rgba(33,150,243,0.25)] border-[0.25px] border-sky-500 p-5 min-h-[140px] transition-transform hover:-translate-y-1">
-                      <div className="flex items-start gap-3 mb-2">
-                        <img src={mockApi.logo} alt="" className="w-14 h-14 rounded-[8px] border-[0.5px] border-sky-500 object-cover" />
-                        <div>
-                          <div className="text-base font-medium text-black truncate w-28">{mockApi.name}</div>
-                          <div className="text-xs font-medium text-black mt-1">Star {mockApi.rating}</div>
-                          <div className="text-xs font-medium text-black">Used by {mockApi.users}</div>
-                          <div className="text-[10px] font-normal text-zinc-400 mt-1 uppercase">{mockApi.price}</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-               ))
-             )}
+        {relatedAPIs.length > 0 && (
+          <div className="mt-24 pb-16">
+            <h3 className="text-xl font-medium text-[#0c4a6e] mb-6">비슷한 API</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {relatedAPIs.map(item => (
+                <APICard key={item.id} api={item} hideCompare={true} />
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

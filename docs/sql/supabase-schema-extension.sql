@@ -155,10 +155,19 @@ CREATE INDEX IF NOT EXISTS idx_api_status ON "Api"(status);
 -- 트리거 추가 (updatedAt 자동 업데이트)
 -- ============================================
 
+-- snake_case 컬럼용 업데이트 함수 (User/Api 테이블은 set_updated_at 사용)
+CREATE OR REPLACE FUNCTION set_updated_at_snake_case()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.updated_at = NOW();
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
 -- boards 테이블 updatedAt 트리거
 CREATE TRIGGER boards_set_updated_at
 BEFORE UPDATE ON boards
-FOR EACH ROW EXECUTE PROCEDURE set_updated_at();
+FOR EACH ROW EXECUTE PROCEDURE set_updated_at_snake_case();
 
 -- ============================================
 -- 코멘트

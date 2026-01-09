@@ -221,50 +221,28 @@ export default function APIRegistrationForm({ onSubmit, onCancel }: APIRegistrat
                 </select>
             </div>
 
-            {/* 가격 상세 */}
+            {/* 가격 상세 - CSV 형식 */}
             <div className="space-y-3">
                 <h4 className="text-sm font-medium text-gray-700">가격 상세 (선택사항)</h4>
+                <p className="text-xs text-gray-500">
+                    각 플랜을 쉼표(,)로 구분하여 입력하세요. 예: 무료 플랜 설명, 기본 플랜 설명, 프로 플랜 설명
+                </p>
 
                 <div>
-                    <label htmlFor="pricing-free" className="block text-xs text-gray-600 mb-1">
-                        무료 플랜
+                    <label htmlFor="pricing-csv" className="block text-xs text-gray-600 mb-1">
+                        가격 플랜 (CSV)
                     </label>
-                    <input
-                        id="pricing-free"
-                        type="text"
-                        value={formData.pricing?.free || ''}
-                        onChange={(e) => handlePricingChange('free', e.target.value)}
-                        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-                        placeholder="예: 월 1,000건 무료"
+                    <textarea
+                        id="pricing-csv"
+                        value={formData.pricing?.csv || ''}
+                        onChange={(e) => handlePricingChange('csv' as any, e.target.value)}
+                        rows={3}
+                        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent resize-none"
+                        placeholder="예: 월 1,000건 무료, 월 $10 - 10,000건, 월 $100 - 100,000건"
                     />
-                </div>
-
-                <div>
-                    <label htmlFor="pricing-basic" className="block text-xs text-gray-600 mb-1">
-                        기본 플랜
-                    </label>
-                    <input
-                        id="pricing-basic"
-                        type="text"
-                        value={formData.pricing?.basic || ''}
-                        onChange={(e) => handlePricingChange('basic', e.target.value)}
-                        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-                        placeholder="예: 월 $10 - 10,000건"
-                    />
-                </div>
-
-                <div>
-                    <label htmlFor="pricing-pro" className="block text-xs text-gray-600 mb-1">
-                        프로 플랜
-                    </label>
-                    <input
-                        id="pricing-pro"
-                        type="text"
-                        value={formData.pricing?.pro || ''}
-                        onChange={(e) => handlePricingChange('pro', e.target.value)}
-                        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-                        placeholder="예: 월 $100 - 100,000건"
-                    />
+                    <p className="text-xs text-gray-400 mt-1">
+                        쉼표로 구분된 각 항목이 하나의 플랜으로 표시됩니다
+                    </p>
                 </div>
             </div>
 
