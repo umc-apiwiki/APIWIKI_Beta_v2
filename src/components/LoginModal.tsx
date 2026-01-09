@@ -15,7 +15,11 @@ interface LoginModalProps {
 export default function LoginModal({ isOpen, onClose, onSwitchToSignup }: LoginModalProps) {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
-    const [showBetaMessage, setShowBetaMessage] = useState(false);
+    const [loginError, setLoginError] = useState('');
+    const [formData, setFormData] = useState({
+        email: '',
+        password: ''
+    });
 
     useEffect(() => {
         if (isOpen) {
@@ -25,6 +29,8 @@ export default function LoginModal({ isOpen, onClose, onSwitchToSignup }: LoginM
         }
         return () => {
             document.body.classList.remove('modal-open');
+            setLoginError('');
+            setFormData({ email: '', password: '' });
         };
     }, [isOpen]);
 
@@ -37,178 +43,161 @@ export default function LoginModal({ isOpen, onClose, onSwitchToSignup }: LoginM
         onClose();
     };
 
-    const handleLoginAttempt = () => {
-        setShowBetaMessage(true);
-        setTimeout(() => setShowBetaMessage(false), 4000);
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value,
+        });
     };
 
-    // 실제 로그인 구현 시 사용할 함수들 (현재는 비활성화)
+    const handleCredentialsLogin = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setLoginError('');
+        setIsLoading(true);
+
+        try {
+            const result = await signIn('credentials', {
+                email: formData.email,
+                password: formData.password,
+                redirect: false,
+            });
+
+            if (result?.error) {
+                setLoginError('이메일 또는 비밀번호가 올바르지 않습니다.');
+            } else if (result?.ok) {
+                onClose();
+                router.refresh();
+            }
+        } catch (error) {
+            setLoginError('로그인 중 오류가 발생했습니다.');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     const handleGoogleLogin = async () => {
-        handleLoginAttempt();
-        // setIsLoading(true);
-        // try {
-        //     await signIn('google', { callbackUrl: '/' });
-        // } catch (error) {
-        //     console.error('Google login error:', error);
-        // } finally {
-        //     setIsLoading(false);
-        // }
+        setIsLoading(true);
+        try {
+            await signIn('google', { callbackUrl: '/' });
+        } catch (error) {
+            console.error('Google login error:', error);
+            setLoginError('Google 로그인 중 오류가 발생했습니다.');
+            setIsLoading(false);
+        }
     };
 
-    const handleGithubLogin = async () => {
-        handleLoginAttempt();
-        // setIsLoading(true);
-        // try {
-        //     await signIn('github', { callbackUrl: '/' });
-        // } catch (error) {
-        //     console.error('Github login error:', error);
-        // } finally {
-        //     setIsLoading(false);
-        // }
-    };
+    // const handleGithubLogin = async () => {
+    //     setIsLoading(true);
+    //     try {
+    //         await signIn('github', { callbackUrl: '/' });
+    //     } catch (error) {
+    //         console.error('Github login error:', error);
+    //     } finally {
+    //         setIsLoading(false);
+    //     }
+    // };
 
     return (
         <AnimatePresence>
             {isOpen && (
                 <motion.div 
-                    className="fixed inset-0 bg-black/[0.18] backdrop-blur-[3px] flex items-center justify-center z-[2000]"
+                    className="fixed inset-0 bg-black/30 backdrop-blur-[6px] flex items-center justify-center z-[2000]"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    transition={{ duration: 0.3 }}
+                    transition={{ duration: 0.2 }}
                     onClick={handleClose}
                 >
                     <motion.div 
-                        className="bg-white rounded-[25px] w-[390px] p-[40px] relative text-center"
-                        style={{
-                            boxShadow: 'var(--shadow-blue)',
-                            border: '0.5px solid var(--primary-blue)'
-                        }}
-                        initial={{ scale: 0.9, opacity: 0, y: 20 }}
+                        className="bg-white rounded-[32px] w-[380px] p-8 relative flex flex-col items-center shadow-2xl"
+                        initial={{ scale: 0.95, opacity: 0, y: 10 }}
                         animate={{ scale: 1, opacity: 1, y: 0 }}
-                        exit={{ scale: 0.9, opacity: 0, y: 20 }}
+                        exit={{ scale: 0.95, opacity: 0, y: 10 }}
                         transition={{ duration: 0.3, type: "spring", damping: 25, stiffness: 300 }}
                         onClick={(e) => e.stopPropagation()}
                     >
-                {/* Close Button */}
-                <span
-                    className="absolute top-[20px] right-[20px] w-[24px] h-[24px] cursor-pointer text-[24px] text-[#aaa] opacity-50 hover:opacity-100 transition-opacity"
-                    onClick={handleClose}
-                >
-                    &times;
-                </span>
-
-                {/* Logo */}
-                <div className="text-center mb-[20px]">
-                    <div className="h-[150px] flex items-center justify-center mb-[-20px]">
-                        <img 
-                            src="/logo.svg" 
-                            alt="API Wiki Logo" 
-                            className="h-[120px] w-auto"
-                        />
-                    </div>
-                    <h2 
-                        className="text-[32px] font-bold mb-[10px]"
-                        style={{ color: 'var(--primary-blue)' }}
-                    >
-                        API Wiki
-                    </h2>
-                    <div className="mb-[30px]">
-                        <p 
-                            className="text-[18px] font-semibold mb-[8px]"
-                            style={{ color: 'var(--text-dark)' }}
+                        <button
+                            className="absolute top-5 right-5 text-gray-300 hover:text-gray-500 transition-colors"
+                            onClick={handleClose}
                         >
-                            로그인 하고 경험을 공유해요!
-                        </p>
-                        <p 
-                            className="text-[14px] leading-[1.6]"
-                            style={{ color: 'var(--text-gray)' }}
-                        >
-                            현재 Beta 버전에서는 로그인 없이도<br />
-                            대부분의 기능을 이용할 수 있습니다.
-                        </p>
-                    </div>
-                </div>
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                        </button>
 
-                {/* Beta Message */}
-                <AnimatePresence>
-                    {showBetaMessage && (
-                        <motion.div
-                            className="mb-4 p-4 rounded-[15px] border-2"
-                            style={{
-                                backgroundColor: 'rgba(33, 150, 243, 0.05)',
-                                borderColor: 'var(--primary-blue)'
-                            }}
-                            initial={{ opacity: 0, scale: 0.9, y: -10 }}
-                            animate={{ opacity: 1, scale: 1, y: 0 }}
-                            exit={{ opacity: 0, scale: 0.9, y: -10 }}
-                            transition={{ duration: 0.3 }}
-                        >
-                            <div className="text-left">
-                                <p className="text-[15px] font-semibold mb-1" style={{ color: 'var(--primary-blue)' }}>
-                                    Beta 버전 안내
-                                </p>
-                                <p className="text-[13px] leading-[1.6]" style={{ color: 'var(--text-dark)' }}>
-                                    로그인 기능은 곧 출시될 예정입니다.<br />
-                                    현재는 로그인 없이 모든 기능을 자유롭게 이용하실 수 있습니다! 😊
-                                </p>
-                            </div>
-                        </motion.div>
-                    )}
-                </AnimatePresence>
+                        <div className="flex flex-col items-center mb-8 mt-2">
+                            <img src="/logo.svg" alt="API Wiki" className="h-[60px] mb-2" />
+                            <h2 className="text-[#2196F3] text-[26px] font-bold tracking-tight">API Wiki</h2>
+                        </div>
 
-                {/* Login Buttons */}
-                <div className="relative">
-                    <motion.button
-                        onClick={handleGoogleLogin}
-                        disabled={isLoading}
-                        className="w-full py-[15px] px-[20px] mb-[15px] rounded-[50px] border border-[#E0E0E9] bg-white flex items-center justify-center gap-[12px] text-[18px] font-medium text-[#1D1C2B] cursor-pointer disabled:opacity-50 relative"
-                        style={{ boxShadow: '0px 18px 30px rgba(130, 119, 197, 0.11)' }}
-                        whileHover={{ y: -2, backgroundColor: '#f8f8f8' }}
-                        whileTap={{ scale: 0.98 }}
-                        transition={{ duration: 0.2 }}
-                    >
-                        <span className="absolute top-[-8px] right-[10px] px-2 py-0.5 text-[11px] font-bold rounded-full text-white" style={{ backgroundColor: '#FF9800' }}>
-                            Coming Soon
-                        </span>
-                        <svg width="24" height="24" viewBox="0 0 24 24">
-                            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-                        </svg>
-                        Sign up with Google
-                    </motion.button>
+                        <form onSubmit={handleCredentialsLogin} className="w-full space-y-3">
+                            <input 
+                                type="text"
+                                name="email"
+                                placeholder="아이디"
+                                value={formData.email}
+                                onChange={handleChange}
+                                className="w-full h-[52px] px-5 rounded-2xl border border-gray-200 bg-white text-[15px] focus:outline-none focus:border-[#2196F3] focus:ring-1 focus:ring-[#2196F3] transition-all placeholder:text-gray-400"
+                                disabled={isLoading}
+                            />
+                            <input 
+                                type="password"
+                                name="password"
+                                placeholder="비밀번호"
+                                value={formData.password}
+                                onChange={handleChange}
+                                className="w-full h-[52px] px-5 rounded-2xl border border-gray-200 bg-white text-[15px] focus:outline-none focus:border-[#2196F3] focus:ring-1 focus:ring-[#2196F3] transition-all placeholder:text-gray-400"
+                                disabled={isLoading}
+                            />
+                            
+                             {loginError && (
+                                <p className="text-[13px] text-red-500 text-center mt-1 font-medium">{loginError}</p>
+                            )}
 
-                    <motion.button
-                        onClick={handleGithubLogin}
-                        disabled={isLoading}
-                        className="w-full py-[15px] px-[20px] mb-[15px] rounded-[50px] border border-[#E0E0E9] bg-white flex items-center justify-center gap-[12px] text-[18px] font-medium text-[#1D1C2B] cursor-pointer disabled:opacity-50 relative"
-                        style={{ boxShadow: '0px 18px 30px rgba(130, 119, 197, 0.11)' }}
-                        whileHover={{ y: -2, backgroundColor: '#f8f8f8' }}
-                        whileTap={{ scale: 0.98 }}
-                        transition={{ duration: 0.2 }}
-                    >
-                        <span className="absolute top-[-8px] right-[10px] px-2 py-0.5 text-[11px] font-bold rounded-full text-white" style={{ backgroundColor: '#FF9800' }}>
-                            Coming Soon
-                        </span>
-                        <svg width="24" height="24" viewBox="0 0 24 24">
-                            <path fill="#24292F" d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.17 6.839 9.49.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.167 22 16.418 22 12c0-5.523-4.477-10-10-10z"/>
-                        </svg>
-                        Sign up with Github
-                    </motion.button>
-                </div>
+                            <button
+                                type="submit"
+                                disabled={isLoading}
+                                className="w-full h-[52px] rounded-full bg-[#2196F3] text-white font-bold text-[16px] hover:bg-[#1E88E5] transition-all shadow-[0_4px_14px_0_rgba(33,150,243,0.39)] mt-2 active:scale-[0.98]"
+                            >
+                                {isLoading ? '로그인 중...' : '로그인'}
+                            </button>
+                        </form>
+                        
+                        <div className="flex items-center justify-center gap-4 mt-5 text-[12px] text-gray-400 font-medium">
+                            <button className="hover:text-gray-600 transition-colors">아이디 찾기</button>
+                            <div className="w-[1px] h-3 bg-gray-300"></div>
+                            <button className="hover:text-gray-600 transition-colors">비밀번호 찾기</button>
+                            <div className="w-[1px] h-3 bg-gray-300"></div>
+                            <button onClick={onSwitchToSignup} className="hover:text-gray-600 transition-colors">회원가입</button>
+                        </div>
 
-                {/* Footer */}
-                <div 
-                    className="text-center text-[11px] leading-[1.5] mt-[30px]"
-                    style={{ color: 'rgba(0, 0, 0, 0.43)' }}
-                >
-                    계속 진행할 경우 API WIKI의 이용약관에 동의하고<br />
-                    개인정보 처리 방침을 이해하는 것으로 간주됩니다.
-                </div>
-            </motion.div>
-        </motion.div>
+                         <div className="w-full mt-8 space-y-3">
+                             <button
+                                onClick={handleGoogleLogin}
+                                disabled={isLoading}
+                                className="w-full h-[52px] rounded-full border border-gray-200 flex items-center justify-center gap-3 bg-white hover:bg-gray-50 transition-all active:scale-[0.98]"
+                             >
+                                 <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="G" className="w-5 h-5"/>
+                                 <span className="text-[14px] font-bold text-[#1f2937]">Sign up with Google</span>
+                             </button>
+                             <button
+                                // onClick={handleGithubLogin}
+                                disabled={true} 
+                                className="w-full h-[52px] rounded-full border border-gray-200 flex items-center justify-center gap-3 bg-white hover:bg-gray-50 transition-all opacity-60 cursor-not-allowed"
+                             >
+                                 <img src="https://www.svgrepo.com/show/512317/github-142.svg" alt="GH" className="w-5 h-5"/>
+                                 <span className="text-[14px] font-bold text-[#1f2937]">Sign up with Github</span>
+                             </button>
+                         </div>
+                         
+                         <div className="mt-8 text-[10px] text-gray-300 text-center leading-normal">
+                             계속 진행할 경우 API WIKI의 이용약관에 동의하고<br/>
+                             개인정보 처리 방침을 이해하는 것으로 간주됩니다.
+                         </div>
+
+                    </motion.div>
+                </motion.div>
             )}
         </AnimatePresence>
     );

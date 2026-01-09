@@ -1,10 +1,11 @@
 // src/components/SignupModal.tsx
+
 'use client';
 
 import { useState } from 'react';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import ModalBase from './ModalBase';
+import { motion, AnimatePresence } from 'motion/react';
 
 interface SignupModalProps {
     isOpen: boolean;
@@ -105,101 +106,107 @@ export default function SignupModal({ isOpen, onClose, onSwitchToLogin }: Signup
     };
 
     return (
-        <ModalBase isOpen={isOpen} onClose={handleClose} title="회원가입">
-            <form onSubmit={handleSubmit} className="space-y-4">
-                {error && (
-                    <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
-                        {error}
-                    </div>
-                )}
-
-                <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-                        이름
-                    </label>
-                    <input
-                        id="name"
-                        name="name"
-                        type="text"
-                        value={formData.name}
-                        onChange={handleChange}
-                        required
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-                        placeholder="홍길동"
-                        disabled={isLoading}
-                    />
-                </div>
-
-                <div>
-                    <label htmlFor="signup-email" className="block text-sm font-medium text-gray-700 mb-2">
-                        이메일
-                    </label>
-                    <input
-                        id="signup-email"
-                        name="email"
-                        type="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        required
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-                        placeholder="example@email.com"
-                        disabled={isLoading}
-                    />
-                </div>
-
-                <div>
-                    <label htmlFor="signup-password" className="block text-sm font-medium text-gray-700 mb-2">
-                        비밀번호
-                    </label>
-                    <input
-                        id="signup-password"
-                        name="password"
-                        type="password"
-                        value={formData.password}
-                        onChange={handleChange}
-                        required
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-                        placeholder="최소 6자 이상"
-                        disabled={isLoading}
-                    />
-                </div>
-
-                <div>
-                    <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
-                        비밀번호 확인
-                    </label>
-                    <input
-                        id="confirmPassword"
-                        name="confirmPassword"
-                        type="password"
-                        value={formData.confirmPassword}
-                        onChange={handleChange}
-                        required
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-                        placeholder="비밀번호를 다시 입력하세요"
-                        disabled={isLoading}
-                    />
-                </div>
-
-                <button
-                    type="submit"
-                    disabled={isLoading}
-                    className="w-full bg-teal-500 text-white py-2 rounded-lg hover:bg-teal-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        <AnimatePresence>
+             {isOpen && (
+                <motion.div 
+                    className="fixed inset-0 bg-black/30 backdrop-blur-[6px] flex items-center justify-center z-[2000]"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    onClick={handleClose}
                 >
-                    {isLoading ? '가입 중...' : '회원가입'}
-                </button>
-
-                <div className="text-center text-sm text-gray-600">
-                    이미 계정이 있으신가요?{' '}
-                    <button
-                        type="button"
-                        onClick={onSwitchToLogin}
-                        className="text-teal-500 hover:text-teal-600 font-medium"
+                    <motion.div 
+                        className="bg-white rounded-[32px] w-[380px] p-8 relative flex flex-col items-center shadow-2xl"
+                        initial={{ scale: 0.95, opacity: 0, y: 10 }}
+                        animate={{ scale: 1, opacity: 1, y: 0 }}
+                        exit={{ scale: 0.95, opacity: 0, y: 10 }}
+                        transition={{ duration: 0.3, type: "spring", damping: 25, stiffness: 300 }}
+                        onClick={(e) => e.stopPropagation()}
                     >
-                        로그인
-                    </button>
-                </div>
-            </form>
-        </ModalBase>
+                         <button
+                            className="absolute top-5 right-5 text-gray-300 hover:text-gray-500 transition-colors"
+                            onClick={handleClose}
+                        >
+                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                        </button>
+
+                         <div className="flex flex-col items-center mb-8 mt-2">
+                            <img src="/logo.svg" alt="API Wiki" className="h-[60px] mb-2" />
+                            <h2 className="text-[#2196F3] text-[26px] font-bold tracking-tight">API Wiki</h2>
+                        </div>
+
+                        <form onSubmit={handleSubmit} className="w-full space-y-3">
+                            <input
+                                name="name"
+                                type="text"
+                                value={formData.name}
+                                onChange={handleChange}
+                                required
+                                placeholder="닉네임"
+                                className="w-full h-[52px] px-5 rounded-2xl border border-gray-200 bg-white text-[15px] focus:outline-none focus:border-[#2196F3] focus:ring-1 focus:ring-[#2196F3] transition-all placeholder:text-gray-400"
+                                disabled={isLoading}
+                            />
+                            <input
+                                name="email"
+                                type="email"
+                                value={formData.email}
+                                onChange={handleChange}
+                                required
+                                placeholder="이메일"
+                                className="w-full h-[52px] px-5 rounded-2xl border border-gray-200 bg-white text-[15px] focus:outline-none focus:border-[#2196F3] focus:ring-1 focus:ring-[#2196F3] transition-all placeholder:text-gray-400"
+                                disabled={isLoading}
+                            />
+                            <input
+                                name="password"
+                                type="password"
+                                value={formData.password}
+                                onChange={handleChange}
+                                required
+                                placeholder="비밀번호"
+                                className="w-full h-[52px] px-5 rounded-2xl border border-gray-200 bg-white text-[15px] focus:outline-none focus:border-[#2196F3] focus:ring-1 focus:ring-[#2196F3] transition-all placeholder:text-gray-400"
+                                disabled={isLoading}
+                            />
+                             <input
+                                name="confirmPassword"
+                                type="password"
+                                value={formData.confirmPassword}
+                                onChange={handleChange}
+                                required
+                                placeholder="비밀번호 확인"
+                                className="w-full h-[52px] px-5 rounded-2xl border border-gray-200 bg-white text-[15px] focus:outline-none focus:border-[#2196F3] focus:ring-1 focus:ring-[#2196F3] transition-all placeholder:text-gray-400"
+                                disabled={isLoading}
+                            />
+
+                            {error && (
+                                <p className="text-[13px] text-red-500 text-center mt-1 font-medium">{error}</p>
+                            )}
+
+                             <button
+                                type="submit"
+                                disabled={isLoading}
+                                className="w-full h-[52px] rounded-full bg-[#2196F3] text-white font-bold text-[16px] hover:bg-[#1E88E5] transition-all shadow-[0_4px_14px_0_rgba(33,150,243,0.39)] mt-5 active:scale-[0.98]"
+                            >
+                                {isLoading ? '회원가입' : '회원가입'}
+                            </button>
+                        </form>
+
+                        <div className="flex items-center justify-center gap-2 mt-5 text-[12px] text-gray-400 font-medium">
+                           <span>이미 계정이 있으신가요?</span>
+                            <button onClick={onSwitchToLogin} className="hover:text-gray-600 font-medium transition-colors">로그인</button>
+                        </div>
+                        
+                         <div className="mt-8 text-[10px] text-gray-300 text-center leading-normal">
+                             계속 진행할 경우 API WIKI의 이용약관에 동의하고<br/>
+                             개인정보 처리 방침을 이해하는 것으로 간주됩니다.
+                         </div>
+
+                    </motion.div>
+                </motion.div>
+            )}
+        </AnimatePresence>
     );
 }

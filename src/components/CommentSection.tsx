@@ -138,55 +138,51 @@ export default function CommentSection({ boardId }: CommentSectionProps) {
                     )}
                 </AnimatePresence>
 
-                {!isAuthenticated && (
-                    <div>
-                        <label className="block text-[14px] font-medium mb-2" style={{ color: 'var(--text-dark)' }}>
-                            이름 *
-                        </label>
-                        <input
-                            type="text"
-                            value={formData.author_name}
-                            onChange={(e) => setFormData(prev => ({ ...prev, author_name: e.target.value }))}
-                            placeholder="이름을 입력하세요"
-                            className="w-full px-4 py-3 border-2 rounded-[12px] focus:outline-none transition-all"
-                            style={{
-                                borderColor: formData.author_name ? 'var(--primary-blue)' : 'rgba(0, 0, 0, 0.1)',
-                                color: 'var(--text-dark)'
+                {/* Authenticated State: Show Form */}
+                {isAuthenticated ? (
+                    <>
+                        <div>
+                            <label className="block text-[14px] font-medium mb-2" style={{ color: 'var(--text-dark)' }}>
+                                댓글 내용 *
+                            </label>
+                            <textarea
+                                value={formData.content}
+                                onChange={(e) => setFormData(prev => ({ ...prev, content: e.target.value }))}
+                                placeholder="댓글을 입력하세요"
+                                rows={3}
+                                className="w-full px-4 py-3 border-2 rounded-[12px] focus:outline-none resize-none transition-all"
+                                style={{
+                                    borderColor: formData.content ? 'var(--primary-blue)' : 'rgba(0, 0, 0, 0.1)',
+                                    color: 'var(--text-dark)'
+                                }}
+                            />
+                        </div>
+
+                        <motion.button
+                            type="submit"
+                            disabled={isSubmitting}
+                            className="px-6 py-3 text-white font-semibold rounded-[12px] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            style={{ 
+                                backgroundColor: 'var(--primary-blue)',
+                                boxShadow: 'var(--shadow-blue)'
                             }}
-                        />
+                            whileHover={{ scale: isSubmitting ? 1 : 1.02, y: isSubmitting ? 0 : -2 }}
+                            whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
+                        >
+                            {isSubmitting ? '작성 중...' : '댓글 작성'}
+                        </motion.button>
+                    </>
+                ) : (
+                    /* Unauthenticated State: Show Login Message */
+                    <div className="flex flex-col items-center justify-center py-8 space-y-3">
+                        <p className="text-[16px] font-medium text-gray-500">
+                            댓글을 작성하려면 로그인이 필요합니다.
+                        </p>
+                        <div className="p-2 bg-gray-50 rounded-lg text-sm text-gray-400">
+                             🔒 로그인 후 의견을 공유해보세요!
+                        </div>
                     </div>
                 )}
-
-                <div>
-                    <label className="block text-[14px] font-medium mb-2" style={{ color: 'var(--text-dark)' }}>
-                        댓글 내용 *
-                    </label>
-                    <textarea
-                        value={formData.content}
-                        onChange={(e) => setFormData(prev => ({ ...prev, content: e.target.value }))}
-                        placeholder="댓글을 입력하세요"
-                        rows={3}
-                        className="w-full px-4 py-3 border-2 rounded-[12px] focus:outline-none resize-none transition-all"
-                        style={{
-                            borderColor: formData.content ? 'var(--primary-blue)' : 'rgba(0, 0, 0, 0.1)',
-                            color: 'var(--text-dark)'
-                        }}
-                    />
-                </div>
-
-                <motion.button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="px-6 py-3 text-white font-semibold rounded-[12px] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                    style={{ 
-                        backgroundColor: 'var(--primary-blue)',
-                        boxShadow: 'var(--shadow-blue)'
-                    }}
-                    whileHover={{ scale: isSubmitting ? 1 : 1.02, y: isSubmitting ? 0 : -2 }}
-                    whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
-                >
-                    {isSubmitting ? '작성 중...' : '댓글 작성'}
-                </motion.button>
             </motion.form>
 
             {/* 댓글 목록 */}

@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Star, Users, ChevronLeft } from 'lucide-react';
+import { Star, Users, ChevronLeft, Heart, Share2 } from 'lucide-react';
 import Header from '@/components/Header';
 import APICard from '@/components/APICard';
 import WikiEditor from '@/components/WikiEditor';
@@ -29,10 +29,10 @@ export default function APIDetailPage({ params }: { params: { id: string } }) {
 
         // Fetch related APIs
         if (data.categories && data.categories.length > 0) {
-          const relatedResponse = await fetch(`/api/apis?category=${data.categories[0]}&limit=3`);
+          const relatedResponse = await fetch(`/api/apis?category=${data.categories[0]}&limit=6`);
           if (relatedResponse.ok) {
             const relatedData = await relatedResponse.json();
-            setRelatedAPIs(relatedData.filter((a: API) => a.id !== params.id).slice(0, 3));
+            setRelatedAPIs(relatedData.filter((a: API) => a.id !== params.id).slice(0, 5));
           }
         }
       } catch (error) {
@@ -46,384 +46,155 @@ export default function APIDetailPage({ params }: { params: { id: string } }) {
     fetchData();
   }, [params.id]);
 
-  if (loading) {
-    return (
-      <div className="min-h-screen" style={{ backgroundColor: 'var(--bg-light)' }}>
-        <Header />
-        <div className="flex items-center justify-center min-h-screen">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-            <p style={{ color: 'var(--text-gray)' }}>로딩 중...</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  if (loading) return null;
+  if (!api) return <div>API not found</div>;
 
-  if (!api) {
-    return (
-      <div className="min-h-screen" style={{ backgroundColor: 'var(--bg-light)' }}>
-        <Header />
-        <div className="flex items-center justify-center min-h-screen">
-          <div className="text-center">
-            <h1 className="text-2xl font-bold mb-4" style={{ color: 'var(--text-dark)' }}>
-              API를 찾을 수 없습니다
-            </h1>
-            <button
-              onClick={() => router.push('/explore')}
-              className="px-6 py-3 rounded-lg transition-colors"
-              style={{
-                backgroundColor: 'var(--primary-blue)',
-                color: 'white'
-              }}
-            >
-              목록으로 돌아가기
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  const tabs = ['개요', '비용 정보', '후기', '코드 예제'];
+  const tabs = [
+    { id: '개요', label: '개요' },
+    { id: '비용 정보', label: '비용정보' },
+    { id: '후기', label: '후기' },
+    { id: '코드 예제', label: '코드예제' },
+  ];
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: 'var(--bg-light)' }}>
+    <div className="min-h-screen bg-[#F5F7FA] font-sans">
       <Header />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24">
-        {/* Back Button */}
-        <button
-          onClick={() => router.push('/explore')}
-          className="flex items-center gap-2 mb-6 transition-colors"
-          style={{ color: 'var(--text-gray)' }}
-          onMouseEnter={(e) => e.currentTarget.style.color = 'var(--primary-blue)'}
-          onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-gray)'}
-        >
-          <ChevronLeft size={20} />
-          <span>목록으로 돌아가기</span>
-        </button>
+      
+      <div className="max-w-6xl mx-auto px-6 py-8 pt-28 relative">
+       
+        {/* Header Section */}
+        <div className="flex justify-between items-start mb-12 relative">
+          <div className="flex-1 max-w-3xl">
+            <h1 className="text-4xl font-semibold text-[#0f172a] mb-4 leading-tight">{api.name}</h1>
+            
+            <div className="space-y-2 mb-6">
+              <div className="text-[#0c4a6e] text-lg font-medium">Star {api.rating || 4.2}</div>
+              <div className="text-[#0c4a6e] text-lg font-medium">Used by {api.users || '970M'} people</div>
+              <div className="text-[#a1a1aa] text-base font-normal mt-2">{api.price === 'free' ? 'Free' : api.price === 'paid' ? 'Paid' : 'Mixed'}</div>
+            </div>
+          </div>
 
-        {/* Layout: main content + right summary sidebar */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2">
-            {/* API Header (main) */}
-            <div className="bg-white rounded-xl shadow-sm p-8 mb-6 card-shadow">
-              <div className="flex items-start justify-between mb-6 flex-wrap gap-4">
-                <div className="flex items-center gap-6">
-                  <div className="text-6xl">{api.logo || '📦'}</div>
-                  <div>
-                    <h1 className="text-3xl font-bold mb-2" style={{ color: 'var(--text-dark)' }}>
-                      {api.name}
-                    </h1>
-                    {api.company && (
-                      <p className="mb-3" style={{ color: 'var(--text-gray)' }}>{api.company}</p>
-                    )}
-                    <div className="flex items-center gap-4">
-                      {api.rating !== undefined && (
-                        <div className="flex items-center gap-1">
-                          <Star size={20} className="fill-yellow-400 text-yellow-400" />
-                          <span className="font-semibold">{api.rating}</span>
-                        </div>
-                      )}
-                      {api.users && (
-                        <div className="flex items-center gap-1" style={{ color: 'var(--text-gray)' }}>
-                          <Users size={20} />
-                          <span>{api.users} users</span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
+          {/* Large Logo Box (Right) */}
+          <div className="w-52 h-52 bg-white rounded-[40px] shadow-[1px_3px_8px_0px_rgba(33,150,243,0.2)] border-[0.25px] border-sky-500 flex items-center justify-center p-6 relative z-10 shrink-0">
+             {api.logo ? (
+                <img src={api.logo} alt={api.name} className="w-32 h-32 object-contain" />
+              ) : (
+                <span className="text-5xl">📦</span>
+              )}
+          </div>
+        </div>
+
+        {/* Tabs */}
+        <div className="mb-8 relative">
+          <div className="flex gap-8 border-b border-gray-200 pb-2">
+            {tabs.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`text-lg font-medium transition-colors relative pb-2 ${
+                  activeTab === tab.id 
+                    ? 'text-[#0c4a6e]' 
+                    : 'text-[#a1a1aa] hover:text-[#0c4a6e]'
+                }`}
+              >
+                {tab.label}
+                {activeTab === tab.id && (
+                  <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-[#0c4a6e] opacity-80" />
+                )}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Content Area */}
+        <div className="space-y-12 min-h-[400px]">
+          {activeTab === '개요' && (
+            <>
+              {/* Description */}
+              <div>
+                <h3 className="text-lg font-medium text-[#0f172a] mb-4">설명</h3>
+                <p className="text-base leading-7 font-medium text-[#0c4a6e] max-w-4xl whitespace-pre-line">
+                  {api.description || `노션 API는 노션의 데이터베이스와 페이지를 외부 프로그램이나 서비스와 연결해 주는 개발 도구입니다. 이를 활용하면 코드를 통해 데이터를 자동으로 읽거나 쓸 수 있어, 설문지 응답을 노션에 바로 기록하거나 일정 관리 앱과 연동하는 등의 업무 자동화가 가능해집니다. 현대적인 REST API 방식과 JSON 데이터 형식을 따르고 있어 개발자가 다루기 편리하며, 특정 페이지에만 접근 권한을 부여하는 보안 설정으로 데이터를 안전하게 관리할 수 있습니다. 결과적으로 노션 API는 노션을 단순한 메모장을 넘어 하나의 거대한 데이터베이스 서버처럼 활용할 수 있게 해줍니다.`}
+                </p>
               </div>
 
-              <p className="leading-relaxed" style={{ color: 'var(--text-gray)' }}>
-                {api.description}
-              </p>
-            </div>
-
-            {/* Tabs */}
-            <div className="bg-white rounded-xl shadow-sm overflow-hidden card-shadow">
-              <div className="border-b" style={{ borderColor: 'rgba(33, 150, 243, 0.2)' }}>
-                <div className="flex overflow-x-auto">
-                  {tabs.map((tab) => (
-                    <button
-                      key={tab}
-                      onClick={() => setActiveTab(tab)}
-                      className={`flex-1 px-6 py-4 font-medium transition-colors whitespace-nowrap ${
-                        activeTab === tab ? 'border-b-2' : ''
-                      }`}
-                      style={{
-                        color: activeTab === tab ? 'var(--primary-blue)' : 'var(--text-gray)',
-                        borderColor: activeTab === tab ? 'var(--primary-blue)' : 'transparent',
-                        backgroundColor: activeTab === tab ? 'rgba(33, 150, 243, 0.05)' : 'transparent'
-                      }}
+              {/* Categories */}
+              <div>
+                <h3 className="text-lg font-medium text-[#0f172a] mb-4">카테고리</h3>
+                <div className="flex gap-3 flex-wrap items-center">
+                  {(api.categories && api.categories.length > 0 ? api.categories : ['데이터베이스', '페이지 및 블록', '사용자', '코멘트', '검색']).map((cat, idx) => (
+                    <div 
+                      key={idx} 
+                      className="px-4 py-1.5 bg-white/50 rounded-[16px] shadow-[0px_1px_3px_0px_rgba(33,150,243,0.25)] border-[0.5px] border-sky-500 flex items-center justify-center"
                     >
-                      {tab}
-                    </button>
+                      <span className="text-sm font-medium text-[#0c4a6e]"># {cat}</span>
+                    </div>
                   ))}
                 </div>
               </div>
 
-              <div className="p-8">
-                {activeTab === '개요' && (
-                  <div>
-                    <h3 className="text-xl font-semibold mb-4" style={{ color: 'var(--text-dark)' }}>
-                      주요 기능
-                    </h3>
-                    <ul className="space-y-2 mb-6">
-                      {api.features?.map((feature, idx) => (
-                        <li key={idx} className="flex items-center gap-2">
-                          <div 
-                            className="w-2 h-2 rounded-full" 
-                            style={{ backgroundColor: 'var(--primary-blue)' }}
-                          ></div>
-                          <span style={{ color: 'var(--text-gray)' }}>{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
-
-                    {api.categories && api.categories.length > 0 && (
-                      <>
-                        <h3 className="text-xl font-semibold mb-4" style={{ color: 'var(--text-dark)' }}>
-                          카테고리
-                        </h3>
-                        <div className="flex gap-2 mb-6 flex-wrap">
-                          {api.categories.map((category, idx) => (
-                        <span 
-                          key={idx} 
-                          className="px-4 py-2 rounded-full text-sm font-medium"
-                          style={{
-                            backgroundColor: 'rgba(33, 150, 243, 0.1)',
-                            color: 'var(--primary-blue)'
-                          }}
-                        >
-                          {category}
-                        </span>
-                          ))}
-                        </div>
-                      </>
-                    )}
-
-                    <h3 className="text-xl font-semibold mb-4" style={{ color: 'var(--text-dark)' }}>
-                      공식 문서
-                    </h3>
-                    <a 
-                      href="#" 
-                      className="inline-flex items-center gap-1 hover:underline"
-                      style={{ color: 'var(--primary-blue)' }}
-                    >
-                      공식 문서 바로가기 →
-                    </a>
-                  </div>
-                )}
-
-                {activeTab === '비용 정보' && (
-                  <div>
-                    <h3 className="text-xl font-semibold mb-6" style={{ color: 'var(--text-dark)' }}>
-                      요금제
-                    </h3>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                      {api.pricing?.free && (
-                        <div className="border-2 rounded-xl p-6 hover:border-blue-500 transition-colors card-shadow">
-                          <div className="text-sm font-semibold mb-2" style={{ color: 'var(--text-gray)' }}>
-                            FREE
-                          </div>
-                          <div className="text-3xl font-bold mb-4">무료</div>
-                          <div className="text-sm" style={{ color: 'var(--text-gray)' }}>
-                            {api.pricing.free}
-                          </div>
-                        </div>
-                      )}
-                      {api.pricing?.basic && (
-                        <div 
-                          className="border-2 rounded-xl p-6"
-                          style={{
-                            borderColor: 'var(--primary-blue)',
-                            backgroundColor: 'rgba(33, 150, 243, 0.05)'
-                          }}
-                        >
-                          <div className="text-sm font-semibold mb-2" style={{ color: 'var(--primary-blue)' }}>
-                            BASIC
-                          </div>
-                          <div className="text-3xl font-bold mb-4">
-                            {api.pricing.basic.split('-')[0].trim()}
-                          </div>
-                          <div className="text-sm" style={{ color: 'var(--text-gray)' }}>
-                            {api.pricing.basic.includes('-') ? api.pricing.basic.split('-')[1].trim() : ''}
-                          </div>
-                        </div>
-                      )}
-                      {api.pricing?.pro && (
-                        <div className="border-2 rounded-xl p-6 hover:border-blue-500 transition-colors card-shadow">
-                          <div className="text-sm font-semibold mb-2" style={{ color: 'var(--text-gray)' }}>
-                            PRO
-                          </div>
-                          <div className="text-3xl font-bold mb-4">
-                            {api.pricing.pro.split('-')[0].trim()}
-                          </div>
-                          <div className="text-sm" style={{ color: 'var(--text-gray)' }}>
-                            {api.pricing.pro.includes('-') ? api.pricing.pro.split('-')[1].trim() : ''}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
-
-                {activeTab === '후기' && (
-                  <div>
-                    <div className="flex justify-between items-center mb-6">
-                      <h3 className="text-xl font-semibold" style={{ color: 'var(--text-dark)' }}>
-                        실사용자 후기
-                      </h3>
-                      <button 
-                        className="px-6 py-2 rounded-lg transition-colors text-white"
-                        style={{ backgroundColor: 'var(--primary-blue)' }}
-                      >
-                        후기 작성하기
-                      </button>
-                    </div>
-
-                    <div className="space-y-6">
-                      {[1, 2, 3].map((idx) => (
-                        <div key={idx} className="border rounded-xl p-6 card-shadow">
-                          <div className="flex items-start justify-between mb-4">
-                            <div>
-                              <div className="flex items-center gap-2 mb-2">
-                                <span className="font-semibold">개발자 {idx}</span>
-                                <span className="text-sm" style={{ color: 'var(--text-gray)' }}>
-                                  2주 전
-                                </span>
-                              </div>
-                              <div className="flex items-center gap-1">
-                                {[...Array(5)].map((_, i) => (
-                                  <Star 
-                                    key={i} 
-                                    size={16} 
-                                    className={i < 4 ? "fill-yellow-400 text-yellow-400" : "text-gray-300"} 
-                                  />
-                                ))}
-                              </div>
-                            </div>
-                          </div>
-                          
-                          <p className="mb-4" style={{ color: 'var(--text-gray)' }}>
-                            프로젝트에 적용하기 쉬웠고, 문서화가 잘 되어있어 도움이 많이 되었습니다.
-                          </p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {activeTab === '코드 예제' && (
-                  <div>
-                    <h3 className="text-xl font-semibold mb-6" style={{ color: 'var(--text-dark)' }}>
-                      빠른 시작 가이드
-                    </h3>
-                    
-                    <div className="mb-6">
-                      <div className="flex gap-2 mb-4">
-                        <button 
-                          className="px-4 py-2 rounded-lg font-medium text-white"
-                          style={{ backgroundColor: 'var(--primary-blue)' }}
-                        >
-                          Python
-                        </button>
-                      </div>
-
-                      <div className="bg-gray-900 text-gray-100 rounded-xl p-6 font-mono text-sm overflow-x-auto">
-                        <pre>{`# ${api.name} API 사용 예제
-
-import requests
-
-API_KEY = "your_api_key_here"
-BASE_URL = "https://api.example.com/v1"
-
-def get_data():
-    headers = {
-        "Authorization": f"Bearer {API_KEY}",
-        "Content-Type": "application/json"
-    }
-    
-    response = requests.get(
-        f"{BASE_URL}/endpoint",
-        headers=headers
-    )
-    
-    if response.status_code == 200:
-        return response.json()
-    else:
-        print(f"Error: {response.status_code}")
-        return None
-
-# 사용 예시
-data = get_data()
-print(data)`}</pre>
-                      </div>
-                    </div>
-                  </div>
-                )}
+              {/* Wiki Editor Section */}
+              <div>
+                 <div className="mt-8">
+                   <h3 className="text-xl font-medium text-[#0c4a6e] mb-4">API 위키</h3>
+                   <div className="w-full">
+                     <WikiEditor apiId={api.id} />
+                   </div>
+                 </div>
               </div>
-            </div>
-          </div>
+            </>
+          )}
 
-          {/* Right summary sidebar */}
-          <aside className="lg:col-span-1">
-            <div className="bg-white rounded-xl shadow-sm p-6 sticky top-24 card-shadow">
-              <div className="mb-4">
-                <div className="text-sm mb-2" style={{ color: 'var(--text-gray)' }}>요금</div>
-                <div className="flex gap-2 flex-wrap">
-                  {api.price === 'free' && (
-                    <span className="px-3 py-1 bg-teal-100 text-teal-800 rounded-full text-sm">무료</span>
-                  )}
-                  {api.price === 'paid' && (
-                    <span className="px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm">유료</span>
-                  )}
-                  {api.price === 'mixed' && (
-                    <span className="px-3 py-1 bg-amber-100 text-amber-800 rounded-full text-sm">혼합</span>
-                  )}
-                </div>
-              </div>
-
-              <div className="flex gap-3 mt-4">
-                <button 
-                  className="flex-1 px-4 py-2 border-2 rounded-lg transition-colors font-medium"
-                  style={{
-                    borderColor: 'var(--primary-blue)',
-                    color: 'var(--primary-blue)',
-                    backgroundColor: 'white'
-                  }}
-                >
-                  비교하기
-                </button>
-                <button 
-                  className="px-4 py-2 rounded-lg transition-colors font-medium text-white"
-                  style={{ backgroundColor: 'var(--primary-blue)' }}
-                >
-                  북마크
-                </button>
-              </div>
-            </div>
-          </aside>
-        </div>
-
-        {/* Wiki editor + related APIs */}
-        <div className="mt-8 bg-white rounded-xl shadow-sm p-6 card-shadow">
-          <WikiEditor apiId={api.id} />
-
-          {relatedAPIs.length > 0 && (
-            <div className="mt-6">
-              <h3 className="text-2xl font-semibold mb-6" style={{ color: 'var(--text-dark)' }}>
-                비슷한 API
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {relatedAPIs.map((relatedAPI) => (
-                  <APICard key={relatedAPI.id} api={relatedAPI} />
-                ))}
-              </div>
+          {/* Placeholder for other tabs */}
+          {activeTab !== '개요' && (
+            <div className="h-48 flex items-center justify-center text-gray-400 bg-gray-50 rounded-xl text-lg">
+              {activeTab} 내용 준비중
             </div>
           )}
+        </div>
+
+        {/* Similar APIs */}
+        <div className="mt-24 pb-16">
+          <h3 className="text-xl font-medium text-[#0c4a6e] mb-6">비슷한 API</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+             {relatedAPIs.length > 0 ? relatedAPIs.map(item => (
+               <APICard key={item.id} api={item} />
+             )) : (
+               // Mock Data
+               [
+                 { 
+                   id: '1', name: '국토부 2D지도API', rating: 4.8, users: '1.2B', price: 'free', 
+                   logo: 'https://placehold.co/70x70', description: 'Sample description' 
+                 },
+                 { 
+                   id: '2', name: 'Naver', rating: 4.3, users: '820M', price: 'mixed', 
+                   logo: 'https://placehold.co/70x70', description: 'Sample description' 
+                 },
+                 { 
+                   id: '3', name: '카카오페이', rating: 3.6, users: '120M', price: 'free', 
+                   logo: 'https://placehold.co/70x70', description: 'Sample description' 
+                 },
+                 { 
+                   id: '4', name: 'AWS API', rating: 4.8, users: '990M', price: 'paid', 
+                   logo: 'https://placehold.co/70x70', description: 'Sample description' 
+                 }
+               ].map((mockApi) => (
+                  <div key={mockApi.id} className="relative group">
+                    <div className="bg-white rounded-2xl shadow-[1px_3px_8px_0px_rgba(33,150,243,0.25)] border-[0.25px] border-sky-500 p-5 min-h-[140px] transition-transform hover:-translate-y-1">
+                      <div className="flex items-start gap-3 mb-2">
+                        <img src={mockApi.logo} alt="" className="w-14 h-14 rounded-[8px] border-[0.5px] border-sky-500 object-cover" />
+                        <div>
+                          <div className="text-base font-medium text-black truncate w-28">{mockApi.name}</div>
+                          <div className="text-xs font-medium text-black mt-1">Star {mockApi.rating}</div>
+                          <div className="text-xs font-medium text-black">Used by {mockApi.users}</div>
+                          <div className="text-[10px] font-normal text-zinc-400 mt-1 uppercase">{mockApi.price}</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+               ))
+             )}
+          </div>
         </div>
       </div>
     </div>

@@ -1,8 +1,9 @@
 // src/components/Header.tsx
+
 'use client';
 
-import { useState } from 'react';
-import { motion } from 'motion/react';
+import { useState, useRef, useEffect } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import { useAuth } from '@/hooks/useAuth';
 import { isAdmin, canSubmitAPI } from '@/lib/permissions';
 import LoginModal from './LoginModal';

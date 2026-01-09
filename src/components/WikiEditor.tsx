@@ -11,7 +11,10 @@ interface WikiEditorProps {
   apiId: string;
 }
 
+import { useAuth } from '@/hooks/useAuth';
+
 export default function WikiEditor({ apiId }: WikiEditorProps) {
+  const { isAuthenticated } = useAuth();
   const storageKey = `wiki_${apiId}`;
   const [text, setText] = useState('');
   const [editing, setEditing] = useState(false);
@@ -28,8 +31,9 @@ export default function WikiEditor({ apiId }: WikiEditorProps) {
   };
 
   const insertMarkdown = (syntax: string, placeholder: string = '') => {
-    if (!editing) return; // 편집 모드가 아니면 실행하지 않음
+    if (!editing) return;
     
+    // ... (rest of function remains same)
     const textarea = document.querySelector('textarea[data-wiki-editor="true"]') as HTMLTextAreaElement;
     if (!textarea) return;
 
@@ -137,16 +141,23 @@ export default function WikiEditor({ apiId }: WikiEditorProps) {
             </>
           ) : (
             <motion.button 
-              onClick={() => setEditing(true)} 
-              className="px-4 py-2 text-[14px] font-semibold text-white rounded-[12px]"
-              style={{ 
-                backgroundColor: '#22c55e',
-                boxShadow: '0 4px 12px rgba(34, 197, 94, 0.3)'
+              onClick={() => {
+                  if (isAuthenticated) {
+                      setEditing(true);
+                  } else {
+                      alert('로그인이 필요한 기능입니다.');
+                  }
               }}
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.98 }}
+              className={`px-4 py-2 text-[14px] font-semibold text-white rounded-[12px] ${!isAuthenticated ? 'opacity-50 cursor-not-allowed' : ''}`}
+              style={{ 
+                backgroundColor: isAuthenticated ? '#22c55e' : '#ccc',
+                boxShadow: isAuthenticated ? '0 4px 12px rgba(34, 197, 94, 0.3)' : 'none'
+              }}
+              whileHover={isAuthenticated ? { scale: 1.05, y: -2 } : {}}
+              whileTap={isAuthenticated ? { scale: 0.98 } : {}}
+              title={isAuthenticated ? "문서 편집하기" : "로그인이 필요합니다"}
             >
-              ✏️ 편집하기
+              {isAuthenticated ? "✏️ 편집하기" : "🔒 로그인 필요"}
             </motion.button>
           )}
         </div>
