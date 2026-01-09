@@ -128,7 +128,7 @@ export default function HomePage() {
           initial={{ opacity: 0, y: -20 }}
           animate={{ 
             opacity: 1, 
-            y: searchFocused ? 40 : 0 
+            y: searchFocused ? 10 : 0 
           }}
           transition={{ duration: 0.6, delay: searchFocused ? 0 : 0.1 }}
         >
