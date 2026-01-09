@@ -11,7 +11,10 @@ interface WikiEditorProps {
   apiId: string;
 }
 
+import { useAuth } from '@/hooks/useAuth';
+
 export default function WikiEditor({ apiId }: WikiEditorProps) {
+  const { isAuthenticated } = useAuth();
   const storageKey = `wiki_${apiId}`;
   const [text, setText] = useState('');
   const [editing, setEditing] = useState(false);
@@ -28,8 +31,9 @@ export default function WikiEditor({ apiId }: WikiEditorProps) {
   };
 
   const insertMarkdown = (syntax: string, placeholder: string = '') => {
-    if (!editing) return; // 편집 모드가 아니면 실행하지 않음
+    if (!editing) return;
     
+    // ... (rest of function remains same)
     const textarea = document.querySelector('textarea[data-wiki-editor="true"]') as HTMLTextAreaElement;
     if (!textarea) return;
 
@@ -104,8 +108,15 @@ export default function WikiEditor({ apiId }: WikiEditorProps) {
       transition={{ duration: 0.4 }}
     >
       <div className="flex items-center justify-between mb-4">
-        <h4 className="text-[24px] font-bold" style={{ color: 'var(--text-dark)' }}>
-          📝 위키 문서
+        <h4 className="text-[24px] font-bold flex items-center gap-2" style={{ color: 'var(--text-dark)' }}>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+            <polyline points="10 9 9 9 8 9"/>
+          </svg>
+          위키 문서
         </h4>
         <div className="flex gap-2">
           {editing ? (
@@ -122,31 +133,43 @@ export default function WikiEditor({ apiId }: WikiEditorProps) {
               >
                 취소
               </motion.button>
-              <motion.button 
-                onClick={save} 
-                className="px-4 py-2 text-[14px] font-semibold text-white rounded-[12px]"
-                style={{ 
+              <motion.button
+                onClick={save}
+                className="px-4 py-2 text-[14px] font-semibold text-white rounded-[12px] flex items-center gap-2"
+                style={{
                   backgroundColor: 'var(--primary-blue)',
                   boxShadow: 'var(--shadow-blue)'
                 }}
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.98 }}
               >
-                💾 저장
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                  <polyline points="17 21 17 13 7 13 7 21"/>
+                  <polyline points="7 3 7 8 15 8"/>
+                </svg>
+                저장
               </motion.button>
             </>
           ) : (
             <motion.button 
-              onClick={() => setEditing(true)} 
-              className="px-4 py-2 text-[14px] font-semibold text-white rounded-[12px]"
-              style={{ 
-                backgroundColor: '#22c55e',
-                boxShadow: '0 4px 12px rgba(34, 197, 94, 0.3)'
+              onClick={() => {
+                  if (isAuthenticated) {
+                      setEditing(true);
+                  } else {
+                      alert('로그인이 필요한 기능입니다.');
+                  }
               }}
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.98 }}
+              className={`px-4 py-2 text-[14px] font-semibold text-white rounded-[12px] ${!isAuthenticated ? 'opacity-50 cursor-not-allowed' : ''}`}
+              style={{ 
+                backgroundColor: isAuthenticated ? '#22c55e' : '#ccc',
+                boxShadow: isAuthenticated ? '0 4px 12px rgba(34, 197, 94, 0.3)' : 'none'
+              }}
+              whileHover={isAuthenticated ? { scale: 1.05, y: -2 } : {}}
+              whileTap={isAuthenticated ? { scale: 0.98 } : {}}
+              title={isAuthenticated ? "문서 편집하기" : "로그인이 필요합니다"}
             >
-              ✏️ 편집하기
+              {isAuthenticated ? "편집하기" : "로그인 필요"}
             </motion.button>
           )}
         </div>
@@ -167,25 +190,32 @@ export default function WikiEditor({ apiId }: WikiEditorProps) {
             <div className="flex border-b" style={{ borderColor: 'rgba(0, 0, 0, 0.05)' }}>
               <button
                 onClick={() => setActiveTab('edit')}
-                className="flex-1 px-6 py-3 text-[14px] font-semibold transition-all"
+                className="flex-1 px-6 py-3 text-[14px] font-semibold transition-all flex items-center justify-center gap-2"
                 style={{
                   color: activeTab === 'edit' ? 'var(--primary-blue)' : 'var(--text-gray)',
                   borderBottom: activeTab === 'edit' ? '2px solid var(--primary-blue)' : '2px solid transparent',
                   backgroundColor: activeTab === 'edit' ? 'rgba(var(--primary-blue-rgb), 0.05)' : 'transparent'
                 }}
               >
-                ✍️ 편집
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
+                </svg>
+                편집
               </button>
               <button
                 onClick={() => setActiveTab('preview')}
-                className="flex-1 px-6 py-3 text-[14px] font-semibold transition-all"
+                className="flex-1 px-6 py-3 text-[14px] font-semibold transition-all flex items-center justify-center gap-2"
                 style={{
                   color: activeTab === 'preview' ? 'var(--primary-blue)' : 'var(--text-gray)',
                   borderBottom: activeTab === 'preview' ? '2px solid var(--primary-blue)' : '2px solid transparent',
                   backgroundColor: activeTab === 'preview' ? 'rgba(var(--primary-blue-rgb), 0.05)' : 'transparent'
                 }}
               >
-                👁️ 미리보기
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg>
+                미리보기
               </button>
             </div>
 
@@ -200,11 +230,44 @@ export default function WikiEditor({ apiId }: WikiEditorProps) {
                 <ToolbarButton onClick={() => insertMarkdown('italic')} title="기울임"><em>I</em></ToolbarButton>
                 <ToolbarButton onClick={() => insertMarkdown('code')} title="인라인 코드">{`</>`}</ToolbarButton>
                 <div className="w-px h-6 bg-gray-300 mx-1" />
-                <ToolbarButton onClick={() => insertMarkdown('link')} title="링크">🔗</ToolbarButton>
-                <ToolbarButton onClick={() => insertMarkdown('ul')} title="목록">• List</ToolbarButton>
-                <ToolbarButton onClick={() => insertMarkdown('ol')} title="번호 목록">1. List</ToolbarButton>
-                <ToolbarButton onClick={() => insertMarkdown('quote')} title="인용">💬</ToolbarButton>
-                <ToolbarButton onClick={() => insertMarkdown('codeblock')} title="코드 블록">{`{}`}</ToolbarButton>
+                <ToolbarButton onClick={() => insertMarkdown('link')} title="링크">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+                    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+                  </svg>
+                </ToolbarButton>
+                <ToolbarButton onClick={() => insertMarkdown('ul')} title="목록">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="8" y1="6" x2="21" y2="6"/>
+                    <line x1="8" y1="12" x2="21" y2="12"/>
+                    <line x1="8" y1="18" x2="21" y2="18"/>
+                    <line x1="3" y1="6" x2="3.01" y2="6"/>
+                    <line x1="3" y1="12" x2="3.01" y2="12"/>
+                    <line x1="3" y1="18" x2="3.01" y2="18"/>
+                  </svg>
+                </ToolbarButton>
+                <ToolbarButton onClick={() => insertMarkdown('ol')} title="번호 목록">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="10" y1="6" x2="21" y2="6"/>
+                    <line x1="10" y1="12" x2="21" y2="12"/>
+                    <line x1="10" y1="18" x2="21" y2="18"/>
+                    <path d="M4 6h1v4"/>
+                    <path d="M4 10h2"/>
+                    <path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"/>
+                  </svg>
+                </ToolbarButton>
+                <ToolbarButton onClick={() => insertMarkdown('quote')} title="인용">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"/>
+                    <path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z"/>
+                  </svg>
+                </ToolbarButton>
+                <ToolbarButton onClick={() => insertMarkdown('codeblock')} title="코드 블록">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="16 18 22 12 16 6"/>
+                    <polyline points="8 6 2 12 8 18"/>
+                  </svg>
+                </ToolbarButton>
               </div>
             )}
 
@@ -306,7 +369,15 @@ export default function WikiEditor({ apiId }: WikiEditorProps) {
               </div>
             ) : (
               <div className="text-center py-20">
-                <div className="text-[64px] mb-4 opacity-30">📄</div>
+                <div className="mb-4 opacity-30 flex justify-center">
+                  <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                    <line x1="16" y1="13" x2="8" y2="13"/>
+                    <line x1="16" y1="17" x2="8" y2="17"/>
+                    <polyline points="10 9 9 9 8 9"/>
+                  </svg>
+                </div>
                 <p className="text-[18px] font-medium mb-2" style={{ color: 'var(--text-dark)' }}>
                   아직 작성된 문서가 없습니다
                 </p>
@@ -330,8 +401,17 @@ export default function WikiEditor({ apiId }: WikiEditorProps) {
             color: 'var(--text-gray)'
           }}
         >
-          <strong style={{ color: 'var(--primary-blue)' }}>💡 Markdown 팁:</strong> 
-          {' '}굵게: **텍스트** | 기울임: *텍스트* | 링크: [텍스트](url) | 코드: `code` | 제목: # H1, ## H2, ### H3
+          <div className="flex items-start gap-2">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primary-blue)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0 mt-0.5">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M12 16v-4"/>
+              <path d="M12 8h.01"/>
+            </svg>
+            <div>
+              <strong style={{ color: 'var(--primary-blue)' }}>Markdown 팁:</strong>
+              {' '}굵게: **텍스트** | 기울임: *텍스트* | 링크: [텍스트](url) | 코드: `code` | 제목: # H1, ## H2, ### H3
+            </div>
+          </div>
         </motion.div>
       )}
     </motion.div>

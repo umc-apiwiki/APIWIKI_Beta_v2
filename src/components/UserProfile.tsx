@@ -4,8 +4,6 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { GradeBadgeWithTooltip } from './GradeBadge';
-import { getGradeInfo, getPointsToNextGrade, getGradeProgress } from '@/lib/gradeUtils';
 import type { User, UserActivity } from '@/types';
 
 // ============================================
@@ -24,10 +22,6 @@ interface UserProfileProps {
 export default function UserProfile({ user, showActivities = true }: UserProfileProps) {
     const [activities, setActivities] = useState<UserActivity[]>([]);
     const [loading, setLoading] = useState(false);
-
-    const gradeInfo = getGradeInfo(user.grade);
-    const pointsToNext = getPointsToNextGrade(user.activity_score, user.grade);
-    const progress = getGradeProgress(user.activity_score, user.grade);
 
     // 활동 내역 조회
     useEffect(() => {
@@ -62,61 +56,21 @@ export default function UserProfile({ user, showActivities = true }: UserProfile
                     <h2 className="text-2xl font-bold text-gray-900">{user.name || user.email}</h2>
                     <p className="text-sm text-gray-600">{user.email}</p>
                 </div>
-                <GradeBadgeWithTooltip
-                    grade={user.grade}
-                    score={user.activity_score}
-                    nextGradeScore={gradeInfo.nextGradeScore}
-                    size="lg"
-                />
             </div>
 
-            {/* 활동 점수 및 진행률 */}
-            <div className="mb-6">
-                <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm font-medium text-gray-700">활동 점수</span>
-                    <span className="text-sm font-bold text-gray-900">{user.activity_score}점</span>
-                </div>
-
-                {/* 진행률 바 */}
-                <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
-                    <div
-                        className="h-full rounded-full transition-all duration-500"
-                        style={{
-                            width: `${progress}%`,
-                            backgroundColor: gradeInfo.color,
-                        }}
-                    />
-                </div>
-
-                {/* 다음 등급 정보 */}
-                {gradeInfo.nextGrade && (
-                    <p className="text-xs text-gray-600 mt-2">
-                        {getGradeInfo(gradeInfo.nextGrade).name} 등급까지{' '}
-                        <span className="font-semibold text-gray-900">{pointsToNext}점</span> 남았습니다
-                    </p>
-                )}
-                {!gradeInfo.nextGrade && (
-                    <p className="text-xs text-gray-600 mt-2">
-                        최고 등급입니다! 🎉
-                    </p>
-                )}
-            </div>
-
-            {/* 등급 정보 */}
-            <div className="grid grid-cols-3 gap-4 mb-6 p-4 bg-gray-50 rounded-lg">
-                <div className="text-center">
-                    <div className="text-xs text-gray-600 mb-1">현재 등급</div>
-                    <div className="text-lg font-bold" style={{ color: gradeInfo.color }}>
-                        {gradeInfo.icon} {gradeInfo.name}
+            {/* 활동 점수 (등급 관련 진행률 바 등 제거) */}
+            <div className="mb-6 p-4 bg-gray-50 rounded-lg">
+                <div className="flex items-center gap-4">
+                     <div className="text-center flex-1">
+                        <div className="text-xs text-gray-600 mb-1">활동 점수</div>
+                        <div className="text-lg font-bold text-gray-900">{user.activity_score}점</div>
                     </div>
-                </div>
-                <div className="text-center">
-                    <div className="text-xs text-gray-600 mb-1">활동 점수</div>
-                    <div className="text-lg font-bold text-gray-900">{user.activity_score}</div>
-                </div>
-                <div className="text-center">
-                    <div className="text-xs text-gray-600 mb-1">진행률</div>
-                    <div className="text-lg font-bold text-gray-900">{Math.round(progress)}%</div>
+                     <div className="text-center flex-1 border-l border-gray-200">
+                        <div className="text-xs text-gray-600 mb-1">회원 유형</div>
+                        <div className="text-lg font-bold" style={{ color: user.grade === 'admin' ? '#1976D2' : 'var(--text-dark)' }}>
+                            {user.grade === 'admin' ? '운영진' : '일반 회원'}
+                        </div>
+                    </div>
                 </div>
             </div>
 

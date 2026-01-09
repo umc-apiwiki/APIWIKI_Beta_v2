@@ -76,9 +76,11 @@ export const authOptions: NextAuthOptions = {
             if (account?.provider === 'google' || account?.provider === 'github') {
                 const { data: existingUser } = await supabase
                     .from('User')
-                    .select('id, email, grade, activity_score')
+                    .select('id, email, grade, activity_score, avatar_url')
                     .eq('email', user.email)
                     .single();
+
+                const avatarUrl = user.image || (profile as any)?.picture;
 
                 if (!existingUser) {
                     // 신규 사용자 생성
@@ -86,9 +88,10 @@ export const authOptions: NextAuthOptions = {
                         .from('User')
                         .insert({
                             email: user.email,
-                            name: user.name || profile?.name || user.email?.split('@')[0],
+                            name: user.name || (profile as any)?.name || user.email?.split('@')[0],
                             grade: 'bronze',
                             activity_score: 1,
+                            avatar_url: avatarUrl
                         });
 
                     if (error) {
@@ -96,13 +99,19 @@ export const authOptions: NextAuthOptions = {
                         return false;
                     }
                 } else {
-                    // 기존 사용자 로그인 활동 기록
+                    // 기존 사용자 로그인 활동 기록 및 프로필 이미지 업데이트 (있을 경우)
+                    const updates: any = {
+                        activity_score: existingUser.activity_score + 1,
+                        updatedAt: new Date().toISOString()
+                    };
+                    
+                    if (avatarUrl && existingUser.avatar_url !== avatarUrl) {
+                        updates.avatar_url = avatarUrl;
+                    }
+
                     await supabase
                         .from('User')
-                        .update({
-                            activity_score: existingUser.activity_score + 1,
-                            updatedAt: new Date().toISOString()
-                        })
+                        .update(updates)
                         .eq('id', existingUser.id);
                 }
             }
@@ -113,13 +122,14 @@ export const authOptions: NextAuthOptions = {
             if (account?.provider === 'google' || account?.provider === 'github') {
                 const { data: dbUser } = await supabase
                     .from('User')
-                    .select('id, email, name, grade')
+                    .select('id, email, name, grade, avatar_url')
                     .eq('email', token.email)
                     .single();
 
                 if (dbUser) {
                     token.id = dbUser.id;
                     token.grade = dbUser.grade;
+                    token.avatar_url = dbUser.avatar_url;
                 }
             }
             
@@ -128,6 +138,9 @@ export const authOptions: NextAuthOptions = {
                 token.email = user.email;
                 token.name = user.name;
                 token.grade = user.grade;
+                if (user.avatar_url) {
+                    token.avatar_url = user.avatar_url;
+                }
             }
             return token;
         },
@@ -138,6 +151,7 @@ export const authOptions: NextAuthOptions = {
                     email: token.email,
                     name: token.name,
                     grade: token.grade,
+                    avatar_url: token.avatar_url
                 };
             }
             return session;

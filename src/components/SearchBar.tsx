@@ -6,6 +6,8 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'motion/react';
 
+import type { API } from '@/types';
+
 interface SearchBarProps {
   initialQuery?: string;
   placeholder?: string;
@@ -32,40 +34,52 @@ export default function SearchBar({
   const router = useRouter();
   const wrapperRef = useRef<HTMLDivElement>(null);
 
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+
   // Load recent searches from localStorage
   useEffect(() => {
     const stored = localStorage.getItem(RECENT_SEARCHES_KEY);
     if (stored) {
       try {
         const parsed = JSON.parse(stored);
-        setRecentSearches(parsed);
+        if (Array.isArray(parsed)) {
+          setRecentSearches(parsed);
+        }
       } catch (error) {
         console.error('Failed to parse recent searches:', error);
       }
     }
   }, []);
 
-  // Fetch trending APIs
+  // Fetch suggestions with debounce
   useEffect(() => {
-    const fetchTrending = async () => {
+    const fetchSuggestions = async () => {
+      if (!query || query.trim().length < 1) {
+        setSuggestions([]);
+        return;
+      }
+
       try {
-        const response = await fetch('/api/apis?sort=popular&limit=6');
-        const result = await response.json();
-        if (result.success && result.data) {
-          const apiNames = result.data.map((api: any) => api.name);
-          setTrendingAPIs(apiNames);
+        const response = await fetch(`/api/apis?q=${encodeURIComponent(query)}&limit=5`);
+        if (response.ok) {
+          const result = await response.json();
+          // Assuming result is an array of API objects
+          const names = result.map((api: API) => api.name);
+          setSuggestions(names);
         }
       } catch (error) {
-        console.error('Failed to fetch trending APIs:', error);
-        // Fallback to default trending
-        setTrendingAPIs(['AWS API', 'OpenAI', 'Stripe', 'Twilio', 'SendGrid', 'Firebase']);
+        console.error('Failed to fetch suggestions:', error);
       }
     };
 
-    if (showDropdown) {
-      fetchTrending();
-    }
-  }, [showDropdown]);
+    const debounceTimer = setTimeout(() => {
+      if (isFocused && showDropdown) {
+        fetchSuggestions();
+      }
+    }, 300);
+
+    return () => clearTimeout(debounceTimer);
+  }, [query, isFocused, showDropdown]);
 
   // Save search to recent searches
   const saveRecentSearch = (searchTerm: string) => {
@@ -144,141 +158,150 @@ export default function SearchBar({
   };
 
   return (
-    <div ref={wrapperRef} className="relative w-full">
-      <div 
-        className={`relative bg-white rounded-[30px] transition-all duration-500 ${
-          isFocused ? 'card-shadow' : 'border border-[var(--primary-blue)] shadow-[var(--shadow-blue)]'
-        }`}
+    <div ref={wrapperRef} className="relative w-full h-[3.125rem] z-50">
+      <motion.div 
+        className={`absolute top-0 left-0 w-full bg-white overflow-hidden`}
+        transition={{ type: "spring", stiffness: 400, damping: 30 }}
+        animate={{
+          height: isFocused && showDropdown && (recentSearches.length > 0 || query.trim().length > 0) ? 'auto' : '3.125rem',
+          boxShadow: isFocused ? '0px 4px 20px rgba(1, 149, 255, 0.2)' : '0px 2px 5px rgba(1, 149, 255, 0.2)',
+          borderRadius: '1.25rem'
+        }}
         style={{
-          overflow: 'hidden',
-          zIndex: 40
+          // 1px 이하로 border를 줄이려면 box-shadow를 사용
+          // border: isFocused ? '1px solid #2196F3' : '1px solid var(--primary-blue)', 
+          zIndex: 51
         }}
       >
-        <input
-          type="text"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          onKeyDown={handleKeyPress}
-          onFocus={handleFocus}
-          placeholder={placeholder}
-          className="w-full h-[60px] px-[30px] pr-[60px] border-0 bg-transparent text-[18px] outline-none relative z-[140]"
-          style={{ color: 'var(--text-dark)' }}
-        />
-        
-        <div className="absolute right-[25px] top-1/2 -translate-y-1/2 w-[28px] h-[28px] z-[150] pointer-events-none">
-          <Image 
-            src="/mingcute_search-line.svg" 
-            alt="Search" 
-            width={28} 
-            height={28}
+        {/* Input Area - Part of the same box */}
+        <div className="relative w-full h-[3.125rem]">
+          <input
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            onKeyDown={handleKeyPress}
+            onFocus={handleFocus}
+            placeholder={placeholder}
+            className="w-full h-full px-6 pr-[3.125rem] border-0 bg-transparent text-base outline-none text-[var(--text-dark)]"
           />
-        </div>
-      </div>
-
-      {showResults && showDropdown && (
-        <AnimatePresence>
-          <motion.div 
-            className="absolute top-full left-0 right-0 mt-[10px] bg-white rounded-[20px] overflow-hidden z-[120]"
-            style={{
-              boxShadow: 'var(--shadow-blue)'
-            }}
-            initial={{ opacity: 0, y: -10, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -10, scale: 0.95 }}
-            transition={{ duration: 0.2 }}
+          <div 
+            className="absolute right-5 top-1/2 -translate-y-1/2 w-6 h-6 z-[150] cursor-pointer hover:opacity-80 transition-opacity"
+            onClick={handleSearch}
           >
-            {recentSearches && recentSearches.length > 0 && (
-              <div className="px-[30px] py-[20px] border-b" style={{ borderColor: 'rgba(0, 0, 0, 0.05)' }}>
-                <div className="flex items-center justify-between mb-[15px]">
-                  <div 
-                    className="text-[16px] font-semibold flex items-center gap-2" 
-                    style={{ color: 'var(--primary-blue)' }}
-                  >
-                    <Image src="/mdi_recent.svg" alt="Recent" width={20} height={20} />
-                    Recent
-                  </div>
-                  <motion.button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      clearRecentSearches();
-                    }}
-                    className="text-[13px] px-3 py-1 rounded-lg transition-colors"
-                    style={{ color: 'var(--text-gray)' }}
-                    whileHover={{ 
-                      backgroundColor: 'rgba(0, 0, 0, 0.05)',
-                      color: 'var(--text-dark)'
-                    }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    모두 지우기
-                  </motion.button>
-                </div>
-                {recentSearches.map((item, idx) => (
-                  <motion.div
-                    key={`recent-${idx}`}
-                    className="flex items-center py-[10px] text-[16px] cursor-pointer transition-colors gap-[10px] rounded-lg px-3 -mx-3"
-                    style={{ color: 'var(--text-dark)' }}
-                    onClick={() => handleItemClick(item)}
-                    whileHover={{ 
-                      backgroundColor: 'rgba(var(--primary-blue-rgb), 0.05)',
-                      color: 'var(--primary-blue)',
-                      x: 5
-                    }}
-                    whileTap={{ scale: 0.98 }}
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: idx * 0.05 }}
-                  >
-                    <Image src="/mingcute_search-line.svg" alt="Search" width={18} height={18} />
-                    {item}
-                  </motion.div>
-                ))}
-              </div>
-            )}
+            <Image 
+              src="/mingcute_search-line.svg" 
+              alt="Search" 
+              width={24} 
+              height={24}
+            />
+          </div>
+        </div>
 
-            {trendingAPIs && trendingAPIs.length > 0 && (
-              <div className="px-[30px] py-[20px]">
-                <div 
-                  className="text-[16px] font-semibold mb-[15px] flex items-center gap-2" 
-                  style={{ color: 'var(--primary-blue)' }}
-                >
-                  <Image src="/ph_trend-up-bold.svg" alt="Trending" width={20} height={20} />
-                  Trending
+      {/* Results Area - Part of the same box */}
+        <AnimatePresence>
+          {isFocused && showDropdown && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="px-6 pb-6 pt-2"
+            >
+              {query.trim().length >= 1 ? (
+                /* Auto-complete Suggestions */
+                <div className="flex flex-col gap-1">
+                  {suggestions.length > 0 ? (
+                    suggestions.map((item, idx) => (
+                      <div
+                        key={`suggestion-${idx}`}
+                        className="flex items-center gap-3 h-10 cursor-pointer hover:bg-sky-500/10 rounded-[5px] px-2 transition-colors"
+                        onClick={() => handleItemClick(item)}
+                      >
+                         <div className="opacity-50 flex items-center justify-center">
+                           <Image src="/mingcute_search-line.svg" alt="Search" width={18} height={18} />
+                         </div>
+                        <span className="text-sm text-slate-700">
+                          {item.split(new RegExp(`(${query})`, 'gi')).map((part, i) => 
+                            part.toLowerCase() === query.toLowerCase() 
+                              ? <span key={i} className="font-bold text-blue-600">{part}</span> 
+                              : part
+                          )}
+                        </span>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="text-sm text-gray-400 py-2">검색 결과가 없습니다.</div>
+                  )}
                 </div>
-                {trendingAPIs.map((item, idx) => (
-                  <motion.div
-                    key={`trending-${idx}`}
-                    className="flex items-center py-[10px] text-[16px] cursor-pointer transition-colors gap-[10px] rounded-lg px-3 -mx-3"
-                    style={{ color: 'var(--text-dark)' }}
-                    onClick={() => handleItemClick(item)}
-                    whileHover={{ 
-                      backgroundColor: 'rgba(var(--primary-blue-rgb), 0.05)',
-                      color: 'var(--primary-blue)',
-                      x: 5
-                    }}
-                    whileTap={{ scale: 0.98 }}
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: idx * 0.05 }}
-                  >
-                    <Image src="/ph_trend-up-bold.svg" alt="Trending" width={18} height={18} />
-                    {item}
-                  </motion.div>
-                ))}
-              </div>
-            )}
-
-            {(!recentSearches || recentSearches.length === 0) && (!trendingAPIs || trendingAPIs.length === 0) && (
-              <div className="px-[30px] py-[40px] text-center">
-                <div className="text-[48px] mb-3 opacity-20">🔍</div>
-                <p className="text-[14px]" style={{ color: 'var(--text-gray)' }}>
-                  검색 기록이 없습니다
-                </p>
-              </div>
-            )}
-          </motion.div>
+              ) : (
+                /* Recent Searches */
+                <>
+                  {recentSearches.length > 0 && (
+                    <>
+                      <div className="flex items-center justify-between mb-2 px-1">
+                        <div 
+                          className="text-sm font-semibold flex items-center gap-2" 
+                          style={{ color: '#1769AA' }}
+                        >
+                          Recent
+                        </div>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            clearRecentSearches();
+                          }}
+                          className="text-xs text-gray-400 hover:text-gray-600 transition-colors"
+                        >
+                          모두 지우기
+                        </button>
+                      </div>
+                      
+                      <div className="flex flex-col gap-1">
+                        {recentSearches.map((item, idx) => (
+                          <div
+                            key={`recent-${idx}`}
+                            className="flex items-center justify-between h-10 cursor-pointer hover:bg-sky-500/10 rounded-[5px] px-2 group transition-colors relative"
+                            onClick={() => handleItemClick(item)}
+                          >
+                            <div className="flex items-center gap-3">
+                              <div className="opacity-50 flex items-center justify-center">
+                                 <Image src="/mdi_recent.svg" alt="Recent" width={20} height={20} />
+                              </div>
+                              <span 
+                                className="text-sm font-medium text-slate-900"
+                              >
+                                {item}
+                              </span>
+                            </div>
+                            
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                const updated = recentSearches.filter(s => s !== item);
+                                setRecentSearches(updated);
+                                localStorage.setItem(RECENT_SEARCHES_KEY, JSON.stringify(updated));
+                              }}
+                              className="hidden group-hover:block p-1 hover:bg-black/5 rounded-full transition-colors"
+                              title="검색어 삭제"
+                            >
+                              <Image 
+                                src="/search_save_remove.svg" 
+                                alt="Remove" 
+                                width={18} 
+                                height={18} 
+                              />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </>
+                  )}
+                </>
+              )}
+            </motion.div>
+          )}
         </AnimatePresence>
-      )}
+      </motion.div>
     </div>
   );
 }

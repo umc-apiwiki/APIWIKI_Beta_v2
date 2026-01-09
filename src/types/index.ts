@@ -35,8 +35,45 @@ export interface User {
   name: string | null;
   grade: UserGrade;
   activity_score: number;
+  avatar_url?: string; // 프로필 이미지 URL
   created_at: Date | string;
   updated_at: Date | string;
+}
+
+// ... existing code ...
+
+// ============================================
+// NextAuth 세션 확장
+// ============================================
+
+declare module 'next-auth' {
+  interface Session {
+    user: {
+      id: string;
+      email: string;
+      name: string;
+      grade: UserGrade;
+      avatar_url?: string;
+    };
+  }
+
+  interface User {
+    id: string;
+    email: string;
+    name: string;
+    grade: UserGrade;
+    avatar_url?: string;
+  }
+}
+
+declare module 'next-auth/jwt' {
+  interface JWT {
+    id: string;
+    email: string;
+    name: string;
+    grade: UserGrade;
+    avatar_url?: string;
+  }
 }
 
 /** API (확장된 버전) */

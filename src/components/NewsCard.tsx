@@ -8,11 +8,10 @@ interface NewsCardProps {
 
 export default function NewsCard({ news }: NewsCardProps) {
   return (
-    <a 
-      href="#" 
+    <a
+      href="#"
       className="block bg-white rounded-[15px] overflow-hidden transition-all duration-300 cursor-pointer card-shadow hover:-translate-y-[5px]"
       style={{
-        border: '0.5px solid var(--primary-blue)',
         boxShadow: 'var(--shadow-blue)'
       }}
       onMouseEnter={(e) => {

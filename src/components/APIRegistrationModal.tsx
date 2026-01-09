@@ -22,12 +22,19 @@ export default function APIRegistrationModal({ isOpen, onClose }: APIRegistratio
             headers: {
                 'Content-Type': 'application/json',
             },
+            credentials: 'include', // 인증 쿠키 전송
             body: JSON.stringify(data),
         });
 
         const result = await response.json();
 
         if (!response.ok) {
+            if (result.requiresAuth || response.status === 401) {
+                alert('로그인이 필요합니다. 다시 로그인해주세요.');
+                onClose();
+                window.location.reload();
+                throw new Error('로그인이 필요합니다.');
+            }
             throw new Error(result.error || 'API 등록에 실패했습니다');
         }
 

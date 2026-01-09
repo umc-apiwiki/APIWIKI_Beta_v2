@@ -28,19 +28,19 @@ export default function ModalBase({ isOpen, onClose, title, children }: Props) {
   if (!isOpen) return null;
 
   return createPortal(
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
       <div
         className="absolute inset-0 bg-black/40 backdrop-blur-sm"
         onClick={onClose}
         aria-hidden="true"
       />
-      <div role="dialog" aria-modal="true" aria-label={title} className="relative z-10 w-full max-w-4xl mx-4">
-        <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-          <div className="p-4 border-b flex items-center justify-between">
+      <div role="dialog" aria-modal="true" aria-label={title} className="relative z-[10000] w-full max-w-2xl max-h-[90vh] flex flex-col">
+        <div className="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col max-h-full">
+          <div className="p-4 border-b flex items-center justify-between flex-shrink-0">
             <h3 className="font-bold">{title}</h3>
             <button onClick={onClose} className="text-gray-600 hover:text-gray-800">닫기</button>
           </div>
-          <div className="p-6">{children}</div>
+          <div className="p-6 overflow-y-auto flex-1">{children}</div>
         </div>
       </div>
     </div>,

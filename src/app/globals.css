@@ -8,23 +8,23 @@
 
 :root {
   /* 와이어프레임 디자인 시스템 */
-  --primary-blue: #2196F3;
+  --primary-blue: #2196f3;
   --primary-blue-rgb: 33, 150, 243;
-  --bg-light: #F9FBFE;
-  --text-dark: rgba(0, 0, 0, 0.70);
+  --bg-light: #ffffff;
+  --text-dark: rgba(0, 0, 0, 0.7);
   --text-gray: #565656;
   --shadow-blue: 1px 1px 10px 2px rgba(33, 150, 243, 0.25);
-  --grid-margin: 24px;
+  --grid-margin: 120px;
   --grid-gutter: 24px;
-  
+
   /* 기존 호환성을 위한 변수 유지 */
-  --primary-color: #2196F3;
-  --gradient-start: #81FFEF;
-  --gradient-end: #F067B4;
-  --background-color: #F9FBFE;
-  --font-color: rgba(0, 0, 0, 0.70);
+  --primary-color: #2196f3;
+  --gradient-start: #81ffef;
+  --gradient-end: #f067b4;
+  --background-color: #f9fbfe;
+  --font-color: rgba(0, 0, 0, 0.7);
   --secondary-font-color: #565656;
-  --border-color: #2196F3;
+  --border-color: #2196f3;
   --shadow-color: rgba(33, 150, 243, 0.25);
 }
 
@@ -35,7 +35,8 @@
 }
 
 body {
-  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, system-ui,
+    Roboto, sans-serif;
   background-color: var(--bg-light);
   color: var(--text-dark);
   line-height: 1.6;
@@ -75,7 +76,12 @@ img {
   pointer-events: none;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   user-select: none;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -115,7 +121,12 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .animated-gradient {
-  background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end), var(--gradient-start));
+  background: linear-gradient(
+    90deg,
+    var(--gradient-start),
+    var(--gradient-end),
+    var(--gradient-start)
+  );
   background-size: 200% 200%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -145,34 +156,58 @@ h1, h2, h3, h4, h5, h6 {
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
-  
+
   /* 12열 그리드 시스템 */
   .grid-container {
     display: grid;
     grid-template-columns: repeat(12, 1fr);
     gap: var(--grid-gutter);
     padding: 0 var(--grid-margin);
-    max-width: 1440px;
+    /* max-width: 1440px; */
     margin: 0 auto;
   }
-  
-  .col-1 { grid-column: span 1; }
-  .col-2 { grid-column: span 2; }
-  .col-3 { grid-column: span 3; }
-  .col-4 { grid-column: span 4; }
-  .col-5 { grid-column: span 5; }
-  .col-6 { grid-column: span 6; }
-  .col-7 { grid-column: span 7; }
-  .col-8 { grid-column: span 8; }
-  .col-9 { grid-column: span 9; }
-  .col-10 { grid-column: span 10; }
-  .col-11 { grid-column: span 11; }
-  .col-12 { grid-column: span 12; }
-  
+
+  .col-1 {
+    grid-column: span 1;
+  }
+  .col-2 {
+    grid-column: span 2;
+  }
+  .col-3 {
+    grid-column: span 3;
+  }
+  .col-4 {
+    grid-column: span 4;
+  }
+  .col-5 {
+    grid-column: span 5;
+  }
+  .col-6 {
+    grid-column: span 6;
+  }
+  .col-7 {
+    grid-column: span 7;
+  }
+  .col-8 {
+    grid-column: span 8;
+  }
+  .col-9 {
+    grid-column: span 9;
+  }
+  .col-10 {
+    grid-column: span 10;
+  }
+  .col-11 {
+    grid-column: span 11;
+  }
+  .col-12 {
+    grid-column: span 12;
+  }
+
   .grid-gap-24 {
     gap: var(--grid-gutter);
   }
-  
+
   .margin-24 {
     padding: 0 var(--grid-margin);
   }
@@ -186,7 +221,7 @@ h1, h2, h3, h4, h5, h6 {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  background: rgba(0, 149, 255, 0.2);
+  background: rgba(0, 149, 255, 0.1);
   border-radius: 50%;
   filter: blur(120px);
   z-index: 0;
@@ -207,12 +242,13 @@ h1, h2, h3, h4, h5, h6 {
 
 @layer base {
   :root {
-    --gradient-start: #81FFEF;
-    --gradient-end: #F067B4;
+    --gradient-start: #81ffef;
+    --gradient-end: #f067b4;
   }
 
   body {
-    font-family: 'Roboto', 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family: "Roboto", "Noto Sans KR", -apple-system, BlinkMacSystemFont,
+      "Segoe UI", sans-serif;
     overflow-x: hidden;
   }
 }
@@ -285,7 +321,8 @@ html {
 
 /* Additional animations for About page */
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
   }
   50% {
@@ -294,7 +331,8 @@ html {
 }
 
 @keyframes bounce {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0);
   }
   50% {
@@ -378,7 +416,8 @@ html {
 }
 
 @keyframes float {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0px);
   }
   50% {
@@ -387,11 +426,13 @@ html {
 }
 
 @keyframes glow {
-  0%, 100% {
+  0%,
+  100% {
     box-shadow: 0 0 20px rgba(129, 255, 239, 0.3);
   }
   50% {
-    box-shadow: 0 0 40px rgba(129, 255, 239, 0.6), 0 0 60px rgba(74, 144, 226, 0.4);
+    box-shadow: 0 0 40px rgba(129, 255, 239, 0.6),
+      0 0 60px rgba(74, 144, 226, 0.4);
   }
 }
 
@@ -450,7 +491,12 @@ html {
 }
 
 .animate-shimmer {
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
   background-size: 200% 100%;
   animation: shimmer 2s infinite;
 }
@@ -517,17 +563,14 @@ html {
 
 /* Text glow effect for better visibility */
 @keyframes textGlow {
-  0%, 100% {
-    text-shadow:
-      0 0 20px rgba(129, 255, 239, 0.5),
-      0 0 40px rgba(74, 144, 226, 0.3),
-      0 0 60px rgba(129, 255, 239, 0.2);
+  0%,
+  100% {
+    text-shadow: 0 0 20px rgba(129, 255, 239, 0.5),
+      0 0 40px rgba(74, 144, 226, 0.3), 0 0 60px rgba(129, 255, 239, 0.2);
   }
   50% {
-    text-shadow:
-      0 0 30px rgba(129, 255, 239, 0.8),
-      0 0 60px rgba(74, 144, 226, 0.5),
-      0 0 90px rgba(129, 255, 239, 0.4);
+    text-shadow: 0 0 30px rgba(129, 255, 239, 0.8),
+      0 0 60px rgba(74, 144, 226, 0.5), 0 0 90px rgba(129, 255, 239, 0.4);
   }
 }
 

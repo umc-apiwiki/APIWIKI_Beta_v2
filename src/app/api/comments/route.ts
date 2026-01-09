@@ -55,7 +55,32 @@ export async function GET(request: NextRequest) {
 // POST: 댓글 작성
 export async function POST(request: NextRequest) {
     try {
-        const session = await getServerSession(authOptions);
+        let session = null;
+        let userUser = null;
+
+        // 세션/토큰 복호화 오류(JWEDecryptionFailed) 방지를 위한 예외 처리
+        try {
+            session = await getServerSession(authOptions);
+            userUser = session?.user;
+
+            // getServerSession이 실패하거나 유저가 없을 경우 getToken으로 재시도
+            if (!userUser) {
+                const { getToken } = await import('next-auth/jwt');
+                const token = await getToken({ req: request });
+                if (token) {
+                    userUser = {
+                        id: token.id as string,
+                        email: token.email as string,
+                        name: token.name as string,
+                        grade: token.grade as any,
+                    };
+                }
+            }
+        } catch (authError) {
+             console.warn('Auth check failed (likely due to invalid/old session cookie):', authError);
+             // 인증 실패로 간주하고 진행
+        }
+
         const body: CommentSubmissionPayload = await request.json();
 
         // 입력 검증
@@ -66,15 +91,29 @@ export async function POST(request: NextRequest) {
             );
         }
 
+        // 커뮤니티 게시판은 로그인 필수
+        const { data: board } = await supabase
+            .from('boards')
+            .select('type')
+            .eq('id', body.board_id)
+            .single();
+
+        if (board?.type === 'community' && !userUser) {
+            return NextResponse.json(
+                { success: false, error: '로그인이 필요합니다', requiresAuth: true },
+                { status: 401 }
+            );
+        }
+
         // 회원/비회원 구분
         let commentData: any = {
             board_id: body.board_id,
             content: body.content,
         };
 
-        if (session?.user) {
+        if (userUser) {
             // 회원
-            commentData.author_id = session.user.id;
+            commentData.author_id = userUser.id;
         } else {
             // 비회원
             if (!body.author_name || body.author_name.trim().length === 0) {

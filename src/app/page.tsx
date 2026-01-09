@@ -116,10 +116,28 @@ export default function HomePage() {
           visibility: isActive ? 'hidden' : 'visible'
         }}
       >
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ 
+            opacity: searchFocused ? 0 : 1, 
+            scale: 1,
+            y: 0
+          }}
+          transition={{ duration: 0.5 }}
+          className="mb-2 relative w-[93px] h-[93px]"
+        >
+          <Image 
+            src="/logo.svg" 
+            alt="API Wiki Logo" 
+            fill
+            className="object-contain"
+            priority 
+          />
+        </motion.div>
         <motion.h1 
-          className="text-[80px] font-bold m-0 select-none"
+          className="text-[50px] font-bold m-0 select-none"
           style={{ 
-            color: 'var(--text-dark)',
+            color: '#1769AA',
             userSelect: 'none',
             WebkitUserSelect: 'none',
             MozUserSelect: 'none',
@@ -127,17 +145,17 @@ export default function HomePage() {
           }}
           initial={{ opacity: 0, y: -20 }}
           animate={{ 
-            opacity: 1, 
-            y: searchFocused ? 40 : 0 
+            opacity: searchFocused ? 0 : 1, 
+            y: 0 
           }}
           transition={{ duration: 0.6, delay: searchFocused ? 0 : 0.1 }}
         >
           API Wiki
         </motion.h1>
         <motion.p 
-          className="text-[22px] mt-[10px] mb-[50px] select-none"
+          className="text-[16px] font-bold mt-[10px] mb-[50px] select-none"
           style={{ 
-            color: 'rgba(0, 0, 0, 0.6)',
+            color: '#145A92',
             pointerEvents: searchFocused ? 'none' : 'auto',
             userSelect: 'none',
             WebkitUserSelect: 'none',
@@ -147,19 +165,19 @@ export default function HomePage() {
           initial={{ opacity: 0 }}
           animate={{
             opacity: searchFocused ? 0 : 1,
-            y: searchFocused ? -10 : 0
+            y: 0
           }}
-          transition={{ duration: 0.3 }}
+          transition={{ duration: 0.2 }}
         >
           개발자가 함께 만드는 API 지식, 실시간으로 업데이트됩니다
         </motion.p>
 
         <motion.div 
-          className="w-[732px] mb-[40px] max-w-[90vw]"
+          className="w-[800px] mb-[20px] max-w-[90vw]"
           animate={{
-            marginTop: searchFocused ? -50 : 0
+            y: searchFocused ? -300 : 0
           }}
-          transition={{ duration: 0.3 }}
+          transition={{ duration: 0.5 }}
         >
           <SearchBar onFocusChange={setSearchFocused} />
         </motion.div>
@@ -174,7 +192,7 @@ export default function HomePage() {
             opacity: searchFocused ? 0 : 1,
             y: searchFocused ? -10 : 0
           }}
-          transition={{ duration: 0.3 }}
+          transition={{ duration: 0.2 }}
         >
           <CategoryCarousel />
         </motion.div>
@@ -224,14 +242,14 @@ export default function HomePage() {
         >
           <div className="grid-container mt-[50px] pb-[50px]">
           {/* Sticky Title */}
-          <motion.div 
-            className="col-12 text-[45px] font-bold text-center mb-[50px]"
+          {/* <motion.div 
+            className="col-12 text-[30px] font-bold text-center mb-[50px]"
             style={{ color: 'var(--text-dark)' }}
             animate={{ opacity: isActive ? 1 : 0 }}
             transition={{ duration: 0.5 }}
           >
             API Wiki
-          </motion.div>
+          </motion.div> */}
 
           {/* 내릴 때: 역삼각형 (아래쪽 화살표) */}
           <motion.div 
@@ -269,7 +287,7 @@ export default function HomePage() {
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="text-[32px] font-semibold mb-[30px]" style={{ color: 'var(--text-dark)' }}>
+            <h2 className="text-[24px] font-semibold mb-[30px]" style={{ color: 'var(--text-dark)' }}>
               Latest News
             </h2>
             <div className="grid grid-cols-12 grid-gap-24">
@@ -296,7 +314,7 @@ export default function HomePage() {
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="text-[32px] font-semibold mb-[30px]" style={{ color: 'var(--text-dark)' }}>
+            <h2 className="text-[24px] font-semibold mb-[30px]" style={{ color: 'var(--text-dark)' }}>
               Recent Popular
             </h2>
             <div className="grid grid-cols-12 grid-gap-24">
@@ -309,34 +327,34 @@ export default function HomePage() {
                   viewport={{ once: true }}
                   transition={{ duration: 0.4, delay: index * 0.1 }}
                 >
-                  <APICard api={api} />
+                  <APICard api={api} hideCompare={true} />
                 </motion.div>
               ))}
             </div>
           </motion.section>
 
           {/* Suggest API */}
-          <motion.section 
+          <motion.section
             className="mb-16 col-12"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="text-[32px] font-semibold mb-[30px]" style={{ color: 'var(--text-dark)' }}>
+            <h2 className="text-[24px] font-semibold mb-[30px]" style={{ color: 'var(--text-dark)' }}>
               Suggest API
             </h2>
             <div className="grid grid-cols-12 grid-gap-24">
               {suggestedAPIs.map((api, index) => (
-                <motion.div 
-                  key={api.id} 
+                <motion.div
+                  key={api.id}
                   className="col-3"
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.4, delay: index * 0.1 }}
                 >
-                  <APICard api={api} />
+                  <APICard api={api} hideCompare={true} />
                 </motion.div>
               ))}
             </div>
