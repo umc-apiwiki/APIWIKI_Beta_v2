@@ -163,7 +163,7 @@ h6 {
     grid-template-columns: repeat(12, 1fr);
     gap: var(--grid-gutter);
     padding: 0 var(--grid-margin);
-    max-width: 1440px;
+    /* max-width: 1440px; */
     margin: 0 auto;
   }
 
