@@ -1,0 +1,2 @@
+src/lib/__tests__/gradeUtils.test.ts(4,38): error TS2307: Cannot find module '@jest/globals' or its corresponding type declarations.
+src/lib/__tests__/supabaseHelpers.test.ts(13,54): error TS2307: Cannot find module 'vitest' or its corresponding type declarations.

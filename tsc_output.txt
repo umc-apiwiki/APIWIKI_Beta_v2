@@ -1,0 +1,4 @@
+src/components/APIRegistrationForm.tsx(237,50): error TS2339: Property 'csv' does not exist on type '{ free?: string | undefined; basic?: string | undefined; pro?: string | undefined; }'.
+src/lib/__tests__/gradeUtils.test.ts(4,38): error TS2307: Cannot find module '@jest/globals' or its corresponding type declarations.
+src/lib/__tests__/supabaseHelpers.test.ts(13,54): error TS2307: Cannot find module 'vitest' or its corresponding type declarations.
+src/types/index.ts(298,5): error TS2717: Subsequent property declarations must have the same type.  Property 'user' must be of type '{ id: string; email: string; name: string; grade: UserGrade; avatar_url?: string | undefined; }', but here has type '{ id: string; email: string; name: string; grade: UserGrade; }'.

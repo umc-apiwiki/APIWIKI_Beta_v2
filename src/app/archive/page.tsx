@@ -6,21 +6,27 @@ import { API } from '@/types';
 
 // Mock data generator for archive
 const generateMockAPIs = (count: number, startIndex: number): API[] => {
-  return Array.from({ length: count }).map((_, i) => ({
-    id: `archive-${startIndex + i}`,
-    name: ['Google Maps', 'GitHub', 'Twilio', 'Notion', 'Discord', 'Kakao Maps', 'Mapbox', 'Eleven Labs'][i % 8],
-    description: 'API Description placeholder...',
-    category: 'Development',
-    categories: ['Development', 'Tools'],
-    rating: (4 + Math.random()).toFixed(1) as any,
-    users: '970M people',
-    price: i % 2 === 0 ? 'paid' : 'free',
-    grade: 'bachelor',
-    status: 'active',
-    logo: `https://placehold.co/70x70?text=${['G', 'GH', 'T', 'N', 'D', 'K', 'M', 'EL'][i % 8]}`,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  }));
+  return Array.from({ length: count }).map((_, i) => {
+    const name = ['Google Maps', 'GitHub', 'Twilio', 'Notion', 'Discord', 'Kakao Maps', 'Mapbox', 'Eleven Labs'][i % 8];
+    const logoLetters = ['G', 'GH', 'T', 'N', 'D', 'K', 'M', 'EL'][i % 8];
+    
+    return {
+      id: `archive-${startIndex + i}`,
+      name,
+      slug: name.toLowerCase().replace(/\s+/g, '-'),
+      description: 'API Description placeholder...',
+      category: 'Development',
+      categories: ['Development', 'Tools'],
+      rating: (4 + Math.random()).toFixed(1) as any,
+      users: '970M people',
+      price: i % 2 === 0 ? 'paid' : 'free',
+      grade: 'bachelor',
+      status: 'approved',
+      logo: `https://placehold.co/70x70?text=${logoLetters}`,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    };
+  });
 };
 
 const archiveData = [

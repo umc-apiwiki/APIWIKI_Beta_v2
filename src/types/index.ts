@@ -94,6 +94,7 @@ export interface API {
     free?: string;
     basic?: string;
     pro?: string;
+    csv?: string;
   };
   // Additional optional metadata for filtering and UI
   countries?: string[]; // 제공 국가(예: ['한국','미국'])
@@ -125,6 +126,7 @@ export interface APISubmissionPayload {
     free?: string;
     basic?: string;
     pro?: string;
+    csv?: string;
   };
 }
 
@@ -289,33 +291,3 @@ export interface ApiResponse<T> {
   message?: string;
 }
 
-// ============================================
-// NextAuth 세션 확장
-// ============================================
-
-declare module 'next-auth' {
-  interface Session {
-    user: {
-      id: string;
-      email: string;
-      name: string;
-      grade: UserGrade;
-    };
-  }
-
-  interface User {
-    id: string;
-    email: string;
-    name: string;
-    grade: UserGrade;
-  }
-}
-
-declare module 'next-auth/jwt' {
-  interface JWT {
-    id: string;
-    email: string;
-    name: string;
-    grade: UserGrade;
-  }
-}
