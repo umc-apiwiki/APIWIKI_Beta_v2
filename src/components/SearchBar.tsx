@@ -164,7 +164,7 @@ export default function SearchBar({
         transition={{ type: "spring", stiffness: 400, damping: 30 }}
         animate={{
           height: isFocused && showDropdown && (recentSearches.length > 0 || query.trim().length > 0) ? 'auto' : '3.125rem',
-          boxShadow: isFocused ? '0px 4px 20px rgba(0, 0, 0, 0.1)' : '0px 2px 5px rgba(0, 0, 0, 0.05)',
+          boxShadow: isFocused ? '0px 4px 20px rgba(1, 149, 255, 0.2)' : '0px 2px 5px rgba(1, 149, 255, 0.2)',
           borderRadius: '1.25rem'
         }}
         style={{
