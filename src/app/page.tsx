@@ -153,9 +153,9 @@ export default function HomePage() {
           API Wiki
         </motion.h1>
         <motion.p 
-          className="text-[16px] mt-[10px] mb-[50px] select-none"
+          className="text-[16px] font-bold mt-[10px] mb-[50px] select-none"
           style={{ 
-            color: 'rgba(0, 0, 0, 0.6)',
+            color: '#145A92',
             pointerEvents: searchFocused ? 'none' : 'auto',
             userSelect: 'none',
             WebkitUserSelect: 'none',
@@ -173,7 +173,7 @@ export default function HomePage() {
         </motion.p>
 
         <motion.div 
-          className="w-[600px] mb-[40px] max-w-[90vw]"
+          className="w-[800px] mb-[20px] max-w-[90vw]"
           animate={{
             marginTop: searchFocused ? -50 : 0
           }}
