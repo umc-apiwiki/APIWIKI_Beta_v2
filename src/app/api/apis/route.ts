@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
 
     let supabaseQuery = supabase
       .from('Api')
-      .select('*', { count: 'exact' });
+      .select('*, logo', { count: 'exact' });
 
     // 상태 필터 (기본값: approved)
     if (status) {
