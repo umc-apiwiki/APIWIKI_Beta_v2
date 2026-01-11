@@ -2,8 +2,8 @@
 // 위키 편집 API
 
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabaseClient';
-import { getById, update } from '@/lib/supabaseHelpers';
+import { supabaseAdmin } from '@/lib/supabaseAdminClient';
+import { getById } from '@/lib/supabaseHelpers';
 import type { User, API } from '@/types';
 
 // ============================================
@@ -99,7 +99,8 @@ export async function POST(request: NextRequest): Promise<NextResponse<WikiEditR
         });
 
         // 편집 이력 저장
-        const { data: wikiEdit, error: editError } = await supabase
+        // RLS 영향 없이 저장하기 위해 admin 클라이언트 사용
+        const { data: wikiEdit, error: editError } = await supabaseAdmin
             .from('wiki_edits')
             .insert({
                 api_id: apiId,
@@ -119,21 +120,32 @@ export async function POST(request: NextRequest): Promise<NextResponse<WikiEditR
         }
 
         // API 문서 업데이트 (wiki_content 컬럼 수정)
-        await update<API>('Api', apiId, {
-            wiki_content: content,
-        });
+        const { error: updateError } = await supabaseAdmin
+            .from('Api')
+            .update({ wiki_content: content })
+            .eq('id', apiId)
+            .single();
+
+        if (updateError) {
+            throw updateError;
+        }
 
         // 활동 점수 증가 (edit: 3점)
-        await fetch(`${request.nextUrl.origin}/api/users/activity`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                userId,
-                actionType: 'edit',
-            }),
-        });
+        // 활동 로그는 실패해도 본 편집을 막지 않도록 best-effort 처리
+        try {
+            await fetch(`${request.nextUrl.origin}/api/users/activity`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    userId,
+                    actionType: 'edit',
+                }),
+            });
+        } catch (activityError) {
+            console.warn('[위키 편집] 활동 로그 실패', activityError);
+        }
 
         console.log(`[위키 편집 완료] 편집 ID: ${wikiEdit.id}`);
 
