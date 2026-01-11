@@ -62,14 +62,20 @@ export default function APIRegistrationForm({ onSubmit, onCancel }: APIRegistrat
         }));
     };
 
-    const handlePricingChange = (tier: 'free' | 'basic' | 'pro', value: string) => {
-        setFormData(prev => ({
-            ...prev,
-            pricing: {
-                ...prev.pricing,
-                [tier]: value
-            }
-        }));
+    const handlePricingChange = (tier: 'free' | 'basic' | 'pro' | 'csv', value: string) => {
+        setFormData(prev => {
+            const safePricing = typeof prev.pricing === 'object' && prev.pricing !== null
+                ? prev.pricing
+                : {};
+
+            return {
+                ...prev,
+                pricing: {
+                    ...safePricing,
+                    [tier]: value,
+                },
+            };
+        });
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
