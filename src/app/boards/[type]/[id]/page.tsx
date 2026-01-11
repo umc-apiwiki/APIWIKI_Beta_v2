@@ -120,7 +120,7 @@ export default function BoardDetailPage({ params }: { params: { type: BoardType;
 
             <Header />
 
-            <div className="grid-container pt-32 pb-20 relative z-10">
+            <div className="grid-container pt-32 pb-60 relative z-10">
                 {/* Back Button */}
                 <div className="col-12 mb-8">
                     <Link 

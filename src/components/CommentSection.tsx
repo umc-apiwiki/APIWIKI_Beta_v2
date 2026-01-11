@@ -121,14 +121,14 @@ export default function CommentSection({ boardId }: CommentSectionProps) {
 
     return (
         <div className="space-y-6">
-            <h3 className="text-[24px] font-bold mb-6" style={{ color: 'var(--text-dark)' }}>
+            <h3 className="text-[20px] font-bold mb-4" style={{ color: 'var(--text-dark)' }}>
                 댓글 ({comments.length})
             </h3>
 
             {/* 댓글 작성 폼 */}
             <motion.form 
                 onSubmit={handleSubmit} 
-                className="bg-white card-shadow p-6 space-y-4"
+                className="bg-white card-shadow p-4 space-y-3"
                 style={{ borderRadius: '20px' }}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -161,8 +161,8 @@ export default function CommentSection({ boardId }: CommentSectionProps) {
                                 value={formData.content}
                                 onChange={(e) => setFormData(prev => ({ ...prev, content: e.target.value }))}
                                 placeholder="댓글을 입력하세요"
-                                rows={3}
-                                className="w-full px-4 py-3 border-2 rounded-[12px] focus:outline-none resize-none transition-all"
+                                rows={2}
+                                className="w-full px-3 py-2 border-2 rounded-[12px] focus:outline-none resize-none transition-all text-[14px]"
                                 style={{
                                     borderColor: formData.content ? 'var(--primary-blue)' : 'rgba(0, 0, 0, 0.1)',
                                     color: 'var(--text-dark)'
@@ -173,7 +173,7 @@ export default function CommentSection({ boardId }: CommentSectionProps) {
                         <motion.button
                             type="submit"
                             disabled={isSubmitting}
-                            className="px-6 py-3 text-white font-semibold rounded-[12px] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="px-4 py-2 text-[14px] text-white font-semibold rounded-[12px] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             style={{ 
                                 backgroundColor: 'var(--primary-blue)',
                                 boxShadow: 'var(--shadow-blue)'
@@ -223,7 +223,7 @@ export default function CommentSection({ boardId }: CommentSectionProps) {
                     {comments.map((comment, index) => (
                         <motion.div 
                             key={comment.id} 
-                            className="bg-white card-shadow rounded-[20px] p-6"
+                            className="bg-white card-shadow rounded-[16px] p-4"
                             initial={{ opacity: 0, x: -20 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.3, delay: index * 0.05 }}

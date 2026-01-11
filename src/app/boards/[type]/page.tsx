@@ -99,7 +99,7 @@ export default function BoardTypePage({ params }: { params: { type: BoardType } 
 
             <Header />
             
-            <div className="grid-container pt-32 pb-20 relative z-10">
+            <div className="grid-container pt-32 pb-60 relative z-10">
                 {/* Header */}
                 <div className="col-12 mb-8">
                     <Link 
@@ -206,7 +206,7 @@ export default function BoardTypePage({ params }: { params: { type: BoardType } 
                             </motion.div>
                         ) : (
                             <>
-                                <div className="bg-white card-shadow col-12" style={{ borderRadius: '20px', overflow: 'hidden' }}>
+                                <div className="bg-white card-shadow col-12 mb-20" style={{ borderRadius: '20px', overflow: 'hidden' }}>
                                     {boards.map((board, index) => (
                                         <motion.div
                                             key={board.id}
@@ -216,7 +216,7 @@ export default function BoardTypePage({ params }: { params: { type: BoardType } 
                                         >
                                             <Link
                                                 href={`/boards/${params.type}/${board.id}`}
-                                                className="block p-6 border-b transition-all hover:bg-gray-50 group"
+                                                className="block p-5 border-b transition-all hover:bg-gray-50 group"
                                                 style={{ borderColor: 'rgba(0, 0, 0, 0.05)' }}
                                             >
                                                 <div className="flex items-start justify-between gap-4">
