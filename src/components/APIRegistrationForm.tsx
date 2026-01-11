@@ -239,8 +239,8 @@ export default function APIRegistrationForm({ onSubmit, onCancel }: APIRegistrat
                     </label>
                     <textarea
                         id="pricing-csv"
-                        value={formData.pricing?.csv || ''}
-                        onChange={(e) => handlePricingChange('csv' as any, e.target.value)}
+                        value={(typeof formData.pricing === 'object' && formData.pricing !== null ? formData.pricing.csv : '') || ''}
+                        onChange={(e) => handlePricingChange('csv', e.target.value)}
                         rows={3}
                         className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent resize-none"
                         placeholder="예: 월 1,000건 무료, 월 $10 - 10,000건, 월 $100 - 100,000건"
