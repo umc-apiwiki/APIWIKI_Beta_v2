@@ -107,7 +107,7 @@ function ExploreContent() {
       // 검색어가 사라지면 다시 '인기순'으로 복귀 (선택사항)
       setSortBy('인기순');
     }
-  }, [searchParams]);
+  }, [searchParams, sortBy]);
 
   // 필터 및 정렬 적용
   useEffect(() => {
@@ -279,13 +279,14 @@ function ExploreContent() {
       { threshold: 0.1, rootMargin: '400px 0px' }
     );
 
-    if (observerTarget.current) {
-      observer.observe(observerTarget.current);
+    const target = observerTarget.current;
+    if (target) {
+      observer.observe(target);
     }
 
     return () => {
-      if (observerTarget.current) {
-        observer.unobserve(observerTarget.current);
+      if (target) {
+        observer.unobserve(target);
       }
     };
   }, [loadMore, hasMore]);

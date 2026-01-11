@@ -1,7 +1,7 @@
 // src/app/api/[id]/page.tsx
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { Star, Users, ChevronLeft, Heart, Share2 } from 'lucide-react';
 import Header from '@/components/Header';
@@ -118,7 +118,7 @@ export default function APIDetailPage({ params }: { params: { id: string } }) {
     return { headers, rows: normalizedRows };
   }, [csvString]);
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       const response = await fetch(`/api/apis/${params.id}`, { cache: 'no-store' });
       if (!response.ok) {
@@ -143,11 +143,11 @@ export default function APIDetailPage({ params }: { params: { id: string } }) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [params.id]);
 
   useEffect(() => {
     fetchData();
-  }, [params.id]);
+  }, [fetchData]);
 
   useEffect(() => {
     const fetchPointRules = async () => {

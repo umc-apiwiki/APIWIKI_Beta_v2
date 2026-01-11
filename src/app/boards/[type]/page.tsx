@@ -1,7 +1,7 @@
 // src/app/boards/[type]/page.tsx
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { motion } from 'motion/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -47,11 +47,7 @@ export default function BoardTypePage({ params }: { params: { type: BoardType } 
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
 
-    useEffect(() => {
-        fetchBoards();
-    }, [params.type, page]);
-
-    const fetchBoards = async () => {
+    const fetchBoards = useCallback(async () => {
         try {
             setLoading(true);
             const response = await fetch(`/api/boards?type=${params.type}&page=${page}&limit=20`);
@@ -66,7 +62,11 @@ export default function BoardTypePage({ params }: { params: { type: BoardType } 
         } finally {
             setLoading(false);
         }
-    };
+    }, [params.type, page]);
+
+    useEffect(() => {
+        fetchBoards();
+    }, [fetchBoards]);
 
     const config = BOARD_CONFIGS[params.type] || BOARD_CONFIGS.free;
 
