@@ -18,22 +18,18 @@ const BOARD_TITLES: Record<BoardType, string> = {
 
 const BOARD_CONFIGS: Record<BoardType, { icon: string; gradient: string; description: string }> = {
     inquiry: {
-        icon: '❓',
         gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
         description: '서비스 이용 중 궁금한 점을 문의하세요'
     },
     qna: {
-        icon: '💬',
         gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
         description: 'API 사용법과 기술적인 질문을 나누세요'
     },
     free: {
-        icon: '✨',
         gradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
         description: '자유롭게 의견을 나누는 공간입니다'
     },
     community: {
-        icon: '🌐',
         gradient: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
         description: '커뮤니티에서 다양한 이야기를 나누세요'
     },
@@ -178,7 +174,6 @@ export default function BoardTypePage({ params }: { params: { type: BoardType } 
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                             >
-                                <div className="text-[64px] mb-4 opacity-30">📝</div>
                                 <h3 className="text-[24px] font-semibold mb-2" style={{ color: 'var(--text-dark)' }}>
                                     아직 게시글이 없습니다
                                 </h3>

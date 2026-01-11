@@ -11,7 +11,6 @@ const BOARD_TYPES = [
         type: 'inquiry',
         title: '문의 게시판',
         description: '서비스 이용 중 궁금한 점을 문의하세요',
-        icon: '❓',
         gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
         stats: { posts: 128, members: 234 }
     },
@@ -19,7 +18,6 @@ const BOARD_TYPES = [
         type: 'qna',
         title: 'Q&A 게시판',
         description: 'API 사용법과 기술적인 질문을 나누세요',
-        icon: '💬',
         gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
         stats: { posts: 342, members: 567 }
     },
@@ -27,7 +25,6 @@ const BOARD_TYPES = [
         type: 'free',
         title: '자유 게시판',
         description: '자유롭게 의견을 나누는 공간입니다',
-        icon: '✨',
         gradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
         stats: { posts: 891, members: 1234 }
     },
@@ -107,22 +104,13 @@ export default function BoardsPage() {
                                 className="block bg-white transition-all duration-300 card-shadow overflow-hidden group"
                                 style={{ borderRadius: '20px', height: '100%' }}
                             >
-                                {/* Gradient Header */}
+                                {/* Gradient Header (icon removed by request) */}
                                 <motion.div 
                                     className="h-[120px] relative overflow-hidden"
                                     style={{ background: board.gradient }}
                                     whileHover={{ scale: 1.05 }}
                                     transition={{ duration: 0.3 }}
                                 >
-                                    <div className="absolute inset-0 flex items-center justify-center">
-                                        <motion.div 
-                                            className="text-[48px]"
-                                            whileHover={{ scale: 1.2, rotate: 360 }}
-                                            transition={{ duration: 0.5 }}
-                                        >
-                                            {board.icon}
-                                        </motion.div>
-                                    </div>
                                     {/* Decorative circles */}
                                     <div className="absolute top-[-20px] right-[-20px] w-[100px] h-[100px] rounded-full bg-white opacity-10"></div>
                                     <div className="absolute bottom-[-30px] left-[-30px] w-[120px] h-[120px] rounded-full bg-white opacity-10"></div>
@@ -192,10 +180,10 @@ export default function BoardsPage() {
 
                     <div className="grid grid-cols-12 grid-gap-24">
                         {[
-                            { icon: '🤝', title: '상호 존중', desc: '모든 구성원을 존중하고 배려해주세요' },
-                            { icon: '💡', title: '건설적인 피드백', desc: '비판보다는 도움이 되는 조언을 제공해주세요' },
-                            { icon: '🔍', title: '정확한 정보', desc: '검증된 정보를 공유하고 출처를 밝혀주세요' },
-                            { icon: '🚫', title: '스팸 금지', desc: '불필요한 광고나 반복 게시물은 지양해주세요' }
+                            { title: '상호 존중', desc: '모든 구성원을 존중하고 배려해주세요' },
+                            { title: '건설적인 피드백', desc: '비판보다는 도움이 되는 조언을 제공해주세요' },
+                            { title: '정확한 정보', desc: '검증된 정보를 공유하고 출처를 밝혀주세요' },
+                            { title: '스팸 금지', desc: '불필요한 광고나 반복 게시물은 지양해주세요' }
                         ].map((guideline, index) => (
                             <motion.div
                                 key={index}
@@ -205,13 +193,6 @@ export default function BoardsPage() {
                                 transition={{ duration: 0.4, delay: 0.5 + index * 0.1 }}
                                 whileHover={{ scale: 1.05 }}
                             >
-                                <motion.div 
-                                    className="text-[40px] mb-3"
-                                    whileHover={{ scale: 1.2, rotate: [0, -10, 10, -10, 0] }}
-                                    transition={{ duration: 0.5 }}
-                                >
-                                    {guideline.icon}
-                                </motion.div>
                                 <h4 className="text-[18px] font-semibold mb-2" style={{ color: 'var(--text-dark)' }}>
                                     {guideline.title}
                                 </h4>
