@@ -69,6 +69,7 @@ export const authOptions: NextAuthOptions = {
                     email: user.email,
                     name: user.name,
                     grade: user.grade as UserGrade,
+                    activity_score: user.activity_score,
                 };
             },
         }),
@@ -136,13 +137,16 @@ export const authOptions: NextAuthOptions = {
                 if (user.avatar_url) {
                     token.avatar_url = user.avatar_url;
                 }
+                if ((user as any).activity_score !== undefined) {
+                    token.activity_score = (user as any).activity_score;
+                }
             }
 
             // 2. OAuth 로그인 시 DB에서 실제 사용자 정보(UUID 등)를 다시 조회하여 덮어쓰기
             if (account?.provider === 'google' || account?.provider === 'github') {
                 const { data: dbUser } = await supabase
                     .from('User')
-                    .select('id, email, name, grade, avatar_url')
+                    .select('id, email, name, grade, avatar_url, activity_score')
                     .eq('email', token.email)
                     .single();
 
@@ -150,6 +154,35 @@ export const authOptions: NextAuthOptions = {
                     token.id = dbUser.id; // Provider ID를 내부 UUID로 교체
                     token.grade = dbUser.grade;
                     token.avatar_url = dbUser.avatar_url;
+                    token.activity_score = dbUser.activity_score;
+                }
+            }
+
+            // 3. 토큰에 activity_score가 없으면 DB에서 한 번 더 조회해 채움 (이전 세션 호환)
+            if (token.activity_score === undefined && token.email) {
+                const { data: scoreUser } = await supabase
+                    .from('User')
+                    .select('activity_score')
+                    .eq('email', token.email)
+                    .single();
+
+                if (scoreUser) {
+                    token.activity_score = scoreUser.activity_score;
+                }
+            }
+
+            // 4. 세션 갱신 시점마다 최신 점수/등급을 DB에서 재확인 (실시간 반영)
+            if (token.id) {
+                const { data: freshUser } = await supabase
+                    .from('User')
+                    .select('activity_score, grade, avatar_url')
+                    .eq('id', token.id)
+                    .single();
+
+                if (freshUser) {
+                    token.activity_score = freshUser.activity_score;
+                    token.grade = freshUser.grade;
+                    token.avatar_url = freshUser.avatar_url ?? token.avatar_url;
                 }
             }
             
@@ -162,7 +195,8 @@ export const authOptions: NextAuthOptions = {
                     email: token.email,
                     name: token.name,
                     grade: token.grade,
-                    avatar_url: token.avatar_url
+                    avatar_url: token.avatar_url,
+                    activity_score: token.activity_score,
                 };
             }
             return session;

@@ -22,7 +22,7 @@ export default function RootLayout({
         <link rel="stylesheet" as="style" crossOrigin="anonymous" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
       </head>
       <body className="font-sans" style={{ backgroundColor: 'var(--bg-light)' }}>
-        <SessionProvider>
+        <SessionProvider refetchInterval={30} refetchOnWindowFocus>
           <GoogleAnalytics />
           <main className="min-h-screen">
             {children}

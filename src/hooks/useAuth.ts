@@ -9,6 +9,7 @@ export interface AuthUser {
     email: string;
     name: string;
     grade: UserGrade;
+    activity_score?: number;
 }
 
 export function useAuth() {
@@ -20,6 +21,7 @@ export function useAuth() {
             email: session.user.email,
             name: session.user.name,
             grade: session.user.grade,
+            activity_score: session.user.activity_score,
         }
         : null;
 

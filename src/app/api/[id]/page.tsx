@@ -1,7 +1,7 @@
 // src/app/api/[id]/page.tsx
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { Star, Users, ChevronLeft, Heart, Share2 } from 'lucide-react';
 import Header from '@/components/Header';
@@ -15,6 +15,94 @@ export default function APIDetailPage({ params }: { params: { id: string } }) {
   const [relatedAPIs, setRelatedAPIs] = useState<API[]>([]);
   const [activeTab, setActiveTab] = useState('개요');
   const [loading, setLoading] = useState(true);
+
+  const pricingTable = useMemo(() => {
+    const csv = api?.pricing?.csv;
+    if (!csv) return null;
+
+    const parseCsv = (input: string): string[][] => {
+      const rows: string[][] = [];
+      let current: string[] = [];
+      let field = '';
+      let inQuotes = false;
+
+      const pushField = () => {
+        current.push(field);
+        field = '';
+      };
+
+      const pushRow = () => {
+        rows.push(current);
+        current = [];
+      };
+
+      for (let i = 0; i < input.length; i++) {
+        const char = input[i];
+        const next = input[i + 1];
+
+        if (char === '"') {
+          if (inQuotes && next === '"') {
+            field += '"';
+            i++; // skip escaped quote
+          } else {
+            inQuotes = !inQuotes;
+          }
+          continue;
+        }
+
+        if (char === ',' && !inQuotes) {
+          pushField();
+          continue;
+        }
+
+        if ((char === '\n' || char === '\r') && !inQuotes) {
+          // treat CRLF / LF uniformly
+          if (char === '\r' && next === '\n') i++;
+          pushField();
+          pushRow();
+          continue;
+        }
+
+        field += char;
+      }
+
+      // flush last field/row
+      pushField();
+      if (current.length > 0) {
+        pushRow();
+      }
+
+      // drop empty trailing rows
+      return rows.filter((r) => r.some((c) => c.trim().length > 0));
+    };
+
+    const rows = parseCsv(csv);
+    if (rows.length === 0) return null;
+
+    const maxCols = Math.max(...rows.map((r) => r.length));
+
+    const isNumeric = (value: string) => /^[-+]?\d+(\.\d+)?$/.test(value.trim());
+
+    const looksLikeHeader =
+      rows.length > 1 &&
+      rows[0].some((cell) => !isNumeric(cell)) &&
+      rows[0].every((cell) => cell.trim().length > 0);
+
+    const headers = looksLikeHeader
+      ? rows[0]
+      : Array.from({ length: maxCols }, (_, idx) => `열 ${idx + 1}`);
+
+    const dataRows = looksLikeHeader ? rows.slice(1) : rows;
+    if (dataRows.length === 0) return null;
+
+    const normalizedRows = dataRows.map((r) => {
+      const padded = [...r];
+      while (padded.length < maxCols) padded.push('');
+      return padded;
+    });
+
+    return { headers, rows: normalizedRows };
+  }, [api?.pricing?.csv]);
 
   const fetchData = async () => {
     try {
@@ -150,8 +238,70 @@ export default function APIDetailPage({ params }: { params: { id: string } }) {
             </>
           )}
 
-          {/* Placeholder for other tabs */}
-          {activeTab !== '개요' && (
+          {activeTab === '비용 정보' && (
+            <div className="space-y-6">
+              {(api?.pricing && ((api.pricing as any).free || (api.pricing as any).basic || (api.pricing as any).pro)) ? (
+                <div className="rounded-2xl bg-white border border-gray-200 p-6 shadow-sm">
+                  <h3 className="text-lg font-semibold text-[#0f172a] mb-4">요금제 요약</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {['free', 'basic', 'pro'].map((tier) => {
+                      const labelMap: Record<string, string> = {
+                        free: 'Free',
+                        basic: 'Basic',
+                        pro: 'Pro',
+                      };
+                      const value = (api?.pricing as any)?.[tier];
+                      if (!value) return null;
+                      return (
+                        <div key={tier} className="rounded-xl border border-gray-200 bg-gray-50 p-4">
+                          <div className="text-sm font-semibold text-[#0c4a6e] mb-2">{labelMap[tier]}</div>
+                          <p className="text-sm text-gray-700 whitespace-pre-line">{value}</p>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              ) : null}
+
+              {pricingTable && (
+                <div className="rounded-2xl bg-white border border-gray-200 p-6 shadow-sm">
+                  <h3 className="text-lg font-semibold text-[#0f172a] mb-4">상세 요금표</h3>
+                  <div className="overflow-auto">
+                    <table className="min-w-full text-sm text-left text-gray-700 border-collapse">
+                      <thead>
+                        <tr className="border-b border-gray-200">
+                          {pricingTable.headers.map((header, idx) => (
+                            <th key={idx} className="py-2 pr-4 font-semibold text-[#0c4a6e]">{header}</th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {pricingTable.rows.map((row, rIdx) => (
+                          <tr key={rIdx} className="border-b border-gray-100 last:border-0">
+                            {row.map((cell, cIdx) => (
+                              <td key={cIdx} className="py-2 pr-4 align-top">{cell}</td>
+                            ))}
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+              {!pricingTable && api?.pricing?.csv && (
+                <div className="rounded-2xl bg-white border border-gray-200 p-6 shadow-sm text-sm text-gray-500">
+                  요금표 데이터를 읽지 못했습니다. CSV 형식을 확인해주세요.
+                </div>
+              )}
+              {!pricingTable && !api?.pricing?.csv && (
+                <div className="rounded-2xl bg-white border border-gray-200 p-6 shadow-sm text-sm text-gray-500">
+                  등록된 요금표가 없습니다. CSV를 추가해주세요.
+                </div>
+              )}
+            </div>
+          )}
+
+          {activeTab !== '개요' && activeTab !== '비용 정보' && (
             <div className="h-48 flex items-center justify-center text-gray-400 bg-gray-50 rounded-xl text-lg">
               {activeTab} 내용 준비중
             </div>

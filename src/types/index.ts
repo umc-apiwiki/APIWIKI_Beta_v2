@@ -54,6 +54,7 @@ declare module 'next-auth' {
       name: string;
       grade: UserGrade;
       avatar_url?: string;
+      activity_score?: number;
     };
   }
 
@@ -63,6 +64,7 @@ declare module 'next-auth' {
     name: string;
     grade: UserGrade;
     avatar_url?: string;
+    activity_score?: number;
   }
 }
 
@@ -73,6 +75,7 @@ declare module 'next-auth/jwt' {
     name: string;
     grade: UserGrade;
     avatar_url?: string;
+    activity_score?: number;
   }
 }
 

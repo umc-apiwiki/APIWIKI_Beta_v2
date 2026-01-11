@@ -20,6 +20,7 @@ export default function Header({ transparent = false, className = '' }: HeaderPr
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
     const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
     const [isAPIRegistrationModalOpen, setIsAPIRegistrationModalOpen] = useState(false);
+    const totalPoints = user?.activity_score ?? 0;
     
     // Dropdown state logic
     const dropdownRef = useRef<HTMLDivElement>(null);
@@ -131,15 +132,17 @@ export default function Header({ transparent = false, className = '' }: HeaderPr
                     }}
                 >
                     {isAuthenticated ? (
-                        <div className="relative group" ref={dropdownRef}>
-                            <button 
-                                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                                className="flex items-center gap-2 focus:outline-none"
-                            >
-                                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#2196F3] to-[#00BCD4] flex items-center justify-center text-white font-bold text-lg shadow-md">
-                                    {user?.name?.[0]?.toUpperCase() || 'U'}
-                                </div>
-                            </button>
+                        <div className="flex items-center gap-2" ref={dropdownRef}>
+                            <span className="text-sm text-gray-600 leading-none">{totalPoints.toLocaleString()} P</span>
+                            <div className="relative group">
+                                <button 
+                                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                                    className="flex items-center gap-2 focus:outline-none"
+                                >
+                                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#2196F3] to-[#00BCD4] flex items-center justify-center text-white font-bold text-lg shadow-md">
+                                        {user?.name?.[0]?.toUpperCase() || 'U'}
+                                    </div>
+                                </button>
 
                             <AnimatePresence>
                                 {isDropdownOpen && (
@@ -206,6 +209,7 @@ export default function Header({ transparent = false, className = '' }: HeaderPr
                                     </motion.div>
                                 )}
                             </AnimatePresence>
+                            </div>
                         </div>
                     ) : (
                         <motion.button
