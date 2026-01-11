@@ -69,9 +69,13 @@ describe('Grade Calculation Utils', () => {
     describe('getActivityPoints', () => {
         it('활동 타입별 점수 반환', () => {
             expect(getActivityPoints('login')).toBe(1);
-            expect(getActivityPoints('post')).toBe(5);
-            expect(getActivityPoints('comment')).toBe(2);
-            expect(getActivityPoints('edit')).toBe(3);
+            expect(getActivityPoints('post')).toBe(2);
+            expect(getActivityPoints('comment')).toBe(1);
+            expect(getActivityPoints('edit')).toBe(4);
+            expect(getActivityPoints('feedback')).toBe(3);
+            expect(getActivityPoints('api_approval')).toBe(5);
+            expect(getActivityPoints('csv_upload')).toBe(5);
+            expect(getActivityPoints('csv_update')).toBe(2);
         });
     });
 

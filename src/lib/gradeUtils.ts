@@ -18,9 +18,13 @@ export const GRADE_THRESHOLDS = {
 /** 활동 타입별 점수 */
 export const ACTIVITY_POINTS: Record<ActivityType, number> = {
     login: 1,
-    post: 5,
-    comment: 2,
-    edit: 3,
+    post: 2,
+    comment: 1,
+    edit: 4,
+    feedback: 3,
+    api_approval: 5,
+    csv_upload: 5,
+    csv_update: 2,
 };
 
 /** 등급별 위키 편집 권한 */
