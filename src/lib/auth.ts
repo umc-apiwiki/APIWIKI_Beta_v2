@@ -118,21 +118,7 @@ export const authOptions: NextAuthOptions = {
             return true;
         },
         async jwt({ token, user, account }) {
-            // OAuth 로그인 시 DB에서 사용자 정보 조회
-            if (account?.provider === 'google' || account?.provider === 'github') {
-                const { data: dbUser } = await supabase
-                    .from('User')
-                    .select('id, email, name, grade, avatar_url')
-                    .eq('email', token.email)
-                    .single();
-
-                if (dbUser) {
-                    token.id = dbUser.id;
-                    token.grade = dbUser.grade;
-                    token.avatar_url = dbUser.avatar_url;
-                }
-            }
-            
+            // 1. 초기 로그인 시 사용자 정보 토큰에 저장 (여기서 user.id는 OAuth의 경우 Provider ID일 수 있음)
             if (user) {
                 token.id = user.id;
                 token.email = user.email;
@@ -142,6 +128,22 @@ export const authOptions: NextAuthOptions = {
                     token.avatar_url = user.avatar_url;
                 }
             }
+
+            // 2. OAuth 로그인 시 DB에서 실제 사용자 정보(UUID 등)를 다시 조회하여 덮어쓰기
+            if (account?.provider === 'google' || account?.provider === 'github') {
+                const { data: dbUser } = await supabase
+                    .from('User')
+                    .select('id, email, name, grade, avatar_url')
+                    .eq('email', token.email)
+                    .single();
+
+                if (dbUser) {
+                    token.id = dbUser.id; // Provider ID를 내부 UUID로 교체
+                    token.grade = dbUser.grade;
+                    token.avatar_url = dbUser.avatar_url;
+                }
+            }
+            
             return token;
         },
         async session({ session, token }) {
