@@ -15,9 +15,22 @@ export default function APIDetailPage({ params }: { params: { id: string } }) {
   const [relatedAPIs, setRelatedAPIs] = useState<API[]>([]);
   const [activeTab, setActiveTab] = useState('개요');
   const [loading, setLoading] = useState(true);
+  const [csvInput, setCsvInput] = useState('');
+  const [savingCsv, setSavingCsv] = useState(false);
+  const [saveMessage, setSaveMessage] = useState('');
+  const [editingCsv, setEditingCsv] = useState(false);
+  const [pointRules, setPointRules] = useState({ upload: 5, update: 2 });
+  const [showPointModal, setShowPointModal] = useState(false);
+  const [awardedPoints, setAwardedPoints] = useState<number | null>(null);
+
+  const csvString = useMemo(() => {
+    if (!api?.pricing) return '';
+    if (typeof api.pricing === 'string') return api.pricing;
+    return api.pricing.csv ?? '';
+  }, [api?.pricing]);
 
   const pricingTable = useMemo(() => {
-    const csv = api?.pricing?.csv;
+    const csv = csvString;
     if (!csv) return null;
 
     const parseCsv = (input: string): string[][] => {
@@ -102,7 +115,7 @@ export default function APIDetailPage({ params }: { params: { id: string } }) {
     });
 
     return { headers, rows: normalizedRows };
-  }, [api?.pricing?.csv]);
+  }, [csvString]);
 
   const fetchData = async () => {
     try {
@@ -113,6 +126,7 @@ export default function APIDetailPage({ params }: { params: { id: string } }) {
       }
       const data = await response.json();
       setApi(data);
+      setCsvInput(typeof data.pricing === 'string' ? data.pricing : data.pricing?.csv || '');
 
       // Fetch related APIs
       if (data.categories && data.categories.length > 0) {
@@ -134,6 +148,54 @@ export default function APIDetailPage({ params }: { params: { id: string } }) {
     fetchData();
   }, [params.id]);
 
+  useEffect(() => {
+    const fetchPointRules = async () => {
+      try {
+        const response = await fetch('/api/point-rules?actionTypes=csv_upload,csv_update', { cache: 'no-store' });
+        if (!response.ok) return;
+        const data = await response.json();
+        setPointRules({
+          upload: typeof data?.csv_upload === 'number' ? data.csv_upload : 5,
+          update: typeof data?.csv_update === 'number' ? data.csv_update : 2,
+        });
+      } catch (error) {
+        console.error('Error fetching point rules:', error);
+      }
+    };
+
+    fetchPointRules();
+  }, []);
+
+  const handleSaveCsv = async () => {
+    if (!api) return;
+    setSavingCsv(true);
+    setSaveMessage('');
+    try {
+      const response = await fetch(`/api/apis/${api.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ csv: csvInput }),
+      });
+
+      const payload = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        throw new Error(payload?.error || '저장에 실패했습니다.');
+      }
+
+      const awarded = typeof payload?.pointsAwarded === 'number' ? payload.pointsAwarded : null;
+      setAwardedPoints(awarded);
+      setShowPointModal(true);
+      setSaveMessage(awarded ? `저장 완료! 포인트 +${awarded} 적립되었습니다.` : '저장 완료!');
+      setEditingCsv(false);
+      await fetchData();
+    } catch (error: any) {
+      setSaveMessage(error.message || '저장에 실패했습니다.');
+    } finally {
+      setSavingCsv(false);
+    }
+  };
+
   if (loading) return null;
   if (!api) return <div>API not found</div>;
 
@@ -149,6 +211,22 @@ export default function APIDetailPage({ params }: { params: { id: string } }) {
       <Header />
       
       <div className="max-w-6xl mx-auto px-6 py-8 pt-28 relative">
+          {showPointModal && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+              <div className="bg-white rounded-2xl shadow-xl p-6 w-[320px] text-center space-y-3">
+                <h4 className="text-lg font-semibold text-[#0f172a]">포인트 적립</h4>
+                <p className="text-sm text-gray-700">
+                  {awardedPoints ? `포인트 ${awardedPoints}점이 적립되었습니다.` : '포인트가 적립되었습니다.'}
+                </p>
+                <button
+                  onClick={() => setShowPointModal(false)}
+                  className="mt-2 w-full rounded-md bg-[#0c4a6e] text-white py-2 text-sm font-medium hover:bg-[#0a3b56]"
+                >
+                  확인
+                </button>
+              </div>
+            </div>
+          )}
        
         {/* Header Section */}
         <div className="flex justify-between items-start mb-12 relative">
@@ -240,6 +318,83 @@ export default function APIDetailPage({ params }: { params: { id: string } }) {
 
           {activeTab === '비용 정보' && (
             <div className="space-y-6">
+              <div className="rounded-2xl bg-white border border-gray-200 p-6 shadow-sm space-y-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-semibold text-[#0f172a]">상세 요금표</h3>
+                  <button
+                    onClick={() => {
+                      setEditingCsv((prev) => !prev);
+                      setSaveMessage('');
+                      setCsvInput(csvString);
+                    }}
+                    className="text-sm px-3 py-1.5 rounded-md border border-gray-200 text-[#0c4a6e] hover:border-sky-400"
+                  >
+                    {editingCsv ? '닫기' : '비용정보 업데이트하기'}
+                  </button>
+                </div>
+
+                {editingCsv && (
+                  <div className="rounded-xl border border-gray-100 bg-gray-50 p-4 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="text-sm font-semibold text-[#0f172a]">CSV 업로드 / 수정</h4>
+                        <p className="text-xs text-gray-500 mt-1">첫 줄에 헤더가 없어도 자동으로 열을 만듭니다.</p>
+                      </div>
+                      <span className="text-xs text-[#0c4a6e]">신규 업로드 {pointRules.upload}점 · 수정 {pointRules.update}점</span>
+                    </div>
+                    <textarea
+                      className="w-full min-h-[180px] rounded-lg border border-gray-200 p-3 text-sm font-mono text-gray-700 focus:outline-none focus:ring-2 focus:ring-sky-500"
+                      value={csvInput}
+                      onChange={(e) => setCsvInput(e.target.value)}
+                      placeholder="Plan,Price,Notes\nFree,0,기본 제공\nPro,49,월 구독"
+                    />
+                    <div className="flex items-center gap-3">
+                      <button
+                        onClick={handleSaveCsv}
+                        disabled={savingCsv}
+                        className="px-4 py-2 rounded-md bg-[#0c4a6e] text-white text-sm font-medium hover:bg-[#0a3b56] disabled:opacity-60 disabled:cursor-not-allowed"
+                      >
+                        {savingCsv ? '저장 중...' : 'CSV 저장'}
+                      </button>
+                      <button
+                        onClick={() => { setEditingCsv(false); setCsvInput(csvString); setSaveMessage(''); }}
+                        className="px-4 py-2 rounded-md border border-gray-200 text-sm font-medium text-gray-700 hover:border-sky-300"
+                      >
+                        취소
+                      </button>
+                      {saveMessage && (
+                        <span className="text-sm text-gray-600">{saveMessage}</span>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {pricingTable ? (
+                  <div className="overflow-auto">
+                    <table className="min-w-full text-sm text-left text-gray-700 border-collapse">
+                      <thead>
+                        <tr className="border-b border-gray-200">
+                          {pricingTable.headers.map((header, idx) => (
+                            <th key={idx} className="py-2 pr-4 font-semibold text-[#0c4a6e]">{header}</th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {pricingTable.rows.map((row, rIdx) => (
+                          <tr key={rIdx} className="border-b border-gray-100 last:border-0">
+                            {row.map((cell, cIdx) => (
+                              <td key={cIdx} className="py-2 pr-4 align-top">{cell}</td>
+                            ))}
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                ) : (
+                  <div className="text-sm text-gray-500">등록된 요금표가 없습니다. 업데이트 버튼을 눌러 CSV를 추가하세요.</div>
+                )}
+              </div>
+
               {(api?.pricing && ((api.pricing as any).free || (api.pricing as any).basic || (api.pricing as any).pro)) ? (
                 <div className="rounded-2xl bg-white border border-gray-200 p-6 shadow-sm">
                   <h3 className="text-lg font-semibold text-[#0f172a] mb-4">요금제 요약</h3>
@@ -263,39 +418,9 @@ export default function APIDetailPage({ params }: { params: { id: string } }) {
                 </div>
               ) : null}
 
-              {pricingTable && (
-                <div className="rounded-2xl bg-white border border-gray-200 p-6 shadow-sm">
-                  <h3 className="text-lg font-semibold text-[#0f172a] mb-4">상세 요금표</h3>
-                  <div className="overflow-auto">
-                    <table className="min-w-full text-sm text-left text-gray-700 border-collapse">
-                      <thead>
-                        <tr className="border-b border-gray-200">
-                          {pricingTable.headers.map((header, idx) => (
-                            <th key={idx} className="py-2 pr-4 font-semibold text-[#0c4a6e]">{header}</th>
-                          ))}
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {pricingTable.rows.map((row, rIdx) => (
-                          <tr key={rIdx} className="border-b border-gray-100 last:border-0">
-                            {row.map((cell, cIdx) => (
-                              <td key={cIdx} className="py-2 pr-4 align-top">{cell}</td>
-                            ))}
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              )}
-              {!pricingTable && api?.pricing?.csv && (
+              {!pricingTable && csvString && (
                 <div className="rounded-2xl bg-white border border-gray-200 p-6 shadow-sm text-sm text-gray-500">
                   요금표 데이터를 읽지 못했습니다. CSV 형식을 확인해주세요.
-                </div>
-              )}
-              {!pricingTable && !api?.pricing?.csv && (
-                <div className="rounded-2xl bg-white border border-gray-200 p-6 shadow-sm text-sm text-gray-500">
-                  등록된 요금표가 없습니다. CSV를 추가해주세요.
                 </div>
               )}
             </div>

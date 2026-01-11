@@ -1,5 +1,4 @@
-import { supabase } from '@/lib/supabaseClient';
-import { create, update, getById } from '@/lib/supabaseHelpers';
+import { supabaseAdmin } from '@/lib/supabaseAdminClient';
 import type { UserActivity, User, ActivityType } from '@/types';
 
 // 활동별 포인트 정의
@@ -26,8 +25,18 @@ export async function logUserActivity(userId: string, actionType: ActivityType, 
     try {
         console.log(`[Activity] Logging activity: ${actionType} for user: ${userId}`);
 
-        // 1. 사용자 조회
-        const user = await getById<User>('User', userId);
+        // 1. 사용자 조회 (admin client 사용해 RLS 영향 방지)
+        const { data: user, error: userError } = await supabaseAdmin
+            .from('User')
+            .select('*')
+            .eq('id', userId)
+            .single();
+
+        if (userError) {
+            console.error('[Activity] User fetch failed:', userError);
+            return null;
+        }
+
         if (!user) {
             console.error(`[Activity] User not found: ${userId}`);
             return null;
@@ -35,11 +44,20 @@ export async function logUserActivity(userId: string, actionType: ActivityType, 
 
         // 3. 활동 기록 (user_activities 테이블)
         // 트리거(on_activity_created)가 실행되어 User.activity_score가 자동으로 업데이트됩니다.
-        const activity = await create<UserActivity>('user_activities', {
-            user_id: userId,
-            action_type: actionType,
-            points: customPoints ?? getActivityPoints(actionType),
-        });
+        const { data: activity, error: insertError } = await supabaseAdmin
+            .from('user_activities')
+            .insert({
+                user_id: userId,
+                action_type: actionType,
+                points: customPoints ?? getActivityPoints(actionType),
+            })
+            .select()
+            .single();
+
+        if (insertError) {
+            console.error('[Activity] Insert failed:', insertError);
+            return null;
+        }
 
         console.log(`[Activity] Logged: ${actionType} (+${activity.points}p)`);
 

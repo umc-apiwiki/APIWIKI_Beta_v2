@@ -94,12 +94,14 @@ export interface API {
   tags?: string[]; // 검색용 상세 태그
   wiki_content?: string; // 상세 위키 문서 내용 (description과 분리됨)
   features?: string[];
-  pricing?: {
-    free?: string;
-    basic?: string;
-    pro?: string;
-    csv?: string;
-  };
+  pricing?:
+    | string
+    | {
+        free?: string;
+        basic?: string;
+        pro?: string;
+        csv?: string;
+      };
   // Additional optional metadata for filtering and UI
   countries?: string[]; // 제공 국가(예: ['한국','미국'])
   authMethods?: string[]; // 인증 방식(예: ['OAuth2','APIKey','JWT'])
@@ -126,12 +128,14 @@ export interface APISubmissionPayload {
   price: 'free' | 'paid' | 'mixed';
   logo?: string;
   features?: string[];
-  pricing?: {
-    free?: string;
-    basic?: string;
-    pro?: string;
-    csv?: string;
-  };
+  pricing?:
+    | string
+    | {
+        free?: string;
+        basic?: string;
+        pro?: string;
+        csv?: string;
+      };
 }
 
 // 게시글 작성 데이터
