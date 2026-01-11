@@ -16,7 +16,7 @@ const BOARD_TITLES: Record<BoardType, string> = {
     community: '커뮤니티',
 };
 
-const BOARD_CONFIGS: Record<BoardType, { icon: string; gradient: string; description: string }> = {
+const BOARD_CONFIGS: Record<BoardType, { gradient: string; description: string }> = {
     inquiry: {
         gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
         description: '서비스 이용 중 궁금한 점을 문의하세요'
