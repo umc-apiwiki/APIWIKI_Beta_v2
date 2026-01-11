@@ -24,7 +24,7 @@ function ExploreContent() {
 
   const [searchQuery, setSearchQuery] = useState(initialQuery);
   const [selectedCategory, setSelectedCategory] = useState(initialCategory);
-  const [sortBy, setSortBy] = useState('인기순');
+  const [sortBy, setSortBy] = useState('정확도순');
   const [filteredAPIs, setFilteredAPIs] = useState<API[]>([]);
   const [displayedAPIs, setDisplayedAPIs] = useState<API[]>([]);
   const [page, setPage] = useState(1);
@@ -42,8 +42,10 @@ function ExploreContent() {
   const [authMethodFilter, setAuthMethodFilter] = useState<string[]>([]);
   const [docLanguageFilter, setDocLanguageFilter] = useState<string[]>([]);
   const [companyFilter, setCompanyFilter] = useState<string[]>([]);
+  const [isSortOpen, setIsSortOpen] = useState(false);
 
   const observerTarget = useRef(null);
+  const sortCloseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const ITEMS_PER_PAGE = 9;
 
   // API 데이터 로드
@@ -351,6 +353,30 @@ function ExploreContent() {
     setCompanyFilter(filters.companyFilter);
   };
 
+  useEffect(() => {
+    return () => {
+      if (sortCloseTimer.current) {
+        clearTimeout(sortCloseTimer.current);
+      }
+    };
+  }, []);
+
+  const toggleSortDropdown = () => {
+    if (sortCloseTimer.current) {
+      clearTimeout(sortCloseTimer.current);
+    }
+    setIsSortOpen(true);
+    sortCloseTimer.current = setTimeout(() => setIsSortOpen(false), 2000);
+  };
+
+  const handleSortSelect = (option: string) => {
+    setSortBy(option);
+    setIsSortOpen(false);
+    if (sortCloseTimer.current) {
+      clearTimeout(sortCloseTimer.current);
+    }
+  };
+
   return (
     <motion.div 
       className="min-h-screen" 
@@ -419,27 +445,34 @@ function ExploreContent() {
               </button>
 
               {/* Sort By Dropdown (Custom) */}
-              <div className="relative group">
-                <button className="flex items-center gap-1 text-sm font-medium text-gray-600 hover:text-blue-600">
+              <div className="relative">
+                <button
+                  onClick={toggleSortDropdown}
+                  className="flex items-center gap-1 text-sm font-medium text-gray-600 hover:text-blue-600"
+                  aria-haspopup="listbox"
+                  aria-expanded={isSortOpen}
+                >
                   Sort By
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <polyline points="6 9 12 15 18 9"></polyline>
                   </svg>
                 </button>
                 {/* Dropdown Menu */}
-                <div className="absolute right-0 top-full mt-2 w-40 bg-white rounded-lg shadow-xl border border-gray-100 hidden group-hover:block z-50">
-                   <div className="py-2">
-                     {['정확도순', '인기순', '최신순', '후기 많은 순', '비용 낮은 순'].map(option => (
-                       <button
-                         key={option}
-                         onClick={() => setSortBy(option)}
-                         className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${sortBy === option ? 'text-blue-600 font-medium' : 'text-gray-700'}`}
-                       >
-                         {option}
-                       </button>
-                     ))}
-                   </div>
-                </div>
+                {isSortOpen && (
+                  <div className="absolute right-0 top-full mt-2 w-40 bg-white rounded-lg shadow-xl border border-gray-100 z-50">
+                     <div className="py-2">
+                       {['정확도순', '인기순', '최신순', '후기 많은 순', '비용 낮은 순'].map(option => (
+                         <button
+                           key={option}
+                           onClick={() => handleSortSelect(option)}
+                           className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${sortBy === option ? 'text-blue-600 font-medium' : 'text-gray-700'}`}
+                         >
+                           {option}
+                         </button>
+                       ))}
+                     </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
