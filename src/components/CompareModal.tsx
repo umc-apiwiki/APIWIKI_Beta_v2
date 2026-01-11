@@ -10,6 +10,16 @@ type Props = {
 };
 
 export default function CompareModal({ isOpen, onClose, apis }: Props) {
+  const getPricingValue = (
+    pricing: API['pricing'],
+    tier: 'free' | 'basic' | 'pro' | 'csv'
+  ) => {
+    if (pricing && typeof pricing === 'object') {
+      return pricing[tier];
+    }
+    return undefined;
+  };
+
   return (
     <ModalBase isOpen={isOpen} onClose={onClose} title={`API 비교 (${apis.length})`}>
       <div className="overflow-x-auto">
@@ -29,15 +39,24 @@ export default function CompareModal({ isOpen, onClose, apis }: Props) {
             </tr>
             <tr className="border-t">
               <td className="p-2 font-semibold">요금 - Free</td>
-              {apis.map(a => <td key={a.id} className="p-2">{(a.pricing && a.pricing.free) ? a.pricing.free : '-'}</td>)}
+              {apis.map(a => {
+                const price = getPricingValue(a.pricing, 'free');
+                return <td key={a.id} className="p-2">{price ?? '-'}</td>;
+              })}
             </tr>
             <tr className="border-t">
               <td className="p-2 font-semibold">요금 - Basic</td>
-              {apis.map(a => <td key={a.id} className="p-2">{(a.pricing && a.pricing.basic) ? a.pricing.basic : '-'}</td>)}
+              {apis.map(a => {
+                const price = getPricingValue(a.pricing, 'basic');
+                return <td key={a.id} className="p-2">{price ?? '-'}</td>;
+              })}
             </tr>
             <tr className="border-t">
               <td className="p-2 font-semibold">요금 - Pro</td>
-              {apis.map(a => <td key={a.id} className="p-2">{(a.pricing && a.pricing.pro) ? a.pricing.pro : '-'}</td>)}
+              {apis.map(a => {
+                const price = getPricingValue(a.pricing, 'pro');
+                return <td key={a.id} className="p-2">{price ?? '-'}</td>;
+              })}
             </tr>
             <tr className="border-t">
               <td className="p-2 font-semibold">인증 방식</td>
