@@ -73,14 +73,12 @@ export default function WikiEditor({ apiId, initialContent = '', onSave }: WikiE
         setSummary('');
         setShowPointsModal(true); // 포인트 모달 표시
 
-        // 모달 표시 후 이동/리로드
-        setTimeout(() => {
-            if (onSave) {
-                onSave();
-            } else {
-                window.location.reload(); 
-            }
-        }, 2500);
+        // 모달 표시 후 데이터만 새로고침 (전체 리로드 제거)
+        if (onSave) {
+          setTimeout(() => {
+            onSave();
+          }, 600);
+        }
     } catch (error: any) {
         alert(error.message);
     } finally {
