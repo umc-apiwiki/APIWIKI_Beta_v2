@@ -41,8 +41,12 @@ export default function APICard({ api, onToggleCompare, isCompareSelected, hideC
             className="w-24 h-24 min-w-[6rem] rounded-[10px] flex-shrink-0 bg-white flex items-center justify-center overflow-hidden shadow-image"
           >
             {api.logo ? (
-               // eslint-disable-next-line @next/next/no-img-element
-              <img src={api.logo} alt={api.name} className="w-full h-full object-cover" />
+                 api.logo.startsWith('http') || api.logo.startsWith('/') ? (
+                     // eslint-disable-next-line @next/next/no-img-element
+                     <img src={api.logo} alt={api.name} className="w-full h-full object-cover" />
+                 ) : (
+                     <span className="text-4xl">{api.logo}</span>
+                 )
             ) : (
               <span className="text-xl">📦</span>
             )}
