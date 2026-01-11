@@ -260,7 +260,7 @@ export async function getUserAPIs(userId: string): Promise<API[]> {
             .from('Api')
             .select('*')
             .eq('created_by', userId)
-            .order('created_at', { ascending: false });
+            .order('createdat', { ascending: false });
 
         if (error) {
             handleError(error, '사용자 등록 API 조회');
@@ -281,7 +281,7 @@ export async function getPendingAPIs(): Promise<API[]> {
             .from('Api')
             .select('*')
             .eq('status', 'pending')
-            .order('created_at', { ascending: false });
+            .order('createdat', { ascending: false });
 
         if (error) {
             handleError(error, '승인 대기 API 조회');
@@ -303,7 +303,7 @@ export async function getAPIsByStatus(status: ApiStatus): Promise<API[]> {
             .from('Api')
             .select('*')
             .eq('status', status)
-            .order('created_at', { ascending: false });
+            .order('createdat', { ascending: false });
 
         if (error) {
             handleError(error, `상태별 API 조회 (${status})`);

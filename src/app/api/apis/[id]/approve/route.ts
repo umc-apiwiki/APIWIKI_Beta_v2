@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import { logUserActivity } from '@/lib/activity';
+
 import { supabase } from '@/lib/supabaseClient';
 
 export const dynamic = 'force-dynamic';
@@ -51,9 +51,7 @@ export async function POST(
         }
 
         // 4. Award Points (5 points)
-        if (api.created_by) {
-            await logUserActivity(api.created_by, 'api_approval');
-        }
+        // 4. Award Points (5 points) - DB Trigger로 자동 처리됨
 
         return NextResponse.json({ success: true, message: 'API가 승인되었으며 포인트가 지급되었습니다.' });
 

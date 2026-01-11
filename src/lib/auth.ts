@@ -52,14 +52,17 @@ export const authOptions: NextAuthOptions = {
                     throw new Error('이메일 또는 비밀번호가 올바르지 않습니다');
                 }
 
-                // 로그인 활동 기록 (activity_score 증가)
-                await supabase
-                    .from('User')
-                    .update({
-                        activity_score: user.activity_score + 1,
-                        updatedAt: new Date().toISOString()
-                    })
-                    .eq('id', user.id);
+                // 로그인 활동 기록
+                try {
+                    await supabase.rpc('log_user_login', { user_id: user.id });
+                    // 마지막 로그인 시간 업데이트
+                    await supabase
+                        .from('User')
+                        .update({ updatedAt: new Date().toISOString() })
+                        .eq('id', user.id);
+                } catch (error) {
+                    console.error('로그인 활동 기록 실패:', error);
+                }
 
                 return {
                     id: user.id,
@@ -99,9 +102,15 @@ export const authOptions: NextAuthOptions = {
                         return false;
                     }
                 } else {
-                    // 기존 사용자 로그인 활동 기록 및 프로필 이미지 업데이트 (있을 경우)
+                    // 로그인 활동 기록
+                    try {
+                        await supabase.rpc('log_user_login', { user_id: existingUser.id });
+                    } catch (error) {
+                        console.error('로그인 활동 기록 실패:', error);
+                    }
+
+                    // 프로필 이미지 등 업데이트
                     const updates: any = {
-                        activity_score: existingUser.activity_score + 1,
                         updatedAt: new Date().toISOString()
                     };
                     

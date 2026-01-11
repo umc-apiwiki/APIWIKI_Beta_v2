@@ -33,30 +33,21 @@ export async function logUserActivity(userId: string, actionType: ActivityType, 
             return null;
         }
 
-        // 2. 점수 계산
-        const points = customPoints ?? getActivityPoints(actionType);
-        const oldScore = user.activity_score || 0;
-        const newScore = oldScore + points;
-
         // 3. 활동 기록 (user_activities 테이블)
+        // 트리거(on_activity_created)가 실행되어 User.activity_score가 자동으로 업데이트됩니다.
         const activity = await create<UserActivity>('user_activities', {
             user_id: userId,
             action_type: actionType,
-            points,
+            points: customPoints ?? getActivityPoints(actionType),
         });
 
-        // 4. 사용자 점수 업데이트 (User 테이블)
-        await update<User>('User', userId, {
-            activity_score: newScore,
-        });
-
-        console.log(`[Activity] Success: +${points} points. Total: ${newScore}`);
+        console.log(`[Activity] Logged: ${actionType} (+${activity.points}p)`);
 
         return {
             activityId: activity.id,
-            points,
-            oldScore,
-            newScore,
+            points: activity.points,
+            oldScore: 0, // Legacy support (dummy value)
+            newScore: 0, // Legacy support (dummy value)
         };
     } catch (error: any) {
         console.error('[Activity] Error logging activity:', error);
