@@ -118,8 +118,13 @@ export default function APIDetailPage({ params }: { params: { id: string } }) {
     return { headers, rows: normalizedRows };
   }, [csvString]);
 
-  const fetchData = useCallback(async () => {
+  const fetchData = useCallback(async (options?: { silent?: boolean }) => {
+    const silent = options?.silent === true;
     try {
+      if (!silent) {
+        setLoading(true);
+      }
+
       const response = await fetch(`/api/apis/${params.id}`, { cache: 'no-store' });
       if (!response.ok) {
         setApi(null);
@@ -141,7 +146,9 @@ export default function APIDetailPage({ params }: { params: { id: string } }) {
       console.error('Error fetching API:', error);
       setApi(null);
     } finally {
-      setLoading(false);
+      if (!silent) {
+        setLoading(false);
+      }
     }
   }, [params.id]);
 
@@ -189,7 +196,7 @@ export default function APIDetailPage({ params }: { params: { id: string } }) {
       setShowPointModal(true);
       setSaveMessage(awarded ? `저장 완료! 포인트 +${awarded} 적립되었습니다.` : '저장 완료!');
       setEditingCsv(false);
-      await fetchData();
+      await fetchData({ silent: true });
     } catch (error: any) {
       setSaveMessage(error.message || '저장에 실패했습니다.');
     } finally {
@@ -300,7 +307,11 @@ export default function APIDetailPage({ params }: { params: { id: string } }) {
                  <div className="mt-8">
                    <h3 className="text-xl font-medium text-[#0c4a6e] mb-4">API 위키</h3>
                    <div className="w-full">
-                   <WikiEditor apiId={api.id} initialContent={api.wiki_content || ''} onSave={fetchData} />
+                   <WikiEditor
+                     apiId={api.id}
+                     initialContent={api.wiki_content || ''}
+                     onSave={() => fetchData({ silent: true })}
+                   />
                    </div>
                  </div>
               </div>
