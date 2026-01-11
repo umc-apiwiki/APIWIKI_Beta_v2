@@ -1,9 +1,10 @@
 // src/app/profile/page.tsx
 'use client';
 
-import { useState, useEffect } from 'react';
+import { type ChangeEvent, type FormEvent, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'motion/react';
+import { Check, Loader2, Lock, Mail, Sparkles, User } from 'lucide-react';
 import Header from '@/components/Header';
 import { useAuth } from '@/hooks/useAuth';
 
@@ -31,19 +32,15 @@ export default function ProfilePage() {
 
     useEffect(() => {
         if (user && !originalName) {
-            setFormData(prev => ({
-                ...prev,
-                name: user.name || '',
-            }));
+            setFormData(prev => ({ ...prev, name: user.name || '' }));
             setOriginalName(user.name || '');
         }
     }, [user, originalName]);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
 
-        // 닉네임이 변경되면 중복 확인 상태 초기화
         if (name === 'name') {
             setIsNameAvailable(false);
             setMessage('');
@@ -87,18 +84,16 @@ export default function ProfilePage() {
         }
     };
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
         setMessage('');
         setError('');
 
-        // 닉네임이 변경되었는데 중복 확인을 안 한 경우
         if (isNameChanged && !isNameAvailable) {
             setError('닉네임 중복 확인을 해주세요');
             return;
         }
 
-        // 비밀번호 변경 시 확인
         if (formData.password || formData.passwordConfirm) {
             if (formData.password !== formData.passwordConfirm) {
                 setError('비밀번호가 일치하지 않습니다');
@@ -112,14 +107,12 @@ export default function ProfilePage() {
 
         setIsSaving(true);
         try {
-            const updatePayload: any = {};
+            const updatePayload: Record<string, string> = {};
 
-            // 닉네임이 변경되었고 중복 확인을 통과한 경우
             if (isNameChanged && isNameAvailable) {
                 updatePayload.name = formData.name;
             }
 
-            // 비밀번호가 입력된 경우
             if (formData.password) {
                 updatePayload.password = formData.password;
             }
@@ -144,7 +137,6 @@ export default function ProfilePage() {
             setOriginalName(formData.name);
             setIsNameAvailable(false);
 
-            // 2초 후 새로고침하여 변경사항 반영
             setTimeout(() => {
                 window.location.reload();
             }, 2000);
@@ -155,22 +147,27 @@ export default function ProfilePage() {
         }
     };
 
-    if (isLoading || !user) {
-        return (
-            <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--bg-light)' }}>
-                <div className="text-center">
-                    <div className="inline-block w-12 h-12 border-4 border-t-transparent rounded-full animate-spin" style={{ borderColor: 'var(--primary-blue)', borderTopColor: 'transparent' }}></div>
-                    <p className="mt-4 text-[16px]" style={{ color: 'var(--text-gray)' }}>로딩 중...</p>
-                </div>
-            </div>
-        );
-    }
-
     const canSubmit = () => {
         const hasPasswordChange = formData.password && formData.passwordConfirm && formData.password === formData.passwordConfirm;
         const hasNameChange = isNameChanged && isNameAvailable;
         return hasPasswordChange || hasNameChange;
     };
+
+    if (isLoading || !user) {
+        return (
+            <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--bg-light)' }}>
+                <div className="text-center">
+                    <div
+                        className="inline-block w-12 h-12 border-4 border-t-transparent rounded-full animate-spin"
+                        style={{ borderColor: 'var(--primary-blue)', borderTopColor: 'transparent' }}
+                    ></div>
+                    <p className="mt-4 text-[16px]" style={{ color: 'var(--text-gray)' }}>
+                        로딩 중...
+                    </p>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <motion.div
@@ -182,154 +179,165 @@ export default function ProfilePage() {
         >
             <Header />
 
-            {/* 배경 그라데이션 */}
             <div className="bg-glow" />
 
-            <div className="grid-container pt-32 pb-20 relative z-10">
-                <div className="col-12 max-w-2xl mx-auto">
+            <div className="max-w-6xl mx-auto px-6 pt-28 pb-20 space-y-6 relative z-10">
+                <div className="flex items-center justify-between flex-wrap gap-3">
+                    <div>
+                        <p className="text-sm uppercase tracking-[0.15em] text-slate-500">Profile</p>
+                        <h1 className="text-3xl font-semibold text-slate-900 mt-1">내 프로필</h1>
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-6">
                     <motion.div
-                        className="relative"
-                        initial={{ opacity: 0, y: 20 }}
+                        className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6 lg:p-7"
+                        initial={{ opacity: 0, y: 15 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.05 }}
+                    >
+                        <div className="flex flex-col md:flex-row items-center md:items-start gap-6 md:gap-8">
+                            <div className="relative">
+                                <div className="w-28 h-28 md:w-32 md:h-32 rounded-2xl bg-gradient-to-br from-[#2196F3] to-[#0EA5E9] text-white flex items-center justify-center text-4xl font-bold shadow-lg">
+                                    {user.name?.[0]?.toUpperCase() || 'U'}
+                                </div>
+                                <div className="absolute -bottom-2 -right-2 w-10 h-10 rounded-xl bg-white shadow-md flex items-center justify-center border border-gray-100">
+                                    <Sparkles className="w-5 h-5 text-[#2196F3]" />
+                                </div>
+                            </div>
+
+                            <div className="flex-1 space-y-3 w-full">
+                                <div className="flex items-center gap-2 text-slate-900 text-xl font-semibold">
+                                    <User className="w-5 h-5 text-slate-500" />
+                                    {user.name || '이름 없음'}
+                                </div>
+                                <div className="flex items-center gap-2 text-sm text-slate-500">
+                                    <Mail className="w-4 h-4" />
+                                    {user.email}
+                                </div>
+                                <div className="flex flex-wrap gap-2 pt-2">
+                                    <span className="inline-flex items-center gap-2 px-3 py-2 rounded-full bg-blue-50 text-[#0F172A] text-sm border border-blue-100">
+                                        <Sparkles className="w-4 h-4 text-[#0EA5E9]" />
+                                        활동 점수 {user.activity_score ?? 0}점
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-8">
+                            <div className="rounded-2xl border border-gray-100 bg-slate-50/60 px-4 py-3">
+                                <p className="text-xs text-slate-500">현재 닉네임</p>
+                                <p className="text-lg font-semibold text-slate-900 truncate">{user.name || '-'}</p>
+                            </div>
+                            <div className="rounded-2xl border border-gray-100 bg-slate-50/60 px-4 py-3">
+                                <p className="text-xs text-slate-500">활동 점수</p>
+                                <p className="text-lg font-semibold text-[#0EA5E9]">{user.activity_score ?? 0}점</p>
+                            </div>
+                        </div>
+                    </motion.div>
+
+                    <motion.div
+                        className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6 lg:p-7"
+                        initial={{ opacity: 0, y: 15 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.1 }}
                     >
-                        <h1 className="text-[32px] font-medium tracking-widest mb-12 text-center" style={{ color: 'var(--text-dark)' }}>
-                            Profile
-                        </h1>
-
-                        {/* 프로필 이미지 */}
-                        <div className="flex flex-col items-center mb-16">
-                            <div className="relative">
-                                <div className="w-48 h-48 rounded-full border border-[#2196F3] flex items-center justify-center overflow-hidden">
-                                    <div className="w-full h-full bg-gradient-to-br from-[#2196F3] to-[#00BCD4] flex items-center justify-center text-white font-bold text-7xl">
-                                        {user.name?.[0]?.toUpperCase() || 'U'}
-                                    </div>
-                                </div>
-                                <button className="absolute bottom-2 right-2 w-10 h-10 bg-black rounded-full shadow-lg flex items-center justify-center">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                        <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/>
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-
-                        {/* 메시지 */}
-                        <div className="max-w-md mx-auto mb-4">
-                            {message && (
-                                <motion.div
-                                    initial={{ opacity: 0, y: -10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    className="p-4 rounded-lg"
-                                    style={{ backgroundColor: '#d1fae5', border: '1px solid #6ee7b7' }}
-                                >
-                                    <p className="text-sm" style={{ color: '#065f46' }}>{message}</p>
-                                </motion.div>
-                            )}
-
-                            {error && (
-                                <motion.div
-                                    initial={{ opacity: 0, y: -10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    className="p-4 rounded-lg"
-                                    style={{ backgroundColor: '#fef2f2', border: '1px solid #fecaca' }}
-                                >
-                                    <p className="text-sm" style={{ color: '#dc2626' }}>{error}</p>
-                                </motion.div>
-                            )}
-                        </div>
-
-                        {/* 프로필 폼 */}
-                        <form onSubmit={handleSubmit} className="space-y-6 max-w-md mx-auto">
-                            {/* 닉네임 */}
-                            <div className="relative">
-                                <input
-                                    id="name"
-                                    name="name"
-                                    type="text"
-                                    value={formData.name}
-                                    onChange={handleChange}
-                                    placeholder="닉네임"
-                                    className="w-full h-11 px-6 bg-white rounded-[30px] border border-zinc-200 focus:outline-none focus:border-[#2196F3] transition-all text-base"
-                                    style={{
-                                        boxShadow: '0px 3px 5px 0px rgba(224, 224, 233, 0.25)',
-                                        color: 'var(--text-dark)'
-                                    }}
-                                />
-                                {isNameChanged && (
-                                    <button
-                                        type="button"
-                                        onClick={handleCheckName}
-                                        disabled={isCheckingName}
-                                        className="absolute right-2 top-1/2 -translate-y-1/2 h-7 px-4 bg-white rounded-2xl border border-[#2196F3] text-[#2196F3] text-sm font-medium transition-colors hover:bg-blue-50 disabled:opacity-50"
-                                        style={{ boxShadow: '0px 1px 2px 0px rgba(33, 150, 243, 0.25)' }}
-                                    >
-                                        {isCheckingName ? '확인 중...' : '중복 확인'}
-                                    </button>
-                                )}
-                            </div>
-
-                            {/* 비밀번호 */}
+                        <div className="flex items-center justify-between mb-4">
                             <div>
+                                <p className="text-sm text-slate-500">계정 설정</p>
+                                <h2 className="text-xl font-semibold text-slate-900">닉네임 · 비밀번호</h2>
+                            </div>
+                        </div>
+
+                        <div className="space-y-3">
+                            {message && (
+                                <motion.div initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} className="p-3 rounded-xl bg-emerald-50 border border-emerald-100 text-emerald-800 text-sm">
+                                    {message}
+                                </motion.div>
+                            )}
+                            {error && (
+                                <motion.div initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} className="p-3 rounded-xl bg-rose-50 border border-rose-100 text-rose-700 text-sm">
+                                    {error}
+                                </motion.div>
+                            )}
+                        </div>
+
+                        <form onSubmit={handleSubmit} className="space-y-5 mt-6">
+                            <div className="space-y-2">
+                                <label htmlFor="name" className="text-sm font-medium text-slate-700 flex items-center gap-2">
+                                    <User className="w-4 h-4 text-slate-500" /> 닉네임
+                                </label>
+                                <div className="relative">
+                                    <input
+                                        id="name"
+                                        name="name"
+                                        type="text"
+                                        value={formData.name}
+                                        onChange={handleChange}
+                                        placeholder="닉네임"
+                                        className="w-full h-12 px-4 rounded-2xl border border-slate-200 bg-white focus:outline-none focus:border-[#2196F3] focus:ring-2 focus:ring-[#2196F3]/15 text-base text-slate-900"
+                                    />
+                                    {isNameChanged && (
+                                        <button
+                                            type="button"
+                                            onClick={handleCheckName}
+                                            disabled={isCheckingName}
+                                            className="absolute right-2 top-1/2 -translate-y-1/2 inline-flex items-center gap-2 px-3 h-9 rounded-xl border border-[#2196F3] text-[#2196F3] text-sm font-medium bg-white hover:bg-blue-50 disabled:opacity-60"
+                                        >
+                                            {isCheckingName ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
+                                            {isCheckingName ? '확인 중' : '중복 확인'}
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
+
+                            <div className="space-y-2">
+                                <label htmlFor="password" className="text-sm font-medium text-slate-700 flex items-center gap-2">
+                                    <Lock className="w-4 h-4 text-slate-500" /> 새 비밀번호
+                                </label>
                                 <input
                                     id="password"
                                     name="password"
                                     type="password"
                                     value={formData.password}
                                     onChange={handleChange}
-                                    placeholder="비밀번호"
-                                    className="w-full h-11 px-6 bg-white rounded-[30px] border border-zinc-200 focus:outline-none focus:border-[#2196F3] transition-all text-base"
-                                    style={{
-                                        boxShadow: '0px 3px 5px 0px rgba(224, 224, 233, 0.25)',
-                                        color: 'var(--text-dark)'
-                                    }}
+                                    placeholder="8자 이상 권장"
+                                    className="w-full h-12 px-4 rounded-2xl border border-slate-200 bg-white focus:outline-none focus:border-[#2196F3] focus:ring-2 focus:ring-[#2196F3]/15 text-base text-slate-900"
                                 />
                             </div>
 
-                            {/* 비밀번호 확인 */}
-                            <div>
+                            <div className="space-y-2">
+                                <label htmlFor="passwordConfirm" className="text-sm font-medium text-slate-700 flex items-center gap-2">
+                                    <Lock className="w-4 h-4 text-slate-500" /> 새 비밀번호 확인
+                                </label>
                                 <input
                                     id="passwordConfirm"
                                     name="passwordConfirm"
                                     type="password"
                                     value={formData.passwordConfirm}
                                     onChange={handleChange}
-                                    placeholder="비밀번호 확인"
-                                    className="w-full h-11 px-6 bg-white rounded-[30px] border border-zinc-200 focus:outline-none focus:border-[#2196F3] transition-all text-base"
-                                    style={{
-                                        boxShadow: '0px 3px 5px 0px rgba(224, 224, 233, 0.25)',
-                                        color: 'var(--text-dark)'
-                                    }}
+                                    placeholder="한 번 더 입력"
+                                    className="w-full h-12 px-4 rounded-2xl border border-slate-200 bg-white focus:outline-none focus:border-[#2196F3] focus:ring-2 focus:ring-[#2196F3]/15 text-base text-slate-900"
                                 />
                             </div>
 
-                            {/* 저장 버튼 */}
                             {canSubmit() && (
                                 <motion.button
                                     type="submit"
                                     disabled={isSaving}
-                                    className="w-full h-14 bg-[#2196F3] text-white font-medium rounded-[30px] transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-8"
-                                    style={{
-                                        boxShadow: '0px 3px 5px 0px rgba(224, 224, 233, 0.25)',
-                                    }}
-                                    whileHover={{ scale: isSaving ? 1 : 1.02 }}
-                                    whileTap={{ scale: isSaving ? 1 : 0.98 }}
+                                    className="w-full h-12 rounded-xl bg-[#2196F3] text-white font-semibold shadow-md hover:bg-[#1b82d8] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                                    whileHover={{ scale: isSaving ? 1 : 1.01 }}
+                                    whileTap={{ scale: isSaving ? 1 : 0.99 }}
                                 >
-                                    {isSaving ? '저장 중...' : (isNameChanged && isNameAvailable && !formData.password) ? '닉네임 변경' : (formData.password && !isNameChanged) ? '비밀번호 변경' : '변경사항 저장'}
+                                    {isSaving
+                                        ? '저장 중...'
+                                        : isNameChanged && isNameAvailable && !formData.password
+                                            ? '닉네임 변경'
+                                            : formData.password && !isNameChanged
+                                                ? '비밀번호 변경'
+                                                : '변경사항 저장'}
                                 </motion.button>
                             )}
-
-                            {/* 회원 탈퇴 */}
-                            <div className="pt-8">
-                                <button
-                                    type="button"
-                                    className="w-full h-14 bg-slate-50 rounded-[30px] border border-zinc-200 text-zinc-400 text-lg font-normal transition-colors hover:bg-gray-100"
-                                    style={{
-                                        boxShadow: '0px 3px 5px 0px rgba(224, 224, 233, 0.25)',
-                                    }}
-                                >
-                                    회원 탈퇴
-                                </button>
-                            </div>
                         </form>
                     </motion.div>
                 </div>

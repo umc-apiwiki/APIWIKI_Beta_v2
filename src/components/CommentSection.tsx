@@ -173,13 +173,9 @@ export default function CommentSection({ boardId }: CommentSectionProps) {
                         <motion.button
                             type="submit"
                             disabled={isSubmitting}
-                            className="px-4 py-2 text-[14px] text-white font-semibold rounded-[12px] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                            style={{ 
-                                backgroundColor: 'var(--primary-blue)',
-                                boxShadow: 'var(--shadow-blue)'
-                            }}
-                            whileHover={{ scale: isSubmitting ? 1 : 1.02, y: isSubmitting ? 0 : -2 }}
-                            whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
+                            className="px-4 py-2 text-sm font-semibold rounded-md bg-[#0c4a6e] text-white shadow-sm transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                            whileHover={{ scale: isSubmitting ? 1 : 1.02, y: isSubmitting ? 0 : -1 }}
+                            whileTap={{ scale: isSubmitting ? 1 : 0.99 }}
                         >
                             {isSubmitting ? '작성 중...' : '댓글 작성'}
                         </motion.button>
@@ -255,10 +251,9 @@ export default function CommentSection({ boardId }: CommentSectionProps) {
                                 {canDeleteComment(comment) && (
                                     <motion.button
                                         onClick={() => handleDelete(comment.id)}
-                                        className="text-[13px] px-3 py-1 rounded-full transition-colors"
-                                        style={{ color: '#ef4444', backgroundColor: '#fef2f2' }}
-                                        whileHover={{ scale: 1.05, backgroundColor: '#fee2e2' }}
-                                        whileTap={{ scale: 0.95 }}
+                                        className="text-[13px] px-3 py-1 rounded-md border border-gray-200 text-gray-600 hover:border-sky-400 transition-colors"
+                                        whileHover={{ scale: 1.02, y: -1 }}
+                                        whileTap={{ scale: 0.99 }}
                                     >
                                         삭제
                                     </motion.button>

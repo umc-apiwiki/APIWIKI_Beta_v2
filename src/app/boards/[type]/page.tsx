@@ -128,25 +128,20 @@ export default function BoardTypePage({ params }: { params: { type: BoardType } 
                     </div>
                     <motion.button
                         onClick={() => setShowForm(!showForm)}
-                        className="px-8 py-3 text-white font-semibold text-[16px] flex items-center gap-2"
-                        style={{ 
-                            backgroundColor: 'var(--primary-blue)',
-                            borderRadius: '15px',
-                            boxShadow: 'var(--shadow-blue)'
-                        }}
-                        whileHover={{ scale: 1.05, y: -2 }}
-                        whileTap={{ scale: 0.98 }}
+                        className={`${showForm ? 'border border-gray-200 text-[#0c4a6e] bg-white hover:border-sky-400' : 'bg-[#0c4a6e] text-white hover:bg-[#0a3b56]'} px-4 py-2 rounded-md text-sm font-semibold flex items-center gap-2 shadow-sm transition-colors`}
+                        whileHover={{ scale: 1.02, y: -1 }}
+                        whileTap={{ scale: 0.99 }}
                     >
                         {showForm ? (
                             <>
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M6 6L18 18M6 18L18 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
                                 </svg>
                                 목록으로
                             </>
                         ) : (
                             <>
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M12 5V19M5 12H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
                                 </svg>
                                 글쓰기
@@ -192,14 +187,9 @@ export default function BoardTypePage({ params }: { params: { type: BoardType } 
                                 </p>
                                 <motion.button
                                     onClick={() => setShowForm(true)}
-                                    className="px-8 py-3 text-white font-semibold"
-                                    style={{ 
-                                        backgroundColor: 'var(--primary-blue)',
-                                        borderRadius: '15px',
-                                        boxShadow: 'var(--shadow-blue)'
-                                    }}
-                                    whileHover={{ scale: 1.05, y: -2 }}
-                                    whileTap={{ scale: 0.98 }}
+                                    className="px-4 py-2 rounded-md bg-[#0c4a6e] text-white text-sm font-semibold shadow-sm hover:bg-[#0a3b56]"
+                                    whileHover={{ scale: 1.02, y: -1 }}
+                                    whileTap={{ scale: 0.99 }}
                                 >
                                     글쓰기
                                 </motion.button>

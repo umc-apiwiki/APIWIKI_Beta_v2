@@ -96,12 +96,10 @@ export default function BoardForm({ type, onCancel }: BoardFormProps) {
                      <button
                         type="button"
                         onClick={() => {
-                            // 로그인 모달을 띄우는 편이 좋지만, 여기서는 라우팅하거나 상위 컴포넌트에서 제어해야 함.
-                            // 일단 간단하게 알림 후 메인으로 이동하거나 로그인 페이지로 유도
                              alert('로그인이 필요합니다.');
                              router.push('/');
                         }}
-                        className="px-6 py-2 bg-[#2196F3] text-white rounded-full font-bold shadow-md hover:bg-blue-600 transition-colors"
+                        className="px-4 py-2 rounded-md bg-[#0c4a6e] text-white text-sm font-semibold shadow-sm hover:bg-[#0a3b56] transition-colors"
                     >
                         로그인 하러 가기
                     </button>
@@ -151,14 +149,14 @@ export default function BoardForm({ type, onCancel }: BoardFormProps) {
                             type="button"
                             onClick={onCancel}
                             disabled={isSubmitting}
-                            className="flex-1 py-3 rounded-xl font-bold text-gray-600 bg-gray-100 hover:bg-gray-200 transition-colors"
+                            className="flex-1 py-3 rounded-md border border-gray-200 text-sm font-semibold text-[#0c4a6e] bg-white hover:border-sky-400 transition-colors disabled:opacity-60"
                         >
                             취소
                         </button>
                         <button
                             type="submit"
                             disabled={isSubmitting}
-                            className="flex-[2] py-3 rounded-xl font-bold text-white bg-[#2196F3] hover:bg-blue-600 shadow-lg shadow-blue-500/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="flex-[2] py-3 rounded-md bg-[#0c4a6e] text-white text-sm font-semibold shadow-sm hover:bg-[#0a3b56] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
                         >
                             {isSubmitting ? '작성 중...' : '작성하기'}
                         </button>

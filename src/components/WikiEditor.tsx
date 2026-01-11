@@ -180,26 +180,18 @@ export default function WikiEditor({ apiId, initialContent = '', onSave }: WikiE
           {editing ? (
             <>
               <motion.button 
-                onClick={() => setEditing(false)} 
-                className="px-4 py-2 text-[14px] font-semibold rounded-[12px] border-2 transition-colors"
-                style={{ 
-                  borderColor: 'rgba(0, 0, 0, 0.1)',
-                  color: 'var(--text-gray)'
-                }}
-                whileHover={{ scale: 1.05, y: -2 }}
-                whileTap={{ scale: 0.98 }}
+                onClick={() => setEditing(false)}
+                className="px-3 py-1.5 text-sm font-medium rounded-md border border-gray-200 text-[#0c4a6e] bg-white hover:border-sky-400 transition-colors"
+                whileHover={{ scale: 1.03, y: -1 }}
+                whileTap={{ scale: 0.99 }}
               >
                 취소
               </motion.button>
               <motion.button
                 onClick={handleSaveClick}
-                className="px-4 py-2 text-[14px] font-semibold text-white rounded-[12px] flex items-center gap-2"
-                style={{
-                  backgroundColor: 'var(--primary-blue)',
-                  boxShadow: 'var(--shadow-blue)'
-                }}
-                whileHover={{ scale: 1.05, y: -2 }}
-                whileTap={{ scale: 0.98 }}
+                className="px-4 py-2 text-sm font-semibold text-white rounded-md flex items-center gap-2 bg-[#0c4a6e] hover:bg-[#0a3b56] shadow-sm transition-colors"
+                whileHover={{ scale: 1.03, y: -1 }}
+                whileTap={{ scale: 0.99 }}
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
@@ -218,16 +210,12 @@ export default function WikiEditor({ apiId, initialContent = '', onSave }: WikiE
                       alert('로그인이 필요한 기능입니다.');
                   }
               }}
-              className={`px-4 py-2 text-[14px] font-semibold text-white rounded-[12px] ${!isAuthenticated ? 'opacity-50 cursor-not-allowed' : ''}`}
-              style={{ 
-                backgroundColor: isAuthenticated ? '#22c55e' : '#ccc',
-                boxShadow: isAuthenticated ? '0 4px 12px rgba(34, 197, 94, 0.3)' : 'none'
-              }}
-              whileHover={isAuthenticated ? { scale: 1.05, y: -2 } : {}}
-              whileTap={isAuthenticated ? { scale: 0.98 } : {}}
-              title={isAuthenticated ? "문서 편집하기" : "로그인이 필요합니다"}
+              className={`px-3 py-1.5 text-sm font-medium rounded-md border border-gray-200 text-[#0c4a6e] bg-white hover:border-sky-400 transition-colors ${!isAuthenticated ? 'opacity-60 cursor-not-allowed' : ''}`}
+              whileHover={isAuthenticated ? { scale: 1.03, y: -1 } : {}}
+              whileTap={isAuthenticated ? { scale: 0.99 } : {}}
+              title={isAuthenticated ? '문서 편집하기' : '로그인이 필요합니다'}
             >
-              {isAuthenticated ? "편집하기" : "로그인 필요"}
+              {isAuthenticated ? '문서 편집하기' : '로그인 필요'}
             </motion.button>
           )}
         </div>

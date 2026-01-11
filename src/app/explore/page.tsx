@@ -369,16 +369,22 @@ function ExploreContent() {
       {/* 검색바 - 페이지 최상단 */}
       <div className="w-full flex justify-center" style={{ marginTop: '120px', marginBottom: '2rem' }}>
         <div className="w-[800px] max-w-[90vw]">
-          <SearchBar
-            initialQuery={searchQuery}
-            onSearch={(query) => {
-              setSearchQuery(query);
-              if (query.trim()) {
-                router.push(`/explore?q=${encodeURIComponent(query)}`);
-              }
-            }}
-            showDropdown={true}
-          />
+          {loading ? (
+            <div className="h-[3.25rem] w-full rounded-2xl bg-gray-100 animate-pulse border border-gray-200" />
+          ) : (
+            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25, ease: 'easeOut' }}>
+              <SearchBar
+                initialQuery={searchQuery}
+                onSearch={(query) => {
+                  setSearchQuery(query);
+                  if (query.trim()) {
+                    router.push(`/explore?q=${encodeURIComponent(query)}`);
+                  }
+                }}
+                showDropdown={true}
+              />
+            </motion.div>
+          )}
         </div>
       </div>
 
