@@ -21,7 +21,15 @@ export type FeedbackType = 'error' | 'feature' | 'idea';
 export type FeedbackStatus = 'pending' | 'reviewed' | 'resolved';
 
 /** 사용자 활동 타입 */
-export type ActivityType = 'login' | 'post' | 'comment' | 'edit' | 'feedback' | 'api_approval';
+export type ActivityType =
+  | 'login'
+  | 'post'
+  | 'comment'
+  | 'edit'
+  | 'feedback'
+  | 'api_approval'
+  | 'csv_upload'
+  | 'csv_update';
 
 // ============================================
 // 데이터베이스 엔티티 타입

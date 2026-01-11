@@ -68,6 +68,8 @@ export default function ActivityHistoryPage() {
             case 'edit': return '위키 편집';
             case 'feedback': return '피드백 제출';
             case 'api_approval': return 'API 승인 (등록완료)';
+            case 'csv_upload': return '비용정보 업로드';
+            case 'csv_update': return '비용정보 수정';
             default: return type;
         }
     };

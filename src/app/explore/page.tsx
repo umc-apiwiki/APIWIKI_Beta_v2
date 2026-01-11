@@ -59,7 +59,10 @@ function ExploreContent() {
         });
         if (response.ok) {
           const data = await response.json();
-          setApis(data);
+          const unique = Array.isArray(data)
+            ? data.filter((item, idx, arr) => arr.findIndex((v) => v.id === item.id) === idx)
+            : [];
+          setApis(unique);
         }
       } catch (error) {
         console.error('Error fetching APIs:', error);
@@ -466,8 +469,8 @@ function ExploreContent() {
 
           {/* API 카드 그리드 */}
           <div className="grid grid-cols-12 gap-4">
-            {displayedAPIs.map((api) => (
-              <div key={api.id} className="col-3">
+            {displayedAPIs.map((api, idx) => (
+              <div key={`${api.id}-${idx}`} className="col-3">
                 <APICard 
                   api={api} 
                   onToggleCompare={() => toggleCompare(api.id)}

@@ -7,6 +7,7 @@ import { Star, Users, ChevronLeft, Heart, Share2 } from 'lucide-react';
 import Header from '@/components/Header';
 import APICard from '@/components/APICard';
 import WikiEditor from '@/components/WikiEditor';
+import PointNotificationModal from '@/components/PointNotificationModal';
 import { API } from '@/types';
 
 export default function APIDetailPage({ params }: { params: { id: string } }) {
@@ -211,22 +212,12 @@ export default function APIDetailPage({ params }: { params: { id: string } }) {
       <Header />
       
       <div className="max-w-6xl mx-auto px-6 py-8 pt-28 relative">
-          {showPointModal && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-              <div className="bg-white rounded-2xl shadow-xl p-6 w-[320px] text-center space-y-3">
-                <h4 className="text-lg font-semibold text-[#0f172a]">포인트 적립</h4>
-                <p className="text-sm text-gray-700">
-                  {awardedPoints ? `포인트 ${awardedPoints}점이 적립되었습니다.` : '포인트가 적립되었습니다.'}
-                </p>
-                <button
-                  onClick={() => setShowPointModal(false)}
-                  className="mt-2 w-full rounded-md bg-[#0c4a6e] text-white py-2 text-sm font-medium hover:bg-[#0a3b56]"
-                >
-                  확인
-                </button>
-              </div>
-            </div>
-          )}
+          <PointNotificationModal
+            isOpen={showPointModal}
+            onClose={() => setShowPointModal(false)}
+            points={awardedPoints ?? 0}
+            message={awardedPoints ? `포인트 ${awardedPoints}점이 적립되었습니다.` : '포인트가 적립되었습니다.'}
+          />
        
         {/* Header Section */}
         <div className="flex justify-between items-start mb-12 relative">

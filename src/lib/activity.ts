@@ -10,6 +10,8 @@ export const getActivityPoints = (type: ActivityType): number => {
         case 'edit': return 4;
         case 'feedback': return 3;
         case 'api_approval': return 5;
+        case 'csv_upload': return 5; // 비용 CSV 신규 등록 기본값
+        case 'csv_update': return 2; // 비용 CSV 수정 기본값
         default: return 0;
     }
 };
@@ -54,7 +56,39 @@ export async function logUserActivity(userId: string, actionType: ActivityType, 
             .select()
             .single();
 
+        // DB enum이 아직 확장되지 않은 경우(csv_* 타입 미등록) edit으로 폴백
         if (insertError) {
+            const needsFallback =
+                (actionType === 'csv_upload' || actionType === 'csv_update') &&
+                insertError.message?.toLowerCase().includes('activity_type');
+
+            if (needsFallback) {
+                const fallbackType: ActivityType = 'edit';
+                console.warn('[Activity] csv_* enum 미등록, edit으로 폴백합니다.');
+                const { data: fallbackActivity, error: fallbackError } = await supabaseAdmin
+                    .from('user_activities')
+                    .insert({
+                        user_id: userId,
+                        action_type: fallbackType,
+                        points: customPoints ?? getActivityPoints(actionType),
+                    })
+                    .select()
+                    .single();
+
+                if (fallbackError) {
+                    console.error('[Activity] Fallback insert failed:', fallbackError);
+                    return null;
+                }
+
+                console.log(`[Activity] Logged (fallback): ${fallbackType} (+${fallbackActivity.points}p)`);
+                return {
+                    activityId: fallbackActivity.id,
+                    points: fallbackActivity.points,
+                    oldScore: 0,
+                    newScore: 0,
+                };
+            }
+
             console.error('[Activity] Insert failed:', insertError);
             return null;
         }

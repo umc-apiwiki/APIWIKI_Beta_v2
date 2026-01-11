@@ -23,6 +23,11 @@ CREATE TYPE feedback_status AS ENUM ('pending', 'reviewed', 'resolved');
 
 -- 활동 타입 (로그인, 게시글, 댓글, 편집)
 CREATE TYPE activity_type AS ENUM ('login', 'post', 'comment', 'edit');
+-- 신규 활동 타입 추가 (이미 존재 시 오류 방지)
+ALTER TYPE activity_type ADD VALUE IF NOT EXISTS 'feedback';
+ALTER TYPE activity_type ADD VALUE IF NOT EXISTS 'api_approval';
+ALTER TYPE activity_type ADD VALUE IF NOT EXISTS 'csv_upload';
+ALTER TYPE activity_type ADD VALUE IF NOT EXISTS 'csv_update';
 
 -- ============================================
 -- 기존 테이블 확장

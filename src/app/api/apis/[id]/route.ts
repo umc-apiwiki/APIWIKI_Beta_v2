@@ -1,16 +1,17 @@
 // src/app/api/apis/[id]/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabaseClient';
+import { supabaseAdmin } from '@/lib/supabaseAdminClient';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { logUserActivity } from '@/lib/activity';
+import type { ActivityType } from '@/types';
 
 export const dynamic = 'force-dynamic';
 
 const getPointsForAction = async (actionType: string) => {
   const fallback = actionType === 'csv_upload' ? 5 : 2;
 
-  const { data, error } = await supabase
+  const { data, error } = await supabaseAdmin
     .from('point_rules')
     .select('points')
     .eq('action_type', actionType)
@@ -32,7 +33,7 @@ export async function GET(
   try {
     const { id } = params;
 
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('Api')
       .select('*, logo, wiki_content')
       .eq('id', id)
@@ -82,7 +83,7 @@ export async function PATCH(
     }
 
     // 기존 데이터 조회해 신규 업로드(5점) vs 수정(2점) 판단
-    const { data: existing, error: fetchError } = await supabase
+    const { data: existing, error: fetchError } = await supabaseAdmin
       .from('Api')
       .select('pricing')
       .eq('id', id)
@@ -105,7 +106,7 @@ export async function PATCH(
     const isNewUpload = existingCsv.trim().length === 0;
 
     // pricing 컬럼이 text이든 jsonb이든 문자열을 저장하도록 처리
-    const { error } = await supabase
+    const { error } = await supabaseAdmin
       .from('Api')
       .update({ pricing: csv })
       .eq('id', id);
@@ -115,9 +116,9 @@ export async function PATCH(
       return NextResponse.json({ error: 'CSV 저장 실패', details: error.message }, { status: 500 });
     }
 
-    const actionType = isNewUpload ? 'csv_upload' : 'csv_update';
+    const actionType: ActivityType = isNewUpload ? 'csv_upload' : 'csv_update';
     const points = await getPointsForAction(actionType);
-    await logUserActivity(session.user.id, 'edit', points);
+    await logUserActivity(session.user.id, actionType, points);
 
     return NextResponse.json({ success: true, pointsAwarded: points });
   } catch (err: any) {
