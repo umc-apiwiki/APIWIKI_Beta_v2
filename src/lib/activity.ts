@@ -10,6 +10,7 @@ export const getActivityPoints = (type: ActivityType): number => {
         case 'comment': return 1;
         case 'edit': return 4;
         case 'feedback': return 3;
+        case 'api_approval': return 5;
         default: return 0;
     }
 };

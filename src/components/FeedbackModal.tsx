@@ -118,7 +118,8 @@ export default function FeedbackModal({ isOpen, onClose, userId }: FeedbackModal
     const selectedOption = FEEDBACK_TYPES.find((t) => t.type === selectedType)!;
 
     return (
-        <AnimatePresence>
+        <>
+            <AnimatePresence>
             {isOpen && (
                 <div className="fixed inset-0 z-[2000] flex items-center justify-center p-4">
                     <motion.div
@@ -311,12 +312,13 @@ export default function FeedbackModal({ isOpen, onClose, userId }: FeedbackModal
                     </motion.div>
                 </div>
             )}
+            </AnimatePresence>
             <PointNotificationModal
                 isOpen={showPointsModal}
                 onClose={() => setShowPointsModal(false)}
                 points={3}
                 message="피드백 제출 완료!"
             />
-        </AnimatePresence>
+        </>
     );
 }

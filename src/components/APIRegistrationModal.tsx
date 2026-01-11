@@ -17,7 +17,7 @@ export default function APIRegistrationModal({ isOpen, onClose }: APIRegistratio
     const [successMessage, setSuccessMessage] = useState('');
 
     const handleSubmit = async (data: APISubmissionPayload) => {
-        const response = await fetch('/api/apis/submit', {
+        const response = await fetch('/api/apis', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

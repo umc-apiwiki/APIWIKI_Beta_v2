@@ -167,11 +167,6 @@ export default function BoardDetailPage({ params }: { params: { type: BoardType;
                                     <span className="font-semibold" style={{ color: 'var(--text-dark)' }}>
                                         {board.author?.name || board.author_name}
                                     </span>
-                                    {board.author?.grade && (
-                                        <span className="px-2 py-0.5 text-[12px] rounded-full" style={{ backgroundColor: 'rgba(var(--primary-blue-rgb), 0.15)', color: 'var(--primary-blue)' }}>
-                                            {board.author.grade}
-                                        </span>
-                                    )}
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
