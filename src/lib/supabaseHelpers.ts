@@ -251,6 +251,28 @@ export async function updateUserActivityScore(
 // ============================================
 
 /**
+ * 사용자가 등록한 API 목록 조회
+ * @param userId 사용자 ID
+ */
+export async function getUserAPIs(userId: string): Promise<API[]> {
+    try {
+        const { data, error } = await supabase
+            .from('Api')
+            .select('*')
+            .eq('created_by', userId)
+            .order('created_at', { ascending: false });
+
+        if (error) {
+            handleError(error, '사용자 등록 API 조회');
+        }
+
+        return (data as API[]) || [];
+    } catch (error) {
+        handleError(error, '사용자 등록 API 조회');
+    }
+}
+
+/**
  * 승인 대기 중인 API 목록 조회
  */
 export async function getPendingAPIs(): Promise<API[]> {
