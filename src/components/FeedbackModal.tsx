@@ -130,7 +130,7 @@ export default function FeedbackModal({ isOpen, onClose, userId }: FeedbackModal
                         onClick={onClose}
                     />
                     <motion.div 
-                        className="relative bg-white max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+                        className="relative bg-white max-w-2xl w-full"
                         style={{ borderRadius: '20px' }}
                         initial={{ opacity: 0, scale: 0.9, y: 20 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
