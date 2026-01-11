@@ -2,6 +2,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabaseClient';
 
+export const dynamic = 'force-dynamic';
+
+
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
@@ -11,7 +14,7 @@ export async function GET(
 
     const { data, error } = await supabase
       .from('Api')
-      .select('*, logo')
+      .select('*, logo, wiki_content')
       .eq('id', id)
       .single();
 

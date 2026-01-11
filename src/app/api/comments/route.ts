@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { supabase } from '@/lib/supabaseClient';
+import { logUserActivity } from '@/lib/activity';
 import type { CommentSubmissionPayload } from '@/types';
 
 // GET: 댓글 목록 조회
@@ -138,6 +139,12 @@ export async function POST(request: NextRequest) {
                 { success: false, error: '댓글 작성 중 오류가 발생했습니다' },
                 { status: 500 }
             );
+        }
+
+        // 활동 점수 부여 (댓글 작성)
+        if (userUser) {
+            // 1 point for comment
+            logUserActivity(userUser.id, 'comment', 1);
         }
 
         return NextResponse.json({

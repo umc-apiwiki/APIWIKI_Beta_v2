@@ -4,6 +4,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabaseClient';
 import { create, getAll } from '@/lib/supabaseHelpers';
+import { logUserActivity } from '@/lib/activity';
 import type { Feedback, FeedbackType, FeedbackStatus } from '@/types';
 
 // ============================================
@@ -82,6 +83,12 @@ export async function POST(request: NextRequest): Promise<NextResponse<FeedbackR
         });
 
         console.log(`[피드백 저장 완료] ID: ${feedback.id}`);
+
+        // 활동 점수 부여 (피드백 제출)
+        if (userId) {
+            // 5 points for feedback
+            logUserActivity(userId, 'feedback', 5);
+        }
 
         return NextResponse.json({
             success: true,

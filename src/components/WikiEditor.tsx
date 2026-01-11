@@ -6,28 +6,86 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
 import rehypeSanitize from 'rehype-sanitize';
+import PointNotificationModal from './PointNotificationModal';
 
 interface WikiEditorProps {
   apiId: string;
+  initialContent?: string;
+  onSave?: () => void;
 }
 
 import { useAuth } from '@/hooks/useAuth';
 
-export default function WikiEditor({ apiId }: WikiEditorProps) {
-  const { isAuthenticated } = useAuth();
-  const storageKey = `wiki_${apiId}`;
-  const [text, setText] = useState('');
+export default function WikiEditor({ apiId, initialContent = '', onSave }: WikiEditorProps) {
+  const { isAuthenticated, user } = useAuth();
+  // const storageKey = `wiki_${apiId}`; // No longer needed
+  const [text, setText] = useState(initialContent);
   const [editing, setEditing] = useState(false);
   const [activeTab, setActiveTab] = useState<'edit' | 'preview'>('edit');
+  
+  // New state for saving
+  const [showSummaryModal, setShowSummaryModal] = useState(false);
+  const [summary, setSummary] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
+  const [showPointsModal, setShowPointsModal] = useState(false);
 
+  // Update text if initialContent changes (e.g. fresh fetch)
   useEffect(() => {
-    const saved = localStorage.getItem(storageKey);
-    if (saved) setText(saved);
-  }, [storageKey]);
+    if (initialContent) setText(initialContent);
+  }, [initialContent]);
 
-  const save = () => {
-    localStorage.setItem(storageKey, text);
-    setEditing(false);
+  const handleSaveClick = () => {
+    if (!text.trim()) {
+        alert('내용을 입력해주세요.');
+        return;
+    }
+    setShowSummaryModal(true);
+  };
+
+  const submitSave = async () => {
+    if (summary.length < 5) {
+        alert('편집 요약을 5자 이상 입력해주세요 (예: API 설명 추가)');
+        return;
+    }
+
+    setIsSaving(true);
+    try {
+        const response = await fetch('/api/wiki/edit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                apiId,
+                content: text,
+                summary,
+                userId: user?.id
+            })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.message || '저장 실패');
+        }
+
+        // alert(result.message || '저장되었습니다!'); // 모달로 대체
+        setEditing(false);
+        setShowSummaryModal(false);
+        setSummary('');
+        setShowPointsModal(true); // 포인트 모달 표시
+
+        // 모달 표시 후 이동/리로드
+        setTimeout(() => {
+            if (onSave) {
+                onSave();
+            } else {
+                window.location.reload(); 
+            }
+        }, 2500);
+    } catch (error: any) {
+        alert(error.message);
+    } finally {
+        setIsSaving(false);
+    }
   };
 
   const insertMarkdown = (syntax: string, placeholder: string = '') => {
@@ -134,7 +192,7 @@ export default function WikiEditor({ apiId }: WikiEditorProps) {
                 취소
               </motion.button>
               <motion.button
-                onClick={save}
+                onClick={handleSaveClick}
                 className="px-4 py-2 text-[14px] font-semibold text-white rounded-[12px] flex items-center gap-2"
                 style={{
                   backgroundColor: 'var(--primary-blue)',
@@ -414,6 +472,66 @@ export default function WikiEditor({ apiId }: WikiEditorProps) {
           </div>
         </motion.div>
       )}
+      {/* Summary Modal */}
+      <AnimatePresence>
+        {showSummaryModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <h3 className="text-xl font-bold mb-4 text-slate-800">편집 요약</h3>
+              <p className="text-sm text-slate-500 mb-4">
+                다른 사용자가 변경 내역을 이해할 수 있도록<br/>
+                수정하신 내용을 간략하게 적어주세요.
+              </p>
+              
+              <textarea
+                value={summary}
+                onChange={(e) => setSummary(e.target.value)}
+                placeholder="예: 오타 수정, API 사용법 예제 추가 등 (5자 이상)"
+                className="w-full p-3 border rounded-lg mb-4 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 min-h-[80px]"
+                autoFocus
+              />
+
+              <div className="flex justify-end gap-2">
+                <button 
+                  onClick={() => setShowSummaryModal(false)}
+                  className="px-4 py-2 text-slate-500 font-medium hover:bg-slate-100 rounded-lg transition-colors"
+                >
+                  취소
+                </button>
+                <button
+                  onClick={submitSave}
+                  disabled={isSaving || summary.length < 5}
+                  className={`px-4 py-2 text-white font-bold rounded-lg transition-all flex items-center gap-2 ${
+                    isSaving || summary.length < 5 ? 'bg-slate-300 cursor-not-allowed' : 'bg-sky-500 hover:bg-sky-600 shadow-md hover:shadow-lg'
+                  }`}
+                >
+                  {isSaving ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      저장 중...
+                    </>
+                  ) : (
+                    '편집 완료'
+                  )}
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      <PointNotificationModal
+        isOpen={showPointsModal}
+        onClose={() => setShowPointsModal(false)}
+        points={4}
+        message="위키 문서 편집 완료!"
+      />
     </motion.div>
   );
 }

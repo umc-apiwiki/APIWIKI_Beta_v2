@@ -4,8 +4,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabaseClient';
 import { create, update, getById } from '@/lib/supabaseHelpers';
-import { calculateGrade, getActivityPoints } from '@/lib/gradeUtils';
 import type { UserActivity, User, ActivityType } from '@/types';
+
+import { logUserActivity } from '@/lib/activity';
 
 // ============================================
 // 요청/응답 타입
@@ -51,70 +52,30 @@ export async function POST(request: NextRequest): Promise<NextResponse<ActivityR
             );
         }
 
-        // 사용자 조회
-        const user = await getById<User>('User', userId);
-        if (!user) {
+        // 활동 기록 (공통 함수 사용)
+        const result = await logUserActivity(userId, actionType, customPoints);
+
+        if (!result) {
             return NextResponse.json(
                 {
                     success: false,
-                    error: 'USER_NOT_FOUND',
-                    message: '사용자를 찾을 수 없습니다',
+                    error: 'LOGGING_FAILED',
+                    message: '활동 기록에 실패했습니다 (사용자를 찾을 수 없거나 DB 오류)',
                 },
-                { status: 404 }
+                { status: 500 } // Or 404 if user not found, simplified here
             );
-        }
-
-        // 활동 점수 계산
-        const points = customPoints ?? getActivityPoints(actionType);
-        const oldScore = user.activity_score;
-        const newScore = oldScore + points;
-        const oldGrade = user.grade;
-        const newGrade = calculateGrade(newScore);
-
-        console.log(`[활동 추적] 사용자 ${userId} - ${actionType} 활동 기록`, {
-            oldScore,
-            newScore,
-            points,
-            oldGrade,
-            newGrade,
-        });
-
-        // 트랜잭션으로 처리 (활동 기록 + 점수 업데이트)
-        // 1. 활동 기록 저장
-        const activity = await create<UserActivity>('user_activities', {
-            user_id: userId,
-            action_type: actionType,
-            points,
-        });
-
-        // 2. 사용자 점수 및 등급 업데이트
-        await update<User>('User', userId, {
-            activity_score: newScore,
-            grade: newGrade,
-        });
-
-        const upgraded = newGrade !== oldGrade;
-
-        // 등급 업그레이드 시 로그
-        if (upgraded) {
-            console.log(`[등급 업그레이드] 사용자 ${userId}: ${oldGrade} → ${newGrade}`, {
-                score: newScore,
-                activity: actionType,
-            });
         }
 
         return NextResponse.json({
             success: true,
             data: {
-                activityId: activity.id,
-                newScore,
-                oldGrade,
-                newGrade,
-                upgraded,
+                activityId: result.activityId,
+                newScore: result.newScore,
+                oldGrade: 'maintenance', // 등급 시스템 제거되어 유지
+                newGrade: 'maintenance',
+                upgraded: false,
             },
-            message: upgraded
-                ? `축하합니다! ${newGrade} 등급으로 승급했습니다! 🎉`
-                : `활동이 기록되었습니다. (+${points}점)`,
+            message: `활동이 기록되었습니다. (+${result.points}점)`,
         });
     } catch (error: any) {
         console.error('[활동 추적 API 오류]', {

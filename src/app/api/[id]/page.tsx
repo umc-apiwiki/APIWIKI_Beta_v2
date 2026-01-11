@@ -16,33 +16,33 @@ export default function APIDetailPage({ params }: { params: { id: string } }) {
   const [activeTab, setActiveTab] = useState('개요');
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(`/api/apis/${params.id}`);
-        if (!response.ok) {
-          setApi(null);
-          return;
-        }
-        const data = await response.json();
-        setApi(data);
-
-        // Fetch related APIs
-        if (data.categories && data.categories.length > 0) {
-          const relatedResponse = await fetch(`/api/apis?category=${data.categories[0]}&limit=6`);
-          if (relatedResponse.ok) {
-            const relatedData = await relatedResponse.json();
-            setRelatedAPIs(relatedData.filter((a: API) => a.id !== params.id).slice(0, 5));
-          }
-        }
-      } catch (error) {
-        console.error('Error fetching API:', error);
+  const fetchData = async () => {
+    try {
+      const response = await fetch(`/api/apis/${params.id}`, { cache: 'no-store' });
+      if (!response.ok) {
         setApi(null);
-      } finally {
-        setLoading(false);
+        return;
       }
-    };
+      const data = await response.json();
+      setApi(data);
 
+      // Fetch related APIs
+      if (data.categories && data.categories.length > 0) {
+        const relatedResponse = await fetch(`/api/apis?category=${data.categories[0]}&limit=6`);
+        if (relatedResponse.ok) {
+          const relatedData = await relatedResponse.json();
+          setRelatedAPIs(relatedData.filter((a: API) => a.id !== params.id).slice(0, 5));
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching API:', error);
+      setApi(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchData();
   }, [params.id]);
 
@@ -143,7 +143,7 @@ export default function APIDetailPage({ params }: { params: { id: string } }) {
                  <div className="mt-8">
                    <h3 className="text-xl font-medium text-[#0c4a6e] mb-4">API 위키</h3>
                    <div className="w-full">
-                     <WikiEditor apiId={api.id} />
+                   <WikiEditor apiId={api.id} initialContent={api.wiki_content || ''} onSave={fetchData} />
                    </div>
                  </div>
               </div>

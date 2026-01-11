@@ -21,7 +21,7 @@ export type FeedbackType = 'error' | 'feature' | 'idea';
 export type FeedbackStatus = 'pending' | 'reviewed' | 'resolved';
 
 /** 사용자 활동 타입 */
-export type ActivityType = 'login' | 'post' | 'comment' | 'edit';
+export type ActivityType = 'login' | 'post' | 'comment' | 'edit' | 'feedback';
 
 // ============================================
 // 데이터베이스 엔티티 타입
@@ -89,6 +89,7 @@ export interface API {
   description: string;
   categories: string[];
   tags?: string[]; // 검색용 상세 태그
+  wiki_content?: string; // 상세 위키 문서 내용 (description과 분리됨)
   features?: string[];
   pricing?: {
     free?: string;

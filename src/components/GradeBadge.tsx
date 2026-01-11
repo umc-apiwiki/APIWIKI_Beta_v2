@@ -4,7 +4,6 @@
 'use client';
 
 import React from 'react';
-import { getGradeInfo } from '@/lib/gradeUtils';
 import type { UserGrade } from '@/types';
 
 // ============================================
@@ -37,6 +36,21 @@ const sizeStyles = {
     },
 };
 
+const getGradeInfo = (grade: UserGrade) => {
+    switch (grade) {
+        case 'bronze':
+            return { name: '브론즈', color: '#CD7F32', icon: '🥉' };
+        case 'silver':
+            return { name: '실버', color: '#C0C0C0', icon: '🥈' };
+        case 'gold':
+            return { name: '골드', color: '#FFD700', icon: '🥇' };
+        case 'admin':
+            return { name: '관리자', color: '#EF4444', icon: '👑' };
+        default:
+            return { name: '브론즈', color: '#CD7F32', icon: '🥉' };
+    }
+};
+
 // ============================================
 // 컴포넌트
 // ============================================
@@ -48,7 +62,7 @@ export default function GradeBadge({
     className = '',
 }: GradeBadgeProps) {
     const gradeInfo = getGradeInfo(grade);
-    const styles = sizeStyles[size];
+    const styles = sizeStyles[size || 'md'];
 
     return (
         <div
@@ -104,11 +118,7 @@ export function GradeBadgeWithTooltip({
                 <div className="bg-gray-900 text-white text-xs rounded-lg py-2 px-3 whitespace-nowrap">
                     <div className="font-semibold">{gradeInfo.name} 등급</div>
                     <div className="text-gray-300 mt-1">현재 점수: {score}점</div>
-                    {gradeInfo.nextGrade && (
-                        <div className="text-gray-300">
-                            다음 등급까지: {pointsToNext}점
-                        </div>
-                    )}
+                    {/* nextGrade logic removed as grading system is gone/simplified */}
                     {/* 화살표 */}
                     <div className="absolute top-full left-1/2 transform -translate-x-1/2 -mt-1">
                         <div className="border-4 border-transparent border-t-gray-900"></div>

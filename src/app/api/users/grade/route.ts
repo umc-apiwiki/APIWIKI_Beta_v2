@@ -3,8 +3,17 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getById, update } from '@/lib/supabaseHelpers';
-import { calculateGrade, getGradeInfo, isGradeUpgrade } from '@/lib/gradeUtils';
 import type { User, UserGrade } from '@/types';
+
+const getGradeInfo = (grade: UserGrade) => {
+    switch (grade) {
+        case 'bronze': return { name: '브론즈', color: '#CD7F32', icon: '🥉' };
+        case 'silver': return { name: '실버', color: '#C0C0C0', icon: '🥈' };
+        case 'gold': return { name: '골드', color: '#FFD700', icon: '🥇' };
+        case 'admin': return { name: '관리자', color: '#EF4444', icon: '👑' };
+        default: return { name: '브론즈', color: '#CD7F32', icon: '🥉' };
+    }
+};
 
 // ============================================
 // 요청/응답 타입
@@ -40,7 +49,7 @@ interface GradeInfoResponse {
 }
 
 // ============================================
-// POST: 등급 재계산 및 업데이트
+// POST: 등급 재계산 및 업데이트 (No-op after removing grading system)
 // ============================================
 
 export async function POST(request: NextRequest): Promise<NextResponse<GradeUpdateResponse>> {
@@ -75,54 +84,11 @@ export async function POST(request: NextRequest): Promise<NextResponse<GradeUpda
 
         const oldGrade = user.grade;
         const currentScore = user.activity_score;
-        const newGrade = calculateGrade(currentScore);
+        const newGrade = oldGrade; // Keep same grade (Grading system removed)
 
-        console.log(`[등급 업데이트] 사용자 ${userId} 등급 재계산`, {
-            oldGrade,
-            newGrade,
+        console.log(`[등급 업데이트] 사용자 ${userId}: ${oldGrade} (유지)`, {
             score: currentScore,
         });
-
-        // 등급이 변경된 경우에만 업데이트
-        if (newGrade !== oldGrade) {
-            // 등급은 상향만 가능 (하향 방지)
-            if (!isGradeUpgrade(oldGrade, newGrade)) {
-                console.log(`[등급 업데이트] 등급 하향 시도 차단: ${oldGrade} → ${newGrade}`);
-
-                return NextResponse.json({
-                    success: true,
-                    data: {
-                        userId,
-                        oldGrade,
-                        newGrade: oldGrade, // 기존 등급 유지
-                        score: currentScore,
-                        upgraded: false,
-                    },
-                    message: '등급은 하향되지 않습니다',
-                });
-            }
-
-            // 등급 업데이트
-            await update<User>('User', userId, {
-                grade: newGrade,
-            });
-
-            console.log(`[등급 업그레이드] 사용자 ${userId}: ${oldGrade} → ${newGrade}`, {
-                score: currentScore,
-            });
-
-            return NextResponse.json({
-                success: true,
-                data: {
-                    userId,
-                    oldGrade,
-                    newGrade,
-                    score: currentScore,
-                    upgraded: true,
-                },
-                message: `축하합니다! ${getGradeInfo(newGrade).name} 등급으로 승급했습니다! 🎉`,
-            });
-        }
 
         // 등급 변경 없음
         return NextResponse.json({
@@ -130,7 +96,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<GradeUpda
             data: {
                 userId,
                 oldGrade,
-                newGrade: oldGrade,
+                newGrade,
                 score: currentScore,
                 upgraded: false,
             },

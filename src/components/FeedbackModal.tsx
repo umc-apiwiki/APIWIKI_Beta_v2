@@ -3,6 +3,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import PointNotificationModal from './PointNotificationModal';
 import type { FeedbackType } from '@/types';
 
 interface FeedbackModalProps {
@@ -41,6 +42,7 @@ export default function FeedbackModal({ isOpen, onClose, userId }: FeedbackModal
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState('');
     const [showSuccess, setShowSuccess] = useState(false);
+    const [showPointsModal, setShowPointsModal] = useState(false);
 
     useEffect(() => {
         const handleEsc = (e: KeyboardEvent) => {
@@ -89,8 +91,17 @@ export default function FeedbackModal({ isOpen, onClose, userId }: FeedbackModal
             if (data.success) {
                 setShowSuccess(true);
                 setContent('');
+                
+                // 포인트 모달 표시 (회원인 경우에만 5점)
+                if (userId) {
+                    setShowPointsModal(true);
+                }
+
                 setTimeout(() => {
                     setShowSuccess(false);
+                    // 포인트 모달이 떠있으면 닫지 않고, 사용자가 직접 닫거나 타이머로 닫히게 둘 수 있지만, 
+                    // 여기서는 모달이 닫히면서 부모 모달도 닫히는 흐름.
+                    // 포인트 모달은 fixed overlay이므로 부모 모달 닫혀도 보임.
                     onClose();
                 }, 2000);
             } else {
@@ -300,6 +311,12 @@ export default function FeedbackModal({ isOpen, onClose, userId }: FeedbackModal
                     </motion.div>
                 </div>
             )}
+            <PointNotificationModal
+                isOpen={showPointsModal}
+                onClose={() => setShowPointsModal(false)}
+                points={3}
+                message="피드백 제출 완료!"
+            />
         </AnimatePresence>
     );
 }

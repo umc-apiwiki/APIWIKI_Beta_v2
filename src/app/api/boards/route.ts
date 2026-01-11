@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { supabase } from '@/lib/supabaseClient';
+import { logUserActivity } from '@/lib/activity';
 import type { BoardSubmissionPayload, BoardType } from '@/types';
 
 // GET: 게시판 목록 조회
@@ -150,6 +151,26 @@ export async function POST(request: NextRequest) {
                 { success: false, error: '게시글 작성 중 오류가 발생했습니다' },
                 { status: 500 }
             );
+        }
+
+        // 활동 점수 부여 (게시글 작성)
+        if (userUser) {
+           // logUserActivity is imported from '@/lib/activity'
+           // We need to import it at the top of the file
+           // Using dynamic import or assuming it's added. I will add the import in a separate replacement if needed, 
+           // but I can't add it here easily without touching top of file.
+           // I'll add the logic here and import in next step or use require if feasible in TS (no).
+           // I'll replace the block and separate import.
+           
+           // Actually, I should add the import first or use a multi-replacement? 
+           // I will assume I can do two replacements or one big one. 
+           // I'll stick to replacing this block and will add import in a separate call to be safe.
+           
+           /* This is a comment to self: I need to add `import { logUserActivity } from '@/lib/activity';` at top. */
+
+            // Note: fire-and-forget for performance, logging error inside function
+            // 4 points for post
+            logUserActivity(userUser.id, 'post', 4);
         }
 
         return NextResponse.json({

@@ -3,6 +3,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import PointNotificationModal from './PointNotificationModal';
 import { useAuth } from '@/hooks/useAuth';
 import type { BoardSubmissionPayload, BoardType } from '@/types';
 
@@ -22,6 +23,7 @@ export default function BoardForm({ type, onCancel }: BoardFormProps) {
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState('');
+    const [showPointsModal, setShowPointsModal] = useState(false);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -66,10 +68,17 @@ export default function BoardForm({ type, onCancel }: BoardFormProps) {
                 throw new Error(result.error || '게시글 작성에 실패했습니다');
             }
 
-            // 성공 시 게시판 목록으로 이동
-            alert('게시글이 작성되었습니다!');
-            router.push(`/boards/${type}`);
-            if (onCancel) onCancel();
+            // 성공 시 알림 모달 표시 및 지연 이동
+            setShowPointsModal(true);
+
+            // 데이터 갱신을 위해 미리 리프레시 호출
+            router.refresh();
+
+            // 모달을 볼 시간을 준 후 이동
+            setTimeout(() => {
+                router.push(`/boards/${type}`);
+                if (onCancel) onCancel();
+            }, 2000);
         } catch (err: any) {
             setError(err.message);
         } finally {
@@ -156,6 +165,12 @@ export default function BoardForm({ type, onCancel }: BoardFormProps) {
                     </div>
                 </>
             )}
+        <PointNotificationModal
+                isOpen={showPointsModal}
+                onClose={() => setShowPointsModal(false)}
+                points={2}
+                message="게시글 작성 완료!"
+            />
         </form>
     );
 }

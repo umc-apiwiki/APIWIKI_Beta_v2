@@ -3,6 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import PointNotificationModal from './PointNotificationModal';
 import { useAuth } from '@/hooks/useAuth';
 import { isAdmin } from '@/lib/permissions';
 import type { Comment, CommentSubmissionPayload } from '@/types';
@@ -22,6 +23,7 @@ export default function CommentSection({ boardId }: CommentSectionProps) {
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState('');
+    const [showPointsModal, setShowPointsModal] = useState(false);
 
     useEffect(() => {
         fetchComments();
@@ -83,6 +85,7 @@ export default function CommentSection({ boardId }: CommentSectionProps) {
             // 성공 시 폼 초기화 및 댓글 목록 새로고침
             setFormData({ board_id: boardId, content: '', author_name: '' });
             await fetchComments();
+            setShowPointsModal(true);
         } catch (err: any) {
             if (err.message !== '로그인이 필요합니다.') {
                 setError(err.message);
@@ -268,6 +271,12 @@ export default function CommentSection({ boardId }: CommentSectionProps) {
                     ))}
                 </div>
             )}
+            <PointNotificationModal
+                isOpen={showPointsModal}
+                onClose={() => setShowPointsModal(false)}
+                points={1}
+                message="댓글 작성 완료!"
+            />
         </div>
     );
 }
