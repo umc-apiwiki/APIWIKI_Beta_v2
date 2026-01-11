@@ -10,7 +10,7 @@ import type { API } from '@/types';
 export async function getApprovedAPIs(limit?: number): Promise<API[]> {
     let query = supabase
         .from('Api')
-        .select('*')
+        .select('*, logo')
         .eq('status', 'approved')
         .order('createdAt', { ascending: false });
 
@@ -34,7 +34,7 @@ export async function getApprovedAPIs(limit?: number): Promise<API[]> {
 export async function getPopularAPIs(limit: number = 10): Promise<API[]> {
     const { data, error } = await supabase
         .from('Api')
-        .select('*')
+        .select('*, logo')
         .eq('status', 'approved')
         .order('viewsLast7Days', { ascending: false })
         .limit(limit);
@@ -53,7 +53,7 @@ export async function getPopularAPIs(limit: number = 10): Promise<API[]> {
 export async function getAPIsByCategory(category: string, limit?: number): Promise<API[]> {
     let query = supabase
         .from('Api')
-        .select('*')
+        .select('*, logo')
         .eq('status', 'approved')
         .contains('categories', [category])
         .order('rating', { ascending: false });
@@ -78,7 +78,7 @@ export async function getAPIsByCategory(category: string, limit?: number): Promi
 export async function getAPIById(id: string): Promise<API | null> {
     const { data, error } = await supabase
         .from('Api')
-        .select('*')
+        .select('*, logo')
         .eq('id', id)
         .single();
 
@@ -100,7 +100,7 @@ export async function getRelatedAPIs(relatedIds: string[]): Promise<API[]> {
 
     const { data, error } = await supabase
         .from('Api')
-        .select('*')
+        .select('*, logo')
         .in('id', relatedIds)
         .eq('status', 'approved');
 
@@ -129,7 +129,7 @@ export async function searchAPIs(
 ): Promise<{ data: API[]; total: number }> {
     let query = supabase
         .from('Api')
-        .select('*', { count: 'exact' })
+        .select('*, logo', { count: 'exact' })
         .eq('status', 'approved');
 
     // 카테고리 필터

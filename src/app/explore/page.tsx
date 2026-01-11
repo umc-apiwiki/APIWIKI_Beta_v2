@@ -50,7 +50,13 @@ function ExploreContent() {
   useEffect(() => {
     const fetchAPIs = async () => {
       try {
-        const response = await fetch('/api/apis?status=approved');
+        const response = await fetch(`/api/apis?status=approved&_t=${Date.now()}`, {
+          cache: 'no-store',
+          headers: {
+            'Pragma': 'no-cache',
+            'Cache-Control': 'no-cache'
+          }
+        });
         if (response.ok) {
           const data = await response.json();
           setApis(data);

@@ -75,9 +75,14 @@ export default function APIDetailPage({ params }: { params: { id: string } }) {
           </div>
 
           {/* Large Logo Box (Right) */}
-          <div className="w-52 h-52 bg-white rounded-[40px] shadow-[1px_3px_8px_0px_rgba(33,150,243,0.2)] border-[0.25px] border-sky-500 flex items-center justify-center p-6 relative z-10 shrink-0">
+          <div className="w-52 h-52 bg-white rounded-[40px] shadow-[1px_3px_8px_0px_rgba(33,150,243,0.2)] border-[0.25px] border-sky-500 flex items-center justify-center p-10 relative z-10 shrink-0">
              {api.logo ? (
-                <img src={api.logo} alt={api.name} className="w-32 h-32 object-contain" />
+                api.logo.length > 4 || api.logo.startsWith('http') || api.logo.startsWith('/') || api.logo.startsWith('data:') ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={api.logo} alt={api.name} className="w-full h-full object-contain p-6" />
+                ) : (
+                  <span className="text-6xl">{api.logo}</span>
+                )
               ) : (
                 <span className="text-5xl">📦</span>
               )}

@@ -11,7 +11,7 @@ export async function GET(
 
     const { data, error } = await supabase
       .from('Api')
-      .select('*')
+      .select('*, logo')
       .eq('id', id)
       .single();
 

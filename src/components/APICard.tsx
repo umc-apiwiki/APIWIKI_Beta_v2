@@ -38,12 +38,12 @@ export default function APICard({ api, onToggleCompare, isCompareSelected, hideC
         <div className="flex gap-4 mb-3">
           {/* Logo Image */}
           <div 
-            className="w-24 h-24 min-w-[6rem] rounded-[10px] flex-shrink-0 bg-white flex items-center justify-center overflow-hidden shadow-image"
+            className="w-24 h-24 min-w-[6rem] rounded-[10px] flex-shrink-0 bg-white flex items-center justify-center overflow-hidden shadow-image p-8"
           >
             {api.logo ? (
-                 api.logo.startsWith('http') || api.logo.startsWith('/') || api.logo.startsWith('data:') ? (
+                 api.logo.length > 4 || api.logo.startsWith('http') || api.logo.startsWith('/') || api.logo.startsWith('data:') ? (
                      // eslint-disable-next-line @next/next/no-img-element
-                     <img src={api.logo} alt={api.name} className="w-full h-full object-cover" />
+                     <img src={api.logo} alt={api.name} className="w-full h-full object-contain" />
                  ) : (
                      <span className="text-4xl">{api.logo}</span>
                  )
