@@ -40,7 +40,9 @@ body {
   background-color: var(--bg-light);
   color: var(--text-dark);
   line-height: 1.6;
-  overflow-x: hidden;
+  /* Force desktop layout even on mobile to avoid broken views */
+  overflow-x: auto;
+  min-width: 1200px;
 }
 
 a {
@@ -249,7 +251,8 @@ h6 {
   body {
     font-family: "Roboto", "Noto Sans KR", -apple-system, BlinkMacSystemFont,
       "Segoe UI", sans-serif;
-    overflow-x: hidden;
+    overflow-x: auto;
+    min-width: 1200px;
   }
 }
 
