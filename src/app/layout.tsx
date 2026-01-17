@@ -4,6 +4,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import GoogleAnalytics from '@/components/GoogleAnalytics';
+import UmamiAnalytics from '@/components/UmamiAnalytics';
 import FloatingFeedbackButton from '@/components/FloatingFeedbackButton';
 import { SessionProvider } from 'next-auth/react';
 
@@ -24,6 +25,7 @@ export default function RootLayout({
       <body className="font-sans" style={{ backgroundColor: 'var(--bg-light)' }}>
         <SessionProvider refetchInterval={30} refetchOnWindowFocus>
           <GoogleAnalytics />
+          <UmamiAnalytics />
           <main className="min-h-screen">
             {children}
           </main>
