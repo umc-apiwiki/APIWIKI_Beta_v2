@@ -4,6 +4,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import Image from 'next/image';
 import { useAuth } from '@/hooks/useAuth';
 import { isAdmin, canSubmitAPI } from '@/lib/permissions';
 import LoginModal from './LoginModal';
@@ -75,11 +76,13 @@ export default function Header({ transparent = false, className = '' }: HeaderPr
                         WebkitUserSelect: 'none'
                     }}
                 >
-                    <img 
+                    <Image 
                         src="/logo.svg" 
                         alt="API Wiki Logo" 
+                        width={40}
+                        height={40}
                         className="h-10 w-auto"
-                        draggable="false"
+                        draggable={false}
                     />
                     <span>API Wiki</span>
                 </a>

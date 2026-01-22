@@ -7,7 +7,7 @@ import { Bell, ChevronDown } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import MobileBottomNavigation from './MobileBottomNavigation';
-import SearchBar from '@/components/SearchBar';
+import MobileSearchModal from './MobileSearchModal';
 import { categories } from '@/data/mockData';
 import styles from './MobileHomePage.module.css';
 
@@ -15,6 +15,7 @@ export default function MobileHomePage() {
   const router = useRouter();
   const scrollRef = useRef<HTMLDivElement>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
 
   const handleScroll = () => {
     if (scrollRef.current) {
@@ -80,17 +81,25 @@ export default function MobileHomePage() {
           개발자가 함께 만드는 API 지식,<br/>실시간으로 업데이트됩니다
         </motion.p>
 
-        {/* 검색바 - 데스크탑 컴포넌트 사용 */}
+        {/* 검색바 - 클릭하면 모달 열림 */}
         <motion.div 
           className={styles.searchWrapper}
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}
+          onClick={() => setIsSearchModalOpen(true)}
         >
-          <SearchBar 
-            placeholder="궁금한 API를 검색해보세요"
-            showDropdown={true}
-          />
+          <div className={styles.searchFakeInput}>
+            <span className={styles.searchPlaceholder}>궁금한 API를 검색해보세요</span>
+            <div className={styles.searchIcon}>
+              <Image 
+                src="/mingcute_search-line.svg" 
+                alt="Search" 
+                width={20} 
+                height={20}
+              />
+            </div>
+          </div>
         </motion.div>
 
         {/* 카테고리 캐러셀 */}
@@ -144,6 +153,12 @@ export default function MobileHomePage() {
 
       {/* 하단 네비게이션 */}
       <MobileBottomNavigation />
+
+      {/* 검색 모달 */}
+      <MobileSearchModal 
+        isOpen={isSearchModalOpen} 
+        onClose={() => setIsSearchModalOpen(false)} 
+      />
     </div>
   );
 }
