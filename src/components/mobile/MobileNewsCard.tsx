@@ -25,8 +25,9 @@ export default function MobileNewsCard({ news }: MobileNewsCardProps) {
     <Link
       href={`/news/${news.id}`}
       className="block w-full h-full bg-white rounded-xl transition-all duration-200 active:scale-95 shadow-sm"
+      style={{ border: '1px solid #2196F3' }}
     >
-      <div className="relative p-2 h-full flex flex-col">
+      <div className="relative p-3 h-full flex flex-col">
         {/* 제목 */}
         <h3 className="text-gray-900 text-sm font-bold font-sans line-clamp-2 leading-snug mb-1.5">
           {news.title}

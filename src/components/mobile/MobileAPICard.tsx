@@ -25,9 +25,9 @@ export default function MobileAPICard({ api }: MobileAPICardProps) {
       className="block w-full h-full bg-white rounded-xl transition-all duration-200 active:scale-95 shadow-sm"
       style={{ border: '1px solid #2196F3' }}
     >
-      <div className="relative p-2 h-full flex flex-col">
+      <div className="relative p-3 h-full flex flex-col">
         {/* Top Section: Image and Info */}
-        <div className="flex gap-1.5 mb-1">
+        <div className="flex gap-3 mb-2">
           {/* Logo Image */}
           <div className="w-12 h-12 min-w-[3rem] rounded-lg flex-shrink-0 bg-white flex items-center justify-center overflow-hidden shadow-sm p-2">
             {api.logo ? (

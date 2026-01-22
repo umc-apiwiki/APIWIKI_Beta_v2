@@ -37,6 +37,7 @@ export default function APICard({
     <Link
       href={`/api/${api.id}`}
       className="block w-full h-full min-h-[13rem] relative bg-white rounded-2xl transition-all duration-300 hover:translate-y-[-0.25rem] shadow-card"
+      style={{ border: '1px solid #2196F3' }}
     >
       <div className="relative p-5 h-full flex flex-col">
         {/* Top Section: Image and Info */}

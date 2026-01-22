@@ -13,6 +13,7 @@ export default function NewsCard({ news }: NewsCardProps) {
       className="block bg-white rounded-[15px] overflow-hidden transition-all duration-300 cursor-pointer card-shadow hover:-translate-y-[5px]"
       style={{
         boxShadow: 'var(--shadow-blue)',
+        border: '1px solid #2196F3', // Match API Card border
       }}
       onMouseEnter={(e) => {
         e.currentTarget.style.boxShadow = '2px 2px 20px 4px rgba(33, 150, 243, 0.3)';

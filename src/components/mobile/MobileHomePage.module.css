@@ -292,7 +292,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: white;
+  background-color: #f9fbfe;
   overflow-y: auto;
   overflow-x: hidden;
   z-index: 2000;
@@ -321,14 +321,14 @@
 }
 
 .section {
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
 }
 
 .sectionTitle {
   font-size: 1.0625rem;
   font-weight: 700;
-  color: #0f172a;
-  margin-bottom: 0.875rem;
+  color: rgba(0, 0, 0, 0.63);
+  margin-bottom: 1.5rem;
   padding: 0 1rem;
   letter-spacing: -0.015em;
 }
