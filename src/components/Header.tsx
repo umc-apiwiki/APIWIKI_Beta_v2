@@ -61,7 +61,7 @@ export default function Header({ transparent = false, className = '' }: HeaderPr
           gap: 'var(--grid-gutter)',
           padding: '1.25rem var(--grid-margin)',
           alignItems: 'center',
-          backgroundColor: transparent ? 'transparent' : 'rgba(255, 255, 255, 0.7)',
+          backgroundColor: transparent ? 'transparent' : 'rgba(249, 251, 254, 0.8)',
           backdropFilter: 'blur(10px)',
           WebkitBackdropFilter: 'blur(10px)',
         }}

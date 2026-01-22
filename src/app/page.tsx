@@ -105,10 +105,7 @@ export default function HomePage() {
       </div>
 
       {/* 데스크톱 버전 (768px 이상) */}
-      <div
-        className={`hidden md:block min-h-screen relative ${isActive ? 'active' : ''}`}
-        style={{ backgroundColor: 'var(--bg-light)' }}
-      >
+      <div className={`hidden md:block min-h-screen relative ${isActive ? 'active' : ''}`}>
         {/* Header Navigation */}
         <Header transparent={!isActive} />
 
