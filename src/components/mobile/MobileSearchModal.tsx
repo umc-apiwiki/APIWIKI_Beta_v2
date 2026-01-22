@@ -1,7 +1,7 @@
 // src/components/mobile/MobileSearchModal.tsx
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'motion/react';
@@ -19,6 +19,8 @@ export default function MobileSearchModal({ isOpen, onClose }: MobileSearchModal
   const [query, setQuery] = useState('');
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
   const router = useRouter();
+  const modalRef = useRef<HTMLDivElement>(null);
+  const lastScrollY = useRef(0);
 
   useEffect(() => {
     const stored = localStorage.getItem(RECENT_SEARCHES_KEY);
@@ -33,6 +35,74 @@ export default function MobileSearchModal({ isOpen, onClose }: MobileSearchModal
       }
     }
   }, []);
+
+  // 뒤로가기 감지
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handlePopState = () => {
+      onClose();
+    };
+
+    // 모달이 열릴 때 히스토리에 상태 추가
+    window.history.pushState({ modalOpen: true }, '');
+    
+    window.addEventListener('popstate', handlePopState);
+
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, [isOpen, onClose]);
+
+  // 스크롤 감지 (아래로 스크롤 시 닫기 - 제거)
+  // 맨 위에서 pull-down 동작 감지
+  useEffect(() => {
+    if (!isOpen || !modalRef.current) return;
+
+    let startY = 0;
+    let isDragging = false;
+
+    const handleTouchStart = (e: TouchEvent) => {
+      if (!modalRef.current) return;
+      const scrollTop = modalRef.current.scrollTop;
+      
+      // 맨 위에 있을 때만 감지 시작
+      if (scrollTop === 0) {
+        startY = e.touches[0].clientY;
+        isDragging = true;
+      }
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (!isDragging || !modalRef.current) return;
+      
+      const scrollTop = modalRef.current.scrollTop;
+      const currentY = e.touches[0].clientY;
+      const deltaY = currentY - startY;
+
+      // 맨 위에서 아래로 당기는 동작 (50px 이상)
+      if (scrollTop === 0 && deltaY > 50) {
+        onClose();
+        isDragging = false;
+      }
+    };
+
+    const handleTouchEnd = () => {
+      isDragging = false;
+      startY = 0;
+    };
+
+    const modalElement = modalRef.current;
+    modalElement.addEventListener('touchstart', handleTouchStart);
+    modalElement.addEventListener('touchmove', handleTouchMove);
+    modalElement.addEventListener('touchend', handleTouchEnd);
+
+    return () => {
+      modalElement.removeEventListener('touchstart', handleTouchStart);
+      modalElement.removeEventListener('touchmove', handleTouchMove);
+      modalElement.removeEventListener('touchend', handleTouchEnd);
+    };
+  }, [isOpen, onClose]);
 
   const saveRecentSearch = (searchTerm: string) => {
     if (!searchTerm.trim()) return;
@@ -82,7 +152,7 @@ export default function MobileSearchModal({ isOpen, onClose }: MobileSearchModal
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
         >
-          <div className={styles.modal}>
+          <div className={styles.modal} ref={modalRef}>
             {/* 검색바 */}
             <div className={styles.searchBar}>
               <div className={styles.searchContainer}>

@@ -239,20 +239,20 @@
 }
 
 .progressBarWrapper {
-  width: 10%;
+  width: 12%;
   max-width: 200px;
-  height: 0.3rem;
+  height: 0.25rem;
   background-color: #e5e7eb;
   border-radius: 9999px;
-  margin: 0.5rem auto 0 auto;
+  margin: 0.625rem auto 0 auto;
   position: relative;
   overflow: visible;
 }
 
 .progressIndicator {
   position: absolute;
-  width: 0.6rem;
-  height: 0.2rem;
+  width: 0.625rem;
+  height: 0.1875rem;
   background-color: #0ea5e9;
   border-radius: 9999px;
   top: 50%;
@@ -291,45 +291,115 @@
   overflow-x: hidden;
   z-index: 2000;
   -webkit-overflow-scrolling: touch;
+  padding-top: 0.5rem;
 }
 
 .downArrow {
   position: relative;
-  width: 3rem;
-  height: 3rem;
+  width: 2.5rem;
+  height: 2.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
   background: none;
   border: none;
   cursor: pointer;
-  margin: 1rem auto 1.5rem auto;
+  margin: 0.5rem auto 1rem auto;
   padding: 0;
 }
 
 .contentWrapper {
-  padding: 0 1rem 5rem 1rem;
+  padding: 0 0 6rem 0;
   max-width: 100%;
   box-sizing: border-box;
 }
 
 .section {
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
 }
 
 .sectionTitle {
-  font-size: 1.25rem;
-  font-weight: 600;
+  font-size: 1.0625rem;
+  font-weight: 700;
   color: #0f172a;
-  margin-bottom: 1rem;
+  margin-bottom: 0.875rem;
+  padding: 0 1rem;
+  letter-spacing: -0.015em;
 }
 
-.cardGrid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1rem;
+.scrollableSection {
+  display: flex;
+  flex-direction: row;
+  gap: 0.625rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0 1rem 0.625rem 1rem;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
+}
+
+.scrollableSection::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollableSection {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 .cardItem {
+  width: calc(50vw - 1.25rem);
+  min-width: calc(50vw - 1.25rem);
+  flex-shrink: 0;
+  scroll-snap-align: start;
+  min-height: 6rem;
+  height: auto;
+}
+
+/* 모바일 카드 상단 섹션 간격 */
+.cardItem :global(.api-card) > div > div:first-child {
+  gap: 0.625rem !important;
+  margin-bottom: 0.375rem !important;
+}
+
+/* 카드 상단 flex 레이아웃 간격 조정 */
+.cardItem :global(.api-card) > div > div:first-child {
+  gap: 0.375rem !important;
+  margin-bottom: 0.375rem !important;
+}
+
+/* 카드 내부 이미지 크기 조정 */
+.cardItem :global(.api-card) img,
+.cardItem :global(.news-card) img {
   width: 100%;
+  height: auto;
+  max-height: 2rem;
+  min-height: 1.5rem;
+  object-fit: contain;
+  border-radius: 0.25rem;
+}
+
+.progressBarWrapper {
+  width: 15%;
+  max-width: 200px;
+  height: 0.25rem;
+  background-color: #e5e7eb;
+  border-radius: 9999px;
+  margin: 0.75rem auto 0 auto;
+  position: relative;
+  overflow: visible;
+}
+
+.progressIndicator {
+  position: absolute;
+  width: 0.75rem;
+  height: 0.1875rem;
+  background-color: #0ea5e9;
+  border-radius: 9999px;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  transition: left 0.2s ease-out;
+  box-shadow: 0 1px 3px rgba(14, 165, 233, 0.4);
 }

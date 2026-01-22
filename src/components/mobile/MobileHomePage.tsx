@@ -8,8 +8,8 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import MobileBottomNavigation from '@/components/mobile/MobileBottomNavigation';
 import MobileSearchModal from '@/components/mobile/MobileSearchModal';
-import APICard from '@/components/APICard';
-import NewsCard from '@/components/NewsCard';
+import MobileAPICard from '@/components/mobile/MobileAPICard';
+import MobileNewsCard from '@/components/mobile/MobileNewsCard';
 import { categories } from '@/data/mockData';
 import { API, NewsItem } from '@/types';
 import styles from './MobileHomePage.module.css';
@@ -17,6 +17,7 @@ import styles from './MobileHomePage.module.css';
 export default function MobileHomePage() {
   const router = useRouter();
   const scrollRef = useRef<HTMLDivElement>(null);
+  const scrollContentRef = useRef<HTMLDivElement>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
   const [isActive, setIsActive] = useState(false);
@@ -93,6 +94,55 @@ export default function MobileHomePage() {
   const handleScrollToTop = () => {
     setIsActive(true);
   };
+
+  // 스크롤 컨텐츠에서 상단 스크롤 감지 (맨 위에서 더 위로 올리려고 시도)
+  useEffect(() => {
+    if (!isActive || !scrollContentRef.current) return;
+
+    let startY = 0;
+    let isDragging = false;
+
+    const handleTouchStart = (e: TouchEvent) => {
+      if (!scrollContentRef.current) return;
+      const scrollTop = scrollContentRef.current.scrollTop;
+      
+      // 맨 위에 있을 때만 감지 시작
+      if (scrollTop === 0) {
+        startY = e.touches[0].clientY;
+        isDragging = true;
+      }
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (!isDragging || !scrollContentRef.current) return;
+      
+      const scrollTop = scrollContentRef.current.scrollTop;
+      const currentY = e.touches[0].clientY;
+      const deltaY = currentY - startY;
+
+      // 맨 위에서 아래로 당기는 동작 (50px 이상)
+      if (scrollTop === 0 && deltaY > 50) {
+        setIsActive(false);
+        isDragging = false;
+      }
+    };
+
+    const handleTouchEnd = () => {
+      isDragging = false;
+      startY = 0;
+    };
+
+    const scrollElement = scrollContentRef.current;
+    scrollElement.addEventListener('touchstart', handleTouchStart);
+    scrollElement.addEventListener('touchmove', handleTouchMove);
+    scrollElement.addEventListener('touchend', handleTouchEnd);
+
+    return () => {
+      scrollElement.removeEventListener('touchstart', handleTouchStart);
+      scrollElement.removeEventListener('touchmove', handleTouchMove);
+      scrollElement.removeEventListener('touchend', handleTouchEnd);
+    };
+  }, [isActive]);
 
   return (
     <div className={styles.container}>
@@ -236,6 +286,7 @@ export default function MobileHomePage() {
         {isActive && (
           <motion.div 
             className={styles.scrollContent}
+            ref={scrollContentRef}
             initial={{ opacity: 0, y: 100 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 100 }}
@@ -266,36 +317,75 @@ export default function MobileHomePage() {
               {/* Latest News */}
               <section className={styles.section}>
                 <h2 className={styles.sectionTitle}>Latest News</h2>
-                <div className={styles.cardGrid}>
+                <div 
+                  className={styles.scrollableSection}
+                  onScroll={(e) => {
+                    const target = e.currentTarget;
+                    const progress = (target.scrollLeft / (target.scrollWidth - target.clientWidth)) * 100;
+                    const indicator = target.nextElementSibling?.querySelector(`.${styles.progressIndicator}`) as HTMLElement;
+                    if (indicator) {
+                      indicator.style.left = `calc((100% - 0.6rem) * ${progress / 100})`;
+                    }
+                  }}
+                >
                   {newsItems.map((news) => (
                     <div key={news.id} className={styles.cardItem}>
-                      <NewsCard news={news} />
+                      <MobileNewsCard news={news} />
                     </div>
                   ))}
+                </div>
+                <div className={styles.progressBarWrapper}>
+                  <div className={styles.progressIndicator} />
                 </div>
               </section>
 
               {/* Recent Popular */}
               <section className={styles.section}>
                 <h2 className={styles.sectionTitle}>Recent Popular</h2>
-                <div className={styles.cardGrid}>
+                <div 
+                  className={styles.scrollableSection}
+                  onScroll={(e) => {
+                    const target = e.currentTarget;
+                    const progress = (target.scrollLeft / (target.scrollWidth - target.clientWidth)) * 100;
+                    const indicator = target.nextElementSibling?.querySelector(`.${styles.progressIndicator}`) as HTMLElement;
+                    if (indicator) {
+                      indicator.style.left = `calc((100% - 0.6rem) * ${progress / 100})`;
+                    }
+                  }}
+                >
                   {popularAPIs.map((api) => (
                     <div key={api.id} className={styles.cardItem}>
-                      <APICard api={api} hideCompare={true} />
+                      <MobileAPICard api={api} />
                     </div>
                   ))}
+                </div>
+                <div className={styles.progressBarWrapper}>
+                  <div className={styles.progressIndicator} />
                 </div>
               </section>
 
               {/* Suggest API */}
               <section className={styles.section}>
                 <h2 className={styles.sectionTitle}>Suggest API</h2>
-                <div className={styles.cardGrid}>
+                <div 
+                  className={styles.scrollableSection}
+                  onScroll={(e) => {
+                    const target = e.currentTarget;
+                    const progress = (target.scrollLeft / (target.scrollWidth - target.clientWidth)) * 100;
+                    const indicator = target.nextElementSibling?.querySelector(`.${styles.progressIndicator}`) as HTMLElement;
+                    if (indicator) {
+                      indicator.style.left = `calc((100% - 0.6rem) * ${progress / 100})`;
+                    }
+                  }}
+                >
                   {suggestedAPIs.map((api) => (
                     <div key={api.id} className={styles.cardItem}>
-                      <APICard api={api} hideCompare={true} />
+                      <MobileAPICard api={api} />
                     </div>
                   ))}
+                </div>
+                <div className={styles.progressBarWrapper}>
+                  <div className={styles.progressIndicator} />
                 </div>
               </section>
             </div>
