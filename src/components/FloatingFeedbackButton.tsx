@@ -15,7 +15,7 @@ export default function FloatingFeedbackButton() {
         <>
             <motion.button
                 onClick={() => setIsFeedbackModalOpen(true)}
-                className="fixed bottom-8 right-8 w-14 h-14 rounded-full shadow-lg flex items-center justify-center z-[1500]"
+                className="fixed bottom-24 right-6 md:bottom-8 md:right-8 w-12 h-12 md:w-14 md:h-14 rounded-full shadow-lg flex items-center justify-center z-[1500]"
                 style={{
                     backgroundColor: 'rgba(33, 150, 243, 0.85)',
                     boxShadow: '0 2px 12px rgba(33, 150, 243, 0.25)'
@@ -43,8 +43,9 @@ export default function FloatingFeedbackButton() {
                     <Image 
                         src="/f7_exclamationmark-bubble-fill.svg" 
                         alt="Feedback" 
-                        width={24} 
-                        height={24}
+                        width={20}
+                        height={20}
+                        className="md:w-6 md:h-6"
                         style={{ filter: 'brightness(0) invert(1)' }}
                     />
                 </motion.div>

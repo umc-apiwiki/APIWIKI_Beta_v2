@@ -27,18 +27,6 @@ export default function MobileNewsCard({ news }: MobileNewsCardProps) {
       className="block w-full h-full bg-white rounded-xl transition-all duration-200 active:scale-95 shadow-sm"
     >
       <div className="relative p-2 h-full flex flex-col">
-        {/* 이미지 영역 */}
-        {news.image && (
-          <div className="w-full h-16 rounded-lg overflow-hidden mb-2 bg-gray-100">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img 
-              src={news.image} 
-              alt={news.title}
-              className="w-full h-full object-cover"
-            />
-          </div>
-        )}
-
         {/* 제목 */}
         <h3 className="text-gray-900 text-sm font-bold font-sans line-clamp-2 leading-snug mb-1.5">
           {news.title}

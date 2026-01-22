@@ -5,6 +5,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import PointNotificationModal from './PointNotificationModal';
 import type { FeedbackType } from '@/types';
+import styles from './FeedbackModal.module.css';
 
 interface FeedbackModalProps {
     isOpen: boolean;
@@ -131,15 +132,15 @@ export default function FeedbackModal({ isOpen, onClose, userId }: FeedbackModal
                         onClick={onClose}
                     />
                     <motion.div 
-                        className="relative bg-white max-w-2xl w-full"
+                        className={`relative bg-white ${styles.modalContainer}`}
                         style={{ borderRadius: '20px' }}
                         initial={{ opacity: 0, scale: 0.9, y: 20 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.9, y: 20 }}
                         transition={{ type: 'spring', damping: 25, stiffness: 300 }}
                     >
-                        <div className="flex items-center justify-between p-8 border-b" style={{ borderColor: 'rgba(0, 0, 0, 0.1)' }}>
-                            <h2 className="text-[32px] font-bold" style={{ color: 'var(--text-dark)' }}>
+                        <div className={`flex items-center justify-between ${styles.modalHeader}`}>
+                            <h2 className={styles.modalTitle}>
                                 피드백 보내기
                             </h2>
                             <motion.button
@@ -149,23 +150,23 @@ export default function FeedbackModal({ isOpen, onClose, userId }: FeedbackModal
                                 whileTap={{ scale: 0.9 }}
                                 aria-label="닫기"
                             >
-                                <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg className={styles.closeButton} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                                 </svg>
                             </motion.button>
                         </div>
-                        <form onSubmit={handleSubmit} className="p-8">
-                            <div className="mb-8">
-                                <label className="block text-[16px] font-semibold mb-4" style={{ color: 'var(--text-dark)' }}>
+                        <form onSubmit={handleSubmit} className={styles.modalForm}>
+                            <div className="mb-6">
+                                <label className={styles.typeLabel}>
                                     피드백 타입을 선택해주세요
                                 </label>
-                                <div className="grid grid-cols-3 gap-4">
+                                <div className={styles.typeGrid}>
                                     {FEEDBACK_TYPES.map((option) => (
                                         <motion.button
                                             key={option.type}
                                             type="button"
                                             onClick={() => setSelectedType(option.type)}
-                                            className="p-5 rounded-[15px] border-2 transition-all"
+                                            className={styles.typeButton}
                                             style={{
                                                 borderColor: selectedType === option.type ? option.color : 'rgba(0, 0, 0, 0.1)',
                                                 backgroundColor: selectedType === option.type ? `${option.color}15` : 'white'
@@ -174,7 +175,7 @@ export default function FeedbackModal({ isOpen, onClose, userId }: FeedbackModal
                                             whileTap={{ scale: 0.98 }}
                                         >
                                             <motion.div 
-                                                className="text-[40px] mb-2"
+                                                className={styles.typeIcon}
                                                 animate={{ 
                                                     scale: selectedType === option.type ? 1.1 : 1,
                                                     rotate: selectedType === option.type ? [0, -10, 10, 0] : 0
@@ -183,7 +184,7 @@ export default function FeedbackModal({ isOpen, onClose, userId }: FeedbackModal
                                             >
                                                 {option.icon}
                                             </motion.div>
-                                            <div className="text-[14px] font-medium" style={{ color: 'var(--text-dark)' }}>
+                                            <div className={styles.typeText}>
                                                 {option.label}
                                             </div>
                                         </motion.button>
@@ -191,7 +192,7 @@ export default function FeedbackModal({ isOpen, onClose, userId }: FeedbackModal
                                 </div>
                             </div>
                             <div className="mb-6">
-                                <label htmlFor="content" className="block text-[16px] font-semibold mb-3" style={{ color: 'var(--text-dark)' }}>
+                                <label htmlFor="content" className={styles.contentLabel}>
                                     내용
                                 </label>
                                 <textarea
@@ -200,19 +201,18 @@ export default function FeedbackModal({ isOpen, onClose, userId }: FeedbackModal
                                     onChange={(e) => setContent(e.target.value)}
                                     placeholder={selectedOption.placeholder}
                                     rows={8}
-                                    className="w-full px-5 py-4 border-2 rounded-[15px] focus:outline-none resize-none transition-all text-[15px]"
+                                    className={styles.textarea}
                                     style={{
-                                        borderColor: content.length >= 10 ? 'var(--primary-blue)' : 'rgba(0, 0, 0, 0.1)',
-                                        color: 'var(--text-dark)'
+                                        borderColor: content.length >= 10 ? 'var(--primary-blue)' : 'rgba(0, 0, 0, 0.1)'
                                     }}
                                     required
                                 />
                                 <div className="flex justify-between items-center mt-3">
-                                    <span className="text-[13px]" style={{ color: 'var(--text-gray)' }}>
+                                    <span className={styles.charCount} style={{ color: 'var(--text-gray)' }}>
                                         최소 10자, 최대 1000자
                                     </span>
                                     <span
-                                        className="text-[13px] font-medium"
+                                        className={`${styles.charCount} font-medium`}
                                         style={{
                                             color: content.length > 1000 ? '#ef4444' : content.length >= 10 ? '#22c55e' : 'var(--text-gray)'
                                         }}
@@ -252,11 +252,11 @@ export default function FeedbackModal({ isOpen, onClose, userId }: FeedbackModal
                                     </motion.div>
                                 )}
                             </AnimatePresence>
-                            <div className="flex gap-4">
+                            <div className={styles.buttonGroup}>
                                 <motion.button
                                     type="button"
                                     onClick={onClose}
-                                    className="flex-1 px-6 py-4 rounded-[15px] font-semibold text-[16px] transition-colors"
+                                    className={styles.cancelButton}
                                     style={{ 
                                         border: '2px solid rgba(0, 0, 0, 0.1)',
                                         color: 'var(--text-gray)',
@@ -268,45 +268,42 @@ export default function FeedbackModal({ isOpen, onClose, userId }: FeedbackModal
                                 >
                                     취소
                                 </motion.button>
-                                <div className="flex-1 relative group">
-                                    <motion.button
-                                        type="submit"
-                                        className="w-full px-6 py-4 rounded-[15px] text-white font-semibold text-[16px] transition-all disabled:opacity-50"
-                                        style={{ 
-                                            backgroundColor: 'var(--primary-blue)',
-                                            boxShadow: 'var(--shadow-blue)',
-                                            cursor: (isSubmitting || showSuccess || content.length < 10 || content.length > 1000) ? 'not-allowed' : 'pointer'
-                                        }}
-                                        disabled={isSubmitting || showSuccess || content.length < 10 || content.length > 1000}
-                                        whileHover={{ scale: (isSubmitting || showSuccess || content.length < 10 || content.length > 1000) ? 1 : 1.02, y: (isSubmitting || showSuccess || content.length < 10 || content.length > 1000) ? 0 : -2 }}
-                                        whileTap={{ scale: (isSubmitting || showSuccess || content.length < 10 || content.length > 1000) ? 1 : 0.98 }}
-                                    >
-                                        {isSubmitting ? (
-                                            <span className="flex items-center justify-center gap-2">
-                                                <motion.div 
-                                                    className="w-5 h-5 border-3 border-white border-t-transparent rounded-full"
-                                                    animate={{ rotate: 360 }}
-                                                    transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                                                />
-                                                제출 중...
-                                            </span>
-                                        ) : showSuccess ? '제출 완료!' : '피드백 제출'}
-                                    </motion.button>
+                                <motion.button
+                                    type="submit"
+                                    className={`${styles.submitButton} text-white disabled:opacity-50 relative group`}
+                                    style={{ 
+                                        backgroundColor: 'var(--primary-blue)',
+                                        boxShadow: 'var(--shadow-blue)',
+                                        cursor: (isSubmitting || showSuccess || content.length < 10 || content.length > 1000) ? 'not-allowed' : 'pointer'
+                                    }}
+                                    disabled={isSubmitting || showSuccess || content.length < 10 || content.length > 1000}
+                                    whileHover={{ scale: (isSubmitting || showSuccess || content.length < 10 || content.length > 1000) ? 1 : 1.02, y: (isSubmitting || showSuccess || content.length < 10 || content.length > 1000) ? 0 : -2 }}
+                                    whileTap={{ scale: (isSubmitting || showSuccess || content.length < 10 || content.length > 1000) ? 1 : 0.98 }}
+                                >
+                                    {isSubmitting ? (
+                                        <span className="flex items-center justify-center gap-2">
+                                            <motion.div 
+                                                className={styles.spinner}
+                                                animate={{ rotate: 360 }}
+                                                transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                                            />
+                                            제출 중...
+                                        </span>
+                                    ) : showSuccess ? '제출 완료!' : '피드백 제출'}
                                     {(content.length < 10 && content.length > 0) && (
                                         <AnimatePresence>
                                             <motion.div
-                                                className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 rounded-lg text-[13px] text-white whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity"
-                                                style={{ backgroundColor: 'rgba(0, 0, 0, 0.8)' }}
+                                                className={styles.tooltip}
                                                 initial={{ opacity: 0, y: 5 }}
                                                 animate={{ opacity: 1, y: 0 }}
                                                 exit={{ opacity: 0, y: 5 }}
                                             >
                                                 최소 10자 이상 입력해주세요 ({content.length}/10)
-                                                <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-black/80" />
+                                                <div className={styles.tooltipArrow} />
                                             </motion.div>
                                         </AnimatePresence>
                                     )}
-                                </div>
+                                </motion.button>
                             </div>
                         </form>
                     </motion.div>

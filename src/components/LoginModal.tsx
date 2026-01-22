@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import styles from './LoginModal.module.css';
 
 interface LoginModalProps {
     isOpen: boolean;
@@ -109,7 +110,7 @@ export default function LoginModal({ isOpen, onClose, onSwitchToSignup }: LoginM
                     onClick={handleClose}
                 >
                     <motion.div 
-                        className="bg-white rounded-[32px] w-[380px] p-8 relative flex flex-col items-center shadow-2xl"
+                        className={styles.modalContainer}
                         initial={{ scale: 0.95, opacity: 0, y: 10 }}
                         animate={{ scale: 1, opacity: 1, y: 0 }}
                         exit={{ scale: 0.95, opacity: 0, y: 10 }}
@@ -117,28 +118,29 @@ export default function LoginModal({ isOpen, onClose, onSwitchToSignup }: LoginM
                         onClick={(e) => e.stopPropagation()}
                     >
                         <button
-                            className="absolute top-5 right-5 text-gray-300 hover:text-gray-500 transition-colors"
+                            className={styles.closeButton}
                             onClick={handleClose}
                         >
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <svg className={styles.closeIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                 <line x1="18" y1="6" x2="6" y2="18"></line>
                                 <line x1="6" y1="6" x2="18" y2="18"></line>
                             </svg>
                         </button>
 
-                        <div className="flex flex-col items-center mb-8 mt-2">
-                            <img src="/logo.svg" alt="API Wiki" className="h-[60px] mb-2" />
-                            <h2 className="text-[#2196F3] text-[26px] font-bold tracking-tight">API Wiki</h2>
+                        <div className={styles.logoSection}>
+                            <img src="/logo.svg" alt="API Wiki" className={styles.logo} />
+                            <h2 className={styles.logoText}>API Wiki</h2>
                         </div>
 
-                        <form onSubmit={handleCredentialsLogin} className="w-full space-y-3">
+                        <form onSubmit={handleCredentialsLogin} className={styles.form}>
+                            <div className={styles.inputGroup}>
                             <input 
                                 type="text"
                                 name="email"
                                 placeholder="아이디"
                                 value={formData.email}
                                 onChange={handleChange}
-                                className="w-full h-[52px] px-5 rounded-2xl border border-gray-200 bg-white text-[15px] focus:outline-none focus:border-[#2196F3] focus:ring-1 focus:ring-[#2196F3] transition-all placeholder:text-gray-400"
+                                className={styles.input}
                                 disabled={isLoading}
                             />
                             <input 
@@ -147,51 +149,51 @@ export default function LoginModal({ isOpen, onClose, onSwitchToSignup }: LoginM
                                 placeholder="비밀번호"
                                 value={formData.password}
                                 onChange={handleChange}
-                                className="w-full h-[52px] px-5 rounded-2xl border border-gray-200 bg-white text-[15px] focus:outline-none focus:border-[#2196F3] focus:ring-1 focus:ring-[#2196F3] transition-all placeholder:text-gray-400"
+                                className={styles.input}
                                 disabled={isLoading}
                             />
+                            </div>
                             
                              {loginError && (
-                                <p className="text-[13px] text-red-500 text-center mt-1 font-medium">{loginError}</p>
+                                <p className={styles.errorText}>{loginError}</p>
                             )}
 
                             <button
                                 type="submit"
                                 disabled={isLoading}
-                                className="w-full h-[52px] rounded-full bg-[#2196F3] text-white font-bold text-[16px] hover:bg-[#1E88E5] transition-all shadow-[0_4px_14px_0_rgba(33,150,243,0.39)] mt-2 active:scale-[0.98]"
+                                className={styles.loginButton}
                             >
                                 {isLoading ? '로그인 중...' : '로그인'}
                             </button>
                         </form>
                         
-                        <div className="flex items-center justify-center gap-4 mt-5 text-[12px] text-gray-400 font-medium">
-                            <button className="hover:text-gray-600 transition-colors">아이디 찾기</button>
-                            <div className="w-[1px] h-3 bg-gray-300"></div>
-                            <button className="hover:text-gray-600 transition-colors">비밀번호 찾기</button>
-                            <div className="w-[1px] h-3 bg-gray-300"></div>
-                            <button onClick={onSwitchToSignup} className="hover:text-gray-600 transition-colors">회원가입</button>
+                        <div className={styles.linkSection}>
+                            <button className={styles.linkButton}>아이디 찾기</button>
+                            <div className={styles.divider}></div>
+                            <button className={styles.linkButton}>비밀번호 찾기</button>
+                            <div className={styles.divider}></div>
+                            <button onClick={onSwitchToSignup} className={styles.linkButton}>회원가입</button>
                         </div>
 
-                         <div className="w-full mt-8 space-y-3">
+                         <div className={styles.socialSection}>
                              <button
                                 onClick={handleGoogleLogin}
                                 disabled={isLoading}
-                                className="w-full h-[52px] rounded-full border border-gray-200 flex items-center justify-center gap-3 bg-white hover:bg-gray-50 transition-all active:scale-[0.98]"
+                                className={styles.socialButton}
                              >
-                                 <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="G" className="w-5 h-5"/>
-                                 <span className="text-[14px] font-bold text-[#1f2937]">Sign up with Google</span>
+                                 <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="G" className={styles.socialIcon}/>
+                                 <span className={styles.socialText}>Sign up with Google</span>
                              </button>
                              <button
-                                // onClick={handleGithubLogin}
                                 disabled={true} 
-                                className="w-full h-[52px] rounded-full border border-gray-200 flex items-center justify-center gap-3 bg-white hover:bg-gray-50 transition-all opacity-60 cursor-not-allowed"
+                                className={styles.socialButton}
                              >
-                                 <img src="https://www.svgrepo.com/show/512317/github-142.svg" alt="GH" className="w-5 h-5"/>
-                                 <span className="text-[14px] font-bold text-[#1f2937]">Sign up with Github</span>
+                                 <img src="https://www.svgrepo.com/show/512317/github-142.svg" alt="GH" className={styles.socialIcon}/>
+                                 <span className={styles.socialText}>Sign up with Github</span>
                              </button>
                          </div>
                          
-                         <div className="mt-8 text-[10px] text-gray-300 text-center leading-normal">
+                         <div className={styles.termsText}>
                              계속 진행할 경우 API WIKI의 이용약관에 동의하고<br/>
                              개인정보 처리 방침을 이해하는 것으로 간주됩니다.
                          </div>
