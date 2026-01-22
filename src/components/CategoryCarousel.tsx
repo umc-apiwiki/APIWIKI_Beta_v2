@@ -4,11 +4,22 @@
 import { useRef, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { categories } from '@/data/mockData';
+import { supabase } from '@/lib/supabaseClient';
 
 export default function CategoryCarousel() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const [categories, setCategories] = useState<string[]>([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const { data } = await supabase.from('categories').select('name').order('name');
+      if (data) {
+        setCategories(data.map((c) => c.name));
+      }
+    };
+    fetchCategories();
+  }, []);
 
   const scroll = (direction: 'left' | 'right') => {
     if (scrollRef.current) {

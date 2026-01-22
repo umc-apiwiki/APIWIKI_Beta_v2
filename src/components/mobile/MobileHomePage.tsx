@@ -9,9 +9,9 @@ import MobileBottomNavigation from '@/components/mobile/MobileBottomNavigation';
 import MobileSearchModal from '@/components/mobile/MobileSearchModal';
 import MobileAPICard from '@/components/mobile/MobileAPICard';
 import MobileNewsCard from '@/components/mobile/MobileNewsCard';
-import { categories } from '@/data/mockData';
 import { API, NewsItem } from '@/types';
 import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/lib/supabaseClient';
 import styles from './MobileHomePage.module.css';
 
 export default function MobileHomePage() {
@@ -25,13 +25,15 @@ export default function MobileHomePage() {
   const [popularAPIs, setPopularAPIs] = useState<API[]>([]);
   const [suggestedAPIs, setSuggestedAPIs] = useState<API[]>([]);
   const [newsItems, setNewsItems] = useState<NewsItem[]>([]);
+  const [categories, setCategories] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [popularRes, suggestedRes] = await Promise.all([
+        const [popularRes, suggestedRes, categoriesRes] = await Promise.all([
           fetch('/api/apis?sort=popular&limit=4'),
           fetch('/api/apis?status=approved&limit=4'),
+          supabase.from('categories').select('name').order('name'),
         ]);
 
         if (popularRes.ok) {
@@ -42,6 +44,12 @@ export default function MobileHomePage() {
         if (suggestedRes.ok) {
           const suggestedData = await suggestedRes.json();
           setSuggestedAPIs(suggestedData.slice(0, 4));
+        }
+
+        // @ts-ignore
+        if (categoriesRes.data) {
+          // @ts-ignore
+          setCategories(categoriesRes.data.map((c) => c.name));
         }
 
         // Mock news data
