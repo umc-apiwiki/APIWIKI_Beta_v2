@@ -1,7 +1,7 @@
 // src/lib/__tests__/gradeUtils.test.ts
 // 등급 계산 유틸리티 테스트
 
-import { describe, it, expect } from '@jest/globals';
+import { describe, it, expect } from 'vitest';
 import {
     calculateGrade,
     getGradeInfo,
@@ -9,11 +9,8 @@ import {
     getPointsToNextGrade,
     getGradeProgress,
     canEditWiki,
-    getMaxEditLength,
     compareGrades,
     isGradeUpgrade,
-    GRADE_THRESHOLDS,
-    ACTIVITY_POINTS,
 } from '../gradeUtils';
 
 describe('Grade Calculation Utils', () => {

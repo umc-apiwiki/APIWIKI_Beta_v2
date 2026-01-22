@@ -412,18 +412,21 @@ function ExploreContent() {
           {loading ? (
             <div className="h-[3.25rem] w-full rounded-2xl bg-gray-100 animate-pulse border border-gray-200" />
           ) : isMobile ? (
-            /* 모바일: 검색 버튼 클릭 시 모달 열기 */
+            /* 모바일: 검색 버튼 클릭 시 모달 열기 - 홈페이지 디자인과 동일 */
             <motion.div
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.25, ease: 'easeOut' }}
               onClick={() => setIsSearchModalOpen(true)}
-              className="flex items-center gap-3 h-[3.25rem] w-full rounded-2xl bg-white border border-gray-200 px-4 cursor-pointer shadow-sm"
+              className="flex items-center h-12 w-full rounded-[1.25rem] bg-white px-5 cursor-pointer relative"
+              style={{ boxShadow: '0px 2px 5px rgba(1, 149, 255, 0.2)' }}
             >
-              <Image src="/mingcute_search-line.svg" alt="Search" width={20} height={20} />
-              <span className="text-gray-400 text-sm">
+              <span className="flex-1 text-sm text-gray-400">
                 {searchQuery || '궁금한 API를 검색해보세요'}
               </span>
+              <div className="w-5 h-5 flex items-center justify-center">
+                <Image src="/mingcute_search-line.svg" alt="Search" width={20} height={20} />
+              </div>
             </motion.div>
           ) : (
             <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25, ease: 'easeOut' }}>

@@ -89,7 +89,7 @@
 .sectionTitle {
   font-size: 0.875rem;
   font-weight: 600;
-  color: #1769AA;
+  color: #1769aa;
 }
 
 .recentList {
@@ -146,4 +146,9 @@
 
 .removeButton:active {
   opacity: 1;
+}
+
+.highlight {
+  font-weight: 700;
+  color: #2563eb;
 }

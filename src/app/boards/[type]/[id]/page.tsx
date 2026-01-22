@@ -1,10 +1,9 @@
 // src/app/boards/[type]/[id]/page.tsx
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'motion/react';
-import Link from 'next/link';
 import Header from '@/components/Header';
 import { useAuth } from '@/hooks/useAuth';
 import { isAdmin } from '@/lib/permissions';
@@ -12,21 +11,13 @@ import CommentSection from '@/components/CommentSection';
 import type { Board, BoardType } from '@/types';
 import styles from './page.module.css';
 
-const BOARD_TITLES: Record<BoardType, string> = {
-    community: '커뮤니티',
-};
-
 export default function BoardDetailPage({ params }: { params: { type: BoardType; id: string } }) {
     const router = useRouter();
     const { user, isAuthenticated } = useAuth();
     const [board, setBoard] = useState<Board | null>(null);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        fetchBoard();
-    }, [params.id]);
-
-    const fetchBoard = async () => {
+    const fetchBoard = useCallback(async () => {
         try {
             setLoading(true);
             const response = await fetch(`/api/boards/${params.id}`);
@@ -43,7 +34,11 @@ export default function BoardDetailPage({ params }: { params: { type: BoardType;
         } finally {
             setLoading(false);
         }
-    };
+    }, [params.id, params.type, router]);
+
+    useEffect(() => {
+        fetchBoard();
+    }, [fetchBoard]);
 
     const handleDelete = async () => {
         if (!confirm('게시글을 삭제하시겠습니까?')) return;
@@ -60,8 +55,9 @@ export default function BoardDetailPage({ params }: { params: { type: BoardType;
 
             alert('게시글이 삭제되었습니다');
             router.push(`/boards/${params.type}`);
-        } catch (err: any) {
-            alert(err.message);
+        } catch (err: unknown) {
+            const errorMessage = err instanceof Error ? err.message : '삭제에 실패했습니다';
+            alert(errorMessage);
         }
     };
 

@@ -10,14 +10,22 @@ import BoardForm from '@/components/BoardForm';
 import type { Board, BoardType } from '@/types';
 import styles from './page.module.css';
 
-const BOARD_TITLES: Record<BoardType, string> = {
-    community: '커뮤니티',
-};
-
 const BOARD_CONFIGS: Record<BoardType, { gradient: string; description: string }> = {
     community: {
         gradient: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
         description: '커뮤니티에서 다양한 이야기를 나누세요'
+    },
+    inquiry: {
+        gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        description: '궁금한 점을 문의해주세요'
+    },
+    qna: {
+        gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+        description: '질문과 답변을 나누세요'
+    },
+    free: {
+        gradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+        description: '자유롭게 이야기를 나누세요'
     },
 };
 

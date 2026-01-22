@@ -18,6 +18,7 @@ const MAX_RECENT_SEARCHES = 5;
 export default function MobileSearchModal({ isOpen, onClose }: MobileSearchModalProps) {
   const [query, setQuery] = useState('');
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
+  const [suggestions, setSuggestions] = useState<string[]>([]);
   const router = useRouter();
   const modalRef = useRef<HTMLDivElement>(null);
   const lastScrollY = useRef(0);
@@ -35,6 +36,33 @@ export default function MobileSearchModal({ isOpen, onClose }: MobileSearchModal
       }
     }
   }, []);
+
+  // Fetch suggestions with debounce
+  useEffect(() => {
+    const fetchSuggestions = async () => {
+      if (!query || query.trim().length < 1) {
+        setSuggestions([]);
+        return;
+      }
+
+      try {
+        const response = await fetch(`/api/apis?q=${encodeURIComponent(query)}&limit=5`);
+        if (response.ok) {
+          const result = await response.json();
+          const names = result.map((api: any) => api.name);
+          setSuggestions(names);
+        }
+      } catch (error) {
+        console.error('Failed to fetch suggestions:', error);
+      }
+    };
+
+    const debounceTimer = setTimeout(() => {
+      fetchSuggestions();
+    }, 300);
+
+    return () => clearTimeout(debounceTimer);
+  }, [query]);
 
   // 뒤로가기 감지 및 하단 네비게이션 숨김
   useEffect(() => {
@@ -186,44 +214,80 @@ export default function MobileSearchModal({ isOpen, onClose }: MobileSearchModal
               </div>
             </div>
 
-            {/* Recent 섹션 */}
-            {recentSearches.length > 0 && (
-              <div className={styles.content}>
-                <div className={styles.sectionHeader}>
-                  <span className={styles.sectionTitle}>Recent</span>
-                </div>
-
-                <div className={styles.recentList}>
-                  {recentSearches.map((item, idx) => (
-                    <div
-                      key={`recent-${idx}`}
-                      className={styles.recentItem}
-                      onClick={() => handleSearch(item)}
-                    >
-                      <div className={styles.recentIcon}>
-                        <Image src="/mdi_recent.svg" alt="Recent" width={20} height={20} />
+            {/* 검색 제안 또는 Recent 섹션 */}
+            <div className={styles.content}>
+              {query.trim().length >= 1 ? (
+                /* 자동완성 제안 */
+                <>
+                  {suggestions.length > 0 && (
+                    <>
+                      <div className={styles.sectionHeader}>
+                        <span className={styles.sectionTitle}>검색 제안</span>
                       </div>
-                      <span className={styles.recentText}>{item}</span>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          removeRecentSearch(item);
-                        }}
-                        className={styles.removeButton}
-                        aria-label="삭제"
-                      >
-                        <Image 
-                          src="/search_save_remove.svg" 
-                          alt="Remove" 
-                          width={16} 
-                          height={16} 
-                        />
-                      </button>
+                      <div className={styles.recentList}>
+                        {suggestions.map((item, idx) => (
+                          <div
+                            key={`suggestion-${idx}`}
+                            className={styles.recentItem}
+                            onClick={() => handleSearch(item)}
+                          >
+                            <div className={styles.recentIcon}>
+                              <Image src="/mingcute_search-line.svg" alt="Search" width={20} height={20} />
+                            </div>
+                            <span className={styles.recentText}>
+                              {item.split(new RegExp(`(${query})`, 'gi')).map((part, i) => 
+                                part.toLowerCase() === query.toLowerCase() 
+                                  ? <span key={i} className={styles.highlight}>{part}</span> 
+                                  : part
+                              )}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </>
+                  )}
+                </>
+              ) : (
+                /* Recent 섹션 */
+                recentSearches.length > 0 && (
+                  <>
+                    <div className={styles.sectionHeader}>
+                      <span className={styles.sectionTitle}>Recent</span>
                     </div>
-                  ))}
-                </div>
-              </div>
-            )}
+
+                    <div className={styles.recentList}>
+                      {recentSearches.map((item, idx) => (
+                        <div
+                          key={`recent-${idx}`}
+                          className={styles.recentItem}
+                          onClick={() => handleSearch(item)}
+                        >
+                          <div className={styles.recentIcon}>
+                            <Image src="/mdi_recent.svg" alt="Recent" width={20} height={20} />
+                          </div>
+                          <span className={styles.recentText}>{item}</span>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              removeRecentSearch(item);
+                            }}
+                            className={styles.removeButton}
+                            aria-label="삭제"
+                          >
+                            <Image 
+                              src="/search_save_remove.svg" 
+                              alt="Remove" 
+                              width={16} 
+                              height={16} 
+                            />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </>
+                )
+              )}
+            </div>
           </div>
         </motion.div>
       )}
