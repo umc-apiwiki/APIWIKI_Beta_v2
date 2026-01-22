@@ -10,7 +10,7 @@
   /* 와이어프레임 디자인 시스템 */
   --primary-blue: #2196f3;
   --primary-blue-rgb: 33, 150, 243;
-  --bg-light: #ffffff;
+  --bg-light: #f9fbfe; /* Update background color */
   --text-dark: rgba(0, 0, 0, 0.7);
   --text-gray: #565656;
   --shadow-blue: 1px 1px 10px 2px rgba(33, 150, 243, 0.25);
@@ -263,12 +263,12 @@ h6 {
   pointer-events: none;
 }
 
-/* 모바일에서 배경 그라데이션 숨김 */
-@media (max-width: 768px) {
+/* 모바일에서 배경 그라데이션 숨김 제거 */
+/* @media (max-width: 768px) {
   .bg-glow {
     display: none;
   }
-}
+} */
 
 /* 카드 스타일 */
 .card-shadow {

@@ -81,6 +81,24 @@ export default function HomePage() {
 
   return (
     <>
+      {/* 배경 그라데이션 효과 - 모든 기기에서 공유 */}
+      <motion.div
+        className="bg-glow"
+        style={{
+          x: '-50%',
+          y: '-50%',
+        }}
+        animate={{
+          scale: [1, 1.2, 1],
+          opacity: [0.6, 1, 0.6],
+        }}
+        transition={{
+          duration: 8,
+          repeat: Infinity,
+          ease: 'easeInOut',
+        }}
+      />
+
       {/* 모바일 버전 (768px 미만) */}
       <div className="md:hidden">
         <MobileHomePage />
@@ -91,24 +109,6 @@ export default function HomePage() {
         className={`hidden md:block min-h-screen relative ${isActive ? 'active' : ''}`}
         style={{ backgroundColor: 'var(--bg-light)' }}
       >
-        {/* 배경 그라데이션 효과 */}
-        <motion.div
-          className="bg-glow"
-          style={{
-            x: '-50%',
-            y: '-50%',
-          }}
-          animate={{
-            scale: [1, 1.2, 1],
-            opacity: [0.6, 1, 0.6],
-          }}
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
-        />
-
         {/* Header Navigation */}
         <Header transparent={!isActive} />
 
