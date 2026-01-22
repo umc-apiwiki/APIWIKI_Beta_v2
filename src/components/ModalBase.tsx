@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
@@ -30,16 +30,14 @@ export default function ModalBase({ isOpen, onClose, title, children }: Props) {
 
   return createPortal(
     <div className={styles.overlay}>
-      <div
-        className={styles.backdrop}
-        onClick={onClose}
-        aria-hidden="true"
-      />
+      <div className={styles.backdrop} onClick={onClose} aria-hidden="true" />
       <div role="dialog" aria-modal="true" aria-label={title} className={styles.dialogContainer}>
         <div className={styles.dialog}>
           <div className={styles.header}>
             <h3 className={styles.title}>{title}</h3>
-            <button onClick={onClose} className={styles.closeButton}>닫기</button>
+            <button onClick={onClose} className={styles.closeButton}>
+              닫기
+            </button>
           </div>
           <div className={styles.content}>{children}</div>
         </div>

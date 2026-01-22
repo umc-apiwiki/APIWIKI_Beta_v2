@@ -14,7 +14,7 @@ export default function MobileNewsCard({ news }: MobileNewsCardProps) {
     const now = new Date();
     const diffTime = Math.abs(now.getTime() - date.getTime());
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    
+
     if (diffDays === 0) return '오늘';
     if (diffDays === 1) return '어제';
     if (diffDays < 7) return `${diffDays}일 전`;
@@ -22,7 +22,7 @@ export default function MobileNewsCard({ news }: MobileNewsCardProps) {
   };
 
   return (
-    <Link 
+    <Link
       href={`/news/${news.id}`}
       className="block w-full h-full bg-white rounded-xl transition-all duration-200 active:scale-95 shadow-sm"
     >

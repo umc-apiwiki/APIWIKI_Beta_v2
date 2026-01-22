@@ -19,24 +19,24 @@
   }
 
   /* 메타 정보 */
-  .boardDetailPage [class*="flex"][class*="items-center"] {
+  .boardDetailPage [class*='flex'][class*='items-center'] {
     flex-wrap: wrap;
     gap: 0.5rem;
   }
 
   /* 본문 내용 */
-  .boardDetailPage [class*="prose"] {
+  .boardDetailPage [class*='prose'] {
     font-size: 0.9375rem !important;
   }
 
   /* 버튼 그룹 */
-  .boardDetailPage [class*="flex"][class*="gap"] button {
+  .boardDetailPage [class*='flex'][class*='gap'] button {
     padding: 0.625rem 1rem !important;
     font-size: 0.875rem !important;
   }
 
   /* 댓글 섹션 */
-  .boardDetailPage [class*="comment"] {
+  .boardDetailPage [class*='comment'] {
     padding: 1rem !important;
   }
 

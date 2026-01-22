@@ -25,7 +25,10 @@ export async function POST(req: NextRequest) {
       body: envelope,
     });
 
-    return new Response(upstream.body, { status: upstream.status, statusText: upstream.statusText });
+    return new Response(upstream.body, {
+      status: upstream.status,
+      statusText: upstream.statusText,
+    });
   } catch (error) {
     console.error('GlitchTip tunnel error', error);
     return new Response('GlitchTip tunnel error', { status: 500 });

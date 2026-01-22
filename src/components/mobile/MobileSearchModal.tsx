@@ -77,7 +77,7 @@ export default function MobileSearchModal({ isOpen, onClose }: MobileSearchModal
 
     // 모달이 열릴 때 히스토리에 상태 추가
     window.history.pushState({ modalOpen: true }, '');
-    
+
     window.addEventListener('popstate', handlePopState);
 
     return () => {
@@ -98,7 +98,7 @@ export default function MobileSearchModal({ isOpen, onClose }: MobileSearchModal
     const handleTouchStart = (e: TouchEvent) => {
       if (!modalRef.current) return;
       const scrollTop = modalRef.current.scrollTop;
-      
+
       // 맨 위에 있을 때만 감지 시작
       if (scrollTop === 0) {
         startY = e.touches[0].clientY;
@@ -108,7 +108,7 @@ export default function MobileSearchModal({ isOpen, onClose }: MobileSearchModal
 
     const handleTouchMove = (e: TouchEvent) => {
       if (!isDragging || !modalRef.current) return;
-      
+
       const scrollTop = modalRef.current.scrollTop;
       const currentY = e.touches[0].clientY;
       const deltaY = currentY - startY;
@@ -140,9 +140,11 @@ export default function MobileSearchModal({ isOpen, onClose }: MobileSearchModal
   const saveRecentSearch = (searchTerm: string) => {
     if (!searchTerm.trim()) return;
 
-    const updated = [searchTerm, ...recentSearches.filter(s => s !== searchTerm)]
-      .slice(0, MAX_RECENT_SEARCHES);
-    
+    const updated = [searchTerm, ...recentSearches.filter((s) => s !== searchTerm)].slice(
+      0,
+      MAX_RECENT_SEARCHES
+    );
+
     setRecentSearches(updated);
     localStorage.setItem(RECENT_SEARCHES_KEY, JSON.stringify(updated));
   };
@@ -170,7 +172,7 @@ export default function MobileSearchModal({ isOpen, onClose }: MobileSearchModal
   };
 
   const removeRecentSearch = (searchTerm: string) => {
-    const updated = recentSearches.filter(s => s !== searchTerm);
+    const updated = recentSearches.filter((s) => s !== searchTerm);
     setRecentSearches(updated);
     localStorage.setItem(RECENT_SEARCHES_KEY, JSON.stringify(updated));
   };
@@ -198,18 +200,13 @@ export default function MobileSearchModal({ isOpen, onClose }: MobileSearchModal
                   className={styles.searchInput}
                   autoFocus
                 />
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   onClick={() => handleSearch()}
                   className={styles.searchIcon}
                   aria-label="검색"
                 >
-                  <Image 
-                    src="/mingcute_search-line.svg" 
-                    alt="Search" 
-                    width={20} 
-                    height={20}
-                  />
+                  <Image src="/mingcute_search-line.svg" alt="Search" width={20} height={20} />
                 </button>
               </div>
             </div>
@@ -232,13 +229,22 @@ export default function MobileSearchModal({ isOpen, onClose }: MobileSearchModal
                             onClick={() => handleSearch(item)}
                           >
                             <div className={styles.recentIcon}>
-                              <Image src="/mingcute_search-line.svg" alt="Search" width={20} height={20} />
+                              <Image
+                                src="/mingcute_search-line.svg"
+                                alt="Search"
+                                width={20}
+                                height={20}
+                              />
                             </div>
                             <span className={styles.recentText}>
-                              {item.split(new RegExp(`(${query})`, 'gi')).map((part, i) => 
-                                part.toLowerCase() === query.toLowerCase() 
-                                  ? <span key={i} className={styles.highlight}>{part}</span> 
-                                  : part
+                              {item.split(new RegExp(`(${query})`, 'gi')).map((part, i) =>
+                                part.toLowerCase() === query.toLowerCase() ? (
+                                  <span key={i} className={styles.highlight}>
+                                    {part}
+                                  </span>
+                                ) : (
+                                  part
+                                )
                               )}
                             </span>
                           </div>
@@ -274,11 +280,11 @@ export default function MobileSearchModal({ isOpen, onClose }: MobileSearchModal
                             className={styles.removeButton}
                             aria-label="삭제"
                           >
-                            <Image 
-                              src="/search_save_remove.svg" 
-                              alt="Remove" 
-                              width={16} 
-                              height={16} 
+                            <Image
+                              src="/search_save_remove.svg"
+                              alt="Remove"
+                              width={16}
+                              height={16}
                             />
                           </button>
                         </div>

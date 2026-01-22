@@ -1,76 +1,76 @@
 /* boards 페이지 모바일 대응 스타일 */
 
 .boardPage {
-    min-height: 100vh;
-    position: relative;
-    overflow: hidden;
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
 }
 
 /* 모바일 스타일 (768px 이하) */
 @media (max-width: 768px) {
-    .boardPage {
-        padding-top: 0;
-        padding-bottom: 5rem; /* 하단 네비게이션 공간 */
-    }
+  .boardPage {
+    padding-top: 0;
+    padding-bottom: 5rem; /* 하단 네비게이션 공간 */
+  }
 
-    /* 제목 크기 조정 */
-    .boardPage :global(h1) {
-        font-size: 2rem !important;
-        margin-bottom: 1rem !important;
-    }
+  /* 제목 크기 조정 */
+  .boardPage :global(h1) {
+    font-size: 2rem !important;
+    margin-bottom: 1rem !important;
+  }
 
-    /* 설명 텍스트 */
-    .boardPage :global(p.text-\\[18px\\]) {
-        font-size: 0.9375rem !important;
-    }
+  /* 설명 텍스트 */
+  .boardPage :global(p.text-\\[18px\\]) {
+    font-size: 0.9375rem !important;
+  }
 
-    /* 검색바와 버튼 영역 */
-    .boardPage :global(.flex.justify-between) {
-        flex-direction: column;
-        gap: 1rem;
-    }
+  /* 검색바와 버튼 영역 */
+  .boardPage :global(.flex.justify-between) {
+    flex-direction: column;
+    gap: 1rem;
+  }
 
-    /* 버튼 풀 너비 */
-    .boardPage :global(.flex.justify-between) button {
-        width: 100%;
-    }
+  /* 버튼 풀 너비 */
+  .boardPage :global(.flex.justify-between) button {
+    width: 100%;
+  }
 
-    /* 게시판 리스트 패딩 */
-    .boardPage :global(.max-w-7xl) {
-        padding-left: 1rem !important;
-        padding-right: 1rem !important;
-    }
+  /* 게시판 리스트 패딩 */
+  .boardPage :global(.max-w-7xl) {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
 
-    /* 게시글 카드 간격 */
-    .boardPage :global(.space-y-3) {
-        gap: 0.75rem;
-    }
+  /* 게시글 카드 간격 */
+  .boardPage :global(.space-y-3) {
+    gap: 0.75rem;
+  }
 
-    /* 페이지네이션 조정 */
-    .boardPage :global(.flex.justify-center.gap-2) {
-        flex-wrap: wrap;
-        gap: 0.5rem;
-    }
+  /* 페이지네이션 조정 */
+  .boardPage :global(.flex.justify-center.gap-2) {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
 
-    .boardPage :global(.flex.justify-center.gap-2) button {
-        min-width: 2.5rem;
-        height: 2.5rem;
-        font-size: 0.875rem;
-    }
+  .boardPage :global(.flex.justify-center.gap-2) button {
+    min-width: 2.5rem;
+    height: 2.5rem;
+    font-size: 0.875rem;
+  }
 }
 
 /* 더 작은 모바일 (480px 이하) */
 @media (max-width: 480px) {
-    .boardPage :global(h1) {
-        font-size: 1.75rem !important;
-    }
+  .boardPage :global(h1) {
+    font-size: 1.75rem !important;
+  }
 
-    .boardPage :global(.max-w-7xl) {
-        padding-left: 0.75rem !important;
-        padding-right: 0.75rem !important;
-    }
+  .boardPage :global(.max-w-7xl) {
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+  }
 
-    .boardPage :global(.space-y-3) {
-        gap: 0.625rem;
-    }
+  .boardPage :global(.space-y-3) {
+    gap: 0.625rem;
+  }
 }

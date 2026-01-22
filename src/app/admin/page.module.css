@@ -13,13 +13,13 @@
   }
 
   /* 그리드를 단일 컬럼으로 */
-  .adminPage [class*="grid"] {
+  .adminPage [class*='grid'] {
     grid-template-columns: 1fr !important;
     gap: 1rem !important;
   }
 
   /* 카드 */
-  .adminPage [class*="card"] {
+  .adminPage [class*='card'] {
     padding: 1rem;
   }
 

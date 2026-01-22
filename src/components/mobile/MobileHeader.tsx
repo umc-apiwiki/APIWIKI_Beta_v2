@@ -11,13 +11,7 @@ export default function MobileHeader() {
         {/* 로고 */}
         <Link href="/" className="flex items-center gap-2">
           <div className="relative w-8 h-8">
-            <Image 
-              src="/logo.svg" 
-              alt="API Wiki Logo" 
-              fill
-              className="object-contain"
-              priority 
-            />
+            <Image src="/logo.svg" alt="API Wiki Logo" fill className="object-contain" priority />
           </div>
           <span className="text-lg font-bold text-blue-600">API Wiki</span>
         </Link>

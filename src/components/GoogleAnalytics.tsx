@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import Script from 'next/script';
 import { usePathname, useSearchParams } from 'next/navigation';
@@ -24,10 +24,7 @@ function GoogleAnalyticsInner() {
         strategy="afterInteractive"
         src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
       />
-      <Script
-        id="ga-init"
-        strategy="afterInteractive"
-      >
+      <Script id="ga-init" strategy="afterInteractive">
         {`
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}

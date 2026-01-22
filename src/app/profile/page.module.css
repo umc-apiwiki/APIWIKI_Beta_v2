@@ -14,13 +14,13 @@
   }
 
   /* 그리드를 단일 컬럼으로 */
-  .profilePage [class*="grid"] {
+  .profilePage [class*='grid'] {
     grid-template-columns: 1fr !important;
     gap: 1rem !important;
   }
 
   /* 프로필 카드 */
-  .profilePage [class*="rounded-3xl"] {
+  .profilePage [class*='rounded-3xl'] {
     padding: 1.5rem !important;
     border-radius: 1.5rem !important;
   }
@@ -47,7 +47,7 @@
   }
 
   /* flex 레이아웃 조정 */
-  .profilePage [class*="flex-row"] {
+  .profilePage [class*='flex-row'] {
     flex-direction: column !important;
   }
 }
@@ -58,7 +58,7 @@
     padding-right: 0.75rem !important;
   }
 
-  .profilePage [class*="rounded-3xl"] {
+  .profilePage [class*='rounded-3xl'] {
     padding: 1rem !important;
   }
 }

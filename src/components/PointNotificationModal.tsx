@@ -11,7 +11,12 @@ interface PointNotificationModalProps {
   message?: string;
 }
 
-export default function PointNotificationModal({ isOpen, onClose, points, message }: PointNotificationModalProps) {
+export default function PointNotificationModal({
+  isOpen,
+  onClose,
+  points,
+  message,
+}: PointNotificationModalProps) {
   useEffect(() => {
     if (isOpen) {
       const timer = setTimeout(() => {
@@ -38,17 +43,10 @@ export default function PointNotificationModal({ isOpen, onClose, points, messag
             transition={{ type: 'spring', damping: 16, stiffness: 240 }}
           >
             <div className={styles.content}>
-              <div className={styles.iconCircle}>
-                +
-              </div>
+              <div className={styles.iconCircle}>+</div>
               <div className={styles.points}>+{points}</div>
-              <div className={styles.message}>
-                {message || '활동 포인트가 적립되었습니다.'}
-              </div>
-              <button
-                onClick={onClose}
-                className={styles.button}
-              >
+              <div className={styles.message}>{message || '활동 포인트가 적립되었습니다.'}</div>
+              <button onClick={onClose} className={styles.button}>
                 확인
               </button>
             </div>

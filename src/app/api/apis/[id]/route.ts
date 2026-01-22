@@ -25,11 +25,7 @@ const getPointsForAction = async (actionType: string) => {
   return data.points;
 };
 
-
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     const { id } = params;
 
@@ -41,17 +37,11 @@ export async function GET(
 
     if (error) {
       console.error('API 조회 오류:', error);
-      return NextResponse.json(
-        { error: 'API 조회 실패', details: error.message },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'API 조회 실패', details: error.message }, { status: 404 });
     }
 
     if (!data) {
-      return NextResponse.json(
-        { error: 'API를 찾을 수 없습니다' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'API를 찾을 수 없습니다' }, { status: 404 });
     }
 
     return NextResponse.json(data);
@@ -64,10 +54,7 @@ export async function GET(
   }
 }
 
-export async function PATCH(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
@@ -91,12 +78,19 @@ export async function PATCH(
 
     if (fetchError) {
       console.error('CSV 조회 실패:', fetchError);
-      return NextResponse.json({ error: 'API 조회 실패', details: fetchError.message }, { status: 404 });
+      return NextResponse.json(
+        { error: 'API 조회 실패', details: fetchError.message },
+        { status: 404 }
+      );
     }
 
     const extractCsv = (pricingValue: unknown): string => {
       if (typeof pricingValue === 'string') return pricingValue;
-      if (pricingValue && typeof pricingValue === 'object' && typeof (pricingValue as any).csv === 'string') {
+      if (
+        pricingValue &&
+        typeof pricingValue === 'object' &&
+        typeof (pricingValue as any).csv === 'string'
+      ) {
         return (pricingValue as any).csv;
       }
       return '';
@@ -106,10 +100,7 @@ export async function PATCH(
     const isNewUpload = existingCsv.trim().length === 0;
 
     // pricing 컬럼이 text이든 jsonb이든 문자열을 저장하도록 처리
-    const { error } = await supabaseAdmin
-      .from('Api')
-      .update({ pricing: csv })
-      .eq('id', id);
+    const { error } = await supabaseAdmin.from('Api').update({ pricing: csv }).eq('id', id);
 
     if (error) {
       console.error('CSV 저장 실패:', error);

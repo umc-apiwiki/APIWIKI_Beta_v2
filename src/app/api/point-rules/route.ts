@@ -13,7 +13,10 @@ export async function GET(request: NextRequest) {
     const url = new URL(request.url);
     const actionTypesParam = url.searchParams.get('actionTypes');
     const actionTypes = actionTypesParam
-      ? actionTypesParam.split(',').map((s) => s.trim()).filter(Boolean)
+      ? actionTypesParam
+          .split(',')
+          .map((s) => s.trim())
+          .filter(Boolean)
       : Object.keys(DEFAULTS);
 
     const { data, error } = await supabase

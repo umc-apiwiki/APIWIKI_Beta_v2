@@ -17,7 +17,7 @@ const tags: Tag[] = [
   { id: 'search', name: '검색', icon: '🔍', color: 'bg-purple-50 text-purple-600' },
   { id: 'translate', name: '번역', icon: '🌍', color: 'bg-pink-50 text-pink-600' },
   { id: 'ai', name: 'AI', icon: '🤖', color: 'bg-indigo-50 text-indigo-600' },
-  { id: 'finance', name: '금융', icon: '💰', color: 'bg-yellow-50 text-yellow-600' }
+  { id: 'finance', name: '금융', icon: '💰', color: 'bg-yellow-50 text-yellow-600' },
 ];
 
 export default function MobileTagNavigation() {

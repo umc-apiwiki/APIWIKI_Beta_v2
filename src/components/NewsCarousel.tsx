@@ -10,14 +10,21 @@ interface NewsCarouselProps {
   step?: number; // how many news cards to move per click
 }
 
-export default function NewsCarousel({ items, step = 3, visible = 3 }: NewsCarouselProps & { visible?: number }) {
+export default function NewsCarousel({
+  items,
+  step = 3,
+  visible = 3,
+}: NewsCarouselProps & { visible?: number }) {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const scroll = (direction: 'left' | 'right') => {
     const container = scrollRef.current;
     if (!container) return;
     const scrollAmount = container.clientWidth;
-    container.scrollBy({ left: direction === 'left' ? -scrollAmount : scrollAmount, behavior: 'smooth' });
+    container.scrollBy({
+      left: direction === 'left' ? -scrollAmount : scrollAmount,
+      behavior: 'smooth',
+    });
   };
 
   return (
@@ -32,7 +39,11 @@ export default function NewsCarousel({ items, step = 3, visible = 3 }: NewsCarou
 
       <div ref={scrollRef} className="flex gap-4 overflow-x-auto scrollbar-hide pb-4">
         {items.map((n) => (
-          <div key={n.id} className="flex-shrink-0" style={{ flex: `0 0 calc((100% - ${(visible - 1) * 16}px) / ${visible})` }}>
+          <div
+            key={n.id}
+            className="flex-shrink-0"
+            style={{ flex: `0 0 calc((100% - ${(visible - 1) * 16}px) / ${visible})` }}
+          >
             <NewsCard news={n} />
           </div>
         ))}

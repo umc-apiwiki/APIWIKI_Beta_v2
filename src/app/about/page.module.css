@@ -1,110 +1,110 @@
 /* about page 모바일 대응 스타일 */
 
 .aboutPage {
-    min-height: 100vh;
+  min-height: 100vh;
 }
 
 /* 모바일 스타일 (768px 이하) */
 @media (max-width: 768px) {
-    /* 모바일 헤더 공간 확보 */
-    .aboutPage {
-        padding-top: 3.5rem !important;
-    }
+  /* 모바일 헤더 공간 확보 */
+  .aboutPage {
+    padding-top: 3.5rem !important;
+  }
 
-    /* Hero 섹션 모바일 조정 */
-    .aboutPage :global(section.relative.min-h-screen) {
-        min-height: 70vh;
-        padding-top: 3rem;
-        padding-bottom: 3rem;
-    }
+  /* Hero 섹션 모바일 조정 */
+  .aboutPage :global(section.relative.min-h-screen) {
+    min-height: 70vh;
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+  }
 
-    /* 제목 크기 조정 */
-    .aboutPage :global(h1) {
-        font-size: 3rem !important;
-        margin-bottom: 1.5rem !important;
-    }
+  /* 제목 크기 조정 */
+  .aboutPage :global(h1) {
+    font-size: 3rem !important;
+    margin-bottom: 1.5rem !important;
+  }
 
-    /* 부제목 크기 조정 */
-    .aboutPage :global(section p.text-\\[32px\\]) {
-        font-size: 1.5rem !important;
-        margin-bottom: 1.5rem !important;
-        padding: 0 1rem;
-    }
+  /* 부제목 크기 조정 */
+  .aboutPage :global(section p.text-\\[32px\\]) {
+    font-size: 1.5rem !important;
+    margin-bottom: 1.5rem !important;
+    padding: 0 1rem;
+  }
 
-    /* 설명 텍스트 */
-    .aboutPage :global(section p.text-\\[18px\\]) {
-        font-size: 1rem !important;
-        padding: 0 1.5rem;
-    }
+  /* 설명 텍스트 */
+  .aboutPage :global(section p.text-\\[18px\\]) {
+    font-size: 1rem !important;
+    padding: 0 1.5rem;
+  }
 
-    /* 미션 섹션 패딩 */
-    .aboutPage :global(section.py-32) {
-        padding-top: 4rem !important;
-        padding-bottom: 4rem !important;
-    }
+  /* 미션 섹션 패딩 */
+  .aboutPage :global(section.py-32) {
+    padding-top: 4rem !important;
+    padding-bottom: 4rem !important;
+  }
 
-    /* 미션 제목 */
-    .aboutPage :global(h2.text-\\[45px\\]) {
-        font-size: 2rem !important;
-    }
+  /* 미션 제목 */
+  .aboutPage :global(h2.text-\\[45px\\]) {
+    font-size: 2rem !important;
+  }
 
-    /* 카드 그리드 모바일 대응 */
-    .aboutPage :global(.grid.grid-cols-12 > .col-4) {
-        grid-column: span 12 !important;
-        margin-bottom: 2rem;
-    }
+  /* 카드 그리드 모바일 대응 */
+  .aboutPage :global(.grid.grid-cols-12 > .col-4) {
+    grid-column: span 12 !important;
+    margin-bottom: 2rem;
+  }
 
-    /* 카드 내부 제목 */
-    .aboutPage :global(.text-\\[36px\\]) {
-        font-size: 1.75rem !important;
-    }
+  /* 카드 내부 제목 */
+  .aboutPage :global(.text-\\[36px\\]) {
+    font-size: 1.75rem !important;
+  }
 
-    /* 카드 내부 텍스트 */
-    .aboutPage :global(.text-\\[16px\\]) {
-        font-size: 0.9375rem !important;
-    }
+  /* 카드 내부 텍스트 */
+  .aboutPage :global(.text-\\[16px\\]) {
+    font-size: 0.9375rem !important;
+  }
 
-    /* 통계 숫자 */
-    .aboutPage :global(.text-\\[60px\\]) {
-        font-size: 2.5rem !important;
-    }
+  /* 통계 숫자 */
+  .aboutPage :global(.text-\\[60px\\]) {
+    font-size: 2.5rem !important;
+  }
 
-    /* 팀 섹션 */
-    .aboutPage :global(.grid.grid-cols-12 > .col-3) {
-        grid-column: span 6 !important;
-    }
+  /* 팀 섹션 */
+  .aboutPage :global(.grid.grid-cols-12 > .col-3) {
+    grid-column: span 6 !important;
+  }
 
-    /* 하단 여백 추가 (네비게이션 공간) */
-    .aboutPage {
-        padding-bottom: 5rem;
-    }
+  /* 하단 여백 추가 (네비게이션 공간) */
+  .aboutPage {
+    padding-bottom: 5rem;
+  }
 }
 
 /* 더 작은 모바일 (480px 이하) */
 @media (max-width: 480px) {
-    .aboutPage :global(h1) {
-        font-size: 2.5rem !important;
-    }
+  .aboutPage :global(h1) {
+    font-size: 2.5rem !important;
+  }
 
-    .aboutPage :global(section p.text-\\[32px\\]) {
-        font-size: 1.25rem !important;
-    }
+  .aboutPage :global(section p.text-\\[32px\\]) {
+    font-size: 1.25rem !important;
+  }
 
-    .aboutPage :global(h2.text-\\[45px\\]) {
-        font-size: 1.75rem !important;
-    }
+  .aboutPage :global(h2.text-\\[45px\\]) {
+    font-size: 1.75rem !important;
+  }
 
-    .aboutPage :global(.text-\\[36px\\]) {
-        font-size: 1.5rem !important;
-    }
+  .aboutPage :global(.text-\\[36px\\]) {
+    font-size: 1.5rem !important;
+  }
 
-    /* 팀원 카드 풀 너비 */
-    .aboutPage :global(.grid.grid-cols-12 > .col-3) {
-        grid-column: span 12 !important;
-    }
+  /* 팀원 카드 풀 너비 */
+  .aboutPage :global(.grid.grid-cols-12 > .col-3) {
+    grid-column: span 12 !important;
+  }
 
-    .aboutPage :global(section.py-32) {
-        padding-top: 3rem !important;
-        padding-bottom: 3rem !important;
-    }
+  .aboutPage :global(section.py-32) {
+    padding-top: 3rem !important;
+    padding-bottom: 3rem !important;
+  }
 }

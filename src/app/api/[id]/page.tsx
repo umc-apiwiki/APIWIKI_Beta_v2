@@ -116,39 +116,42 @@ export default function APIDetailPage({ params }: { params: { id: string } }) {
     return { headers, rows: normalizedRows };
   }, [csvString]);
 
-  const fetchData = useCallback(async (options?: { silent?: boolean }) => {
-    const silent = options?.silent === true;
-    try {
-      if (!silent) {
-        setLoading(true);
-      }
+  const fetchData = useCallback(
+    async (options?: { silent?: boolean }) => {
+      const silent = options?.silent === true;
+      try {
+        if (!silent) {
+          setLoading(true);
+        }
 
-      const response = await fetch(`/api/apis/${params.id}`, { cache: 'no-store' });
-      if (!response.ok) {
+        const response = await fetch(`/api/apis/${params.id}`, { cache: 'no-store' });
+        if (!response.ok) {
+          setApi(null);
+          return;
+        }
+        const data = await response.json();
+        setApi(data);
+        setCsvInput(typeof data.pricing === 'string' ? data.pricing : data.pricing?.csv || '');
+
+        // Fetch related APIs
+        if (data.categories && data.categories.length > 0) {
+          const relatedResponse = await fetch(`/api/apis?category=${data.categories[0]}&limit=6`);
+          if (relatedResponse.ok) {
+            const relatedData = await relatedResponse.json();
+            setRelatedAPIs(relatedData.filter((a: API) => a.id !== params.id).slice(0, 5));
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching API:', error);
         setApi(null);
-        return;
-      }
-      const data = await response.json();
-      setApi(data);
-      setCsvInput(typeof data.pricing === 'string' ? data.pricing : data.pricing?.csv || '');
-
-      // Fetch related APIs
-      if (data.categories && data.categories.length > 0) {
-        const relatedResponse = await fetch(`/api/apis?category=${data.categories[0]}&limit=6`);
-        if (relatedResponse.ok) {
-          const relatedData = await relatedResponse.json();
-          setRelatedAPIs(relatedData.filter((a: API) => a.id !== params.id).slice(0, 5));
+      } finally {
+        if (!silent) {
+          setLoading(false);
         }
       }
-    } catch (error) {
-      console.error('Error fetching API:', error);
-      setApi(null);
-    } finally {
-      if (!silent) {
-        setLoading(false);
-      }
-    }
-  }, [params.id]);
+    },
+    [params.id]
+  );
 
   useEffect(() => {
     fetchData();
@@ -157,7 +160,9 @@ export default function APIDetailPage({ params }: { params: { id: string } }) {
   useEffect(() => {
     const fetchPointRules = async () => {
       try {
-        const response = await fetch('/api/point-rules?actionTypes=csv_upload,csv_update', { cache: 'no-store' });
+        const response = await fetch('/api/point-rules?actionTypes=csv_upload,csv_update', {
+          cache: 'no-store',
+        });
         if (!response.ok) return;
         const data = await response.json();
         setPointRules({
@@ -204,9 +209,15 @@ export default function APIDetailPage({ params }: { params: { id: string } }) {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--bg-light)' }}>
+      <div
+        className="min-h-screen flex items-center justify-center"
+        style={{ backgroundColor: 'var(--bg-light)' }}
+      >
         <div className="text-center">
-          <div className="inline-block w-12 h-12 border-4 border-t-transparent rounded-full animate-spin" style={{ borderColor: '#2196F3', borderTopColor: 'transparent' }}></div>
+          <div
+            className="inline-block w-12 h-12 border-4 border-t-transparent rounded-full animate-spin"
+            style={{ borderColor: '#2196F3', borderTopColor: 'transparent' }}
+          ></div>
           <p className="mt-4 text-sm text-gray-600">API 정보를 불러오는 중...</p>
         </div>
       </div>
@@ -222,41 +233,55 @@ export default function APIDetailPage({ params }: { params: { id: string } }) {
   ];
 
   return (
-    <div className={`min-h-screen ${styles.apiDetailPage}`} style={{ backgroundColor: 'var(--bg-light)' }}>
+    <div
+      className={`min-h-screen ${styles.apiDetailPage}`}
+      style={{ backgroundColor: 'var(--bg-light)' }}
+    >
       <Header />
-      
+
       <div className="max-w-6xl mx-auto px-6 py-8 pt-28 relative">
-          <PointNotificationModal
-            isOpen={showPointModal}
-            onClose={() => setShowPointModal(false)}
-            points={awardedPoints ?? 0}
-            message={awardedPoints ? `포인트 ${awardedPoints}점이 적립되었습니다.` : '포인트가 적립되었습니다.'}
-          />
-       
+        <PointNotificationModal
+          isOpen={showPointModal}
+          onClose={() => setShowPointModal(false)}
+          points={awardedPoints ?? 0}
+          message={
+            awardedPoints
+              ? `포인트 ${awardedPoints}점이 적립되었습니다.`
+              : '포인트가 적립되었습니다.'
+          }
+        />
+
         {/* Header Section */}
         <div className="flex justify-between items-start mb-12 relative">
           <div className="flex-1 max-w-3xl">
             <h1 className="text-4xl font-semibold text-[#0f172a] mb-4 leading-tight">{api.name}</h1>
-            
+
             <div className="space-y-2 mb-6">
               <div className="text-[#0c4a6e] text-lg font-medium">Star {api.rating || 4.2}</div>
-              <div className="text-[#0c4a6e] text-lg font-medium">Used by {api.users || '970M'} people</div>
-              <div className="text-[#a1a1aa] text-base font-normal mt-2">{api.price === 'free' ? 'Free' : api.price === 'paid' ? 'Paid' : 'Mixed'}</div>
+              <div className="text-[#0c4a6e] text-lg font-medium">
+                Used by {api.users || '970M'} people
+              </div>
+              <div className="text-[#a1a1aa] text-base font-normal mt-2">
+                {api.price === 'free' ? 'Free' : api.price === 'paid' ? 'Paid' : 'Mixed'}
+              </div>
             </div>
           </div>
 
           {/* Large Logo Box (Right) */}
           <div className="w-52 h-52 bg-white rounded-[40px] shadow-[1px_3px_8px_0px_rgba(33,150,243,0.2)] border-[0.25px] border-sky-500 flex items-center justify-center p-10 relative z-10 shrink-0">
-             {api.logo ? (
-                api.logo.length > 4 || api.logo.startsWith('http') || api.logo.startsWith('/') || api.logo.startsWith('data:') ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={api.logo} alt={api.name} className="w-full h-full object-contain p-6" />
-                ) : (
-                  <span className="text-6xl">{api.logo}</span>
-                )
+            {api.logo ? (
+              api.logo.length > 4 ||
+              api.logo.startsWith('http') ||
+              api.logo.startsWith('/') ||
+              api.logo.startsWith('data:') ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={api.logo} alt={api.name} className="w-full h-full object-contain p-6" />
               ) : (
-                <span className="text-5xl">📦</span>
-              )}
+                <span className="text-6xl">{api.logo}</span>
+              )
+            ) : (
+              <span className="text-5xl">📦</span>
+            )}
           </div>
         </div>
 
@@ -268,9 +293,7 @@ export default function APIDetailPage({ params }: { params: { id: string } }) {
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 className={`text-lg font-medium transition-colors relative pb-2 ${
-                  activeTab === tab.id 
-                    ? 'text-[#0c4a6e]' 
-                    : 'text-[#a1a1aa] hover:text-[#0c4a6e]'
+                  activeTab === tab.id ? 'text-[#0c4a6e]' : 'text-[#a1a1aa] hover:text-[#0c4a6e]'
                 }`}
               >
                 {tab.label}
@@ -290,7 +313,8 @@ export default function APIDetailPage({ params }: { params: { id: string } }) {
               <div>
                 <h3 className="text-lg font-medium text-[#0f172a] mb-4">설명</h3>
                 <p className="text-base leading-7 font-medium text-[#0c4a6e] max-w-4xl whitespace-pre-line">
-                  {api.description || `노션 API는 노션의 데이터베이스와 페이지를 외부 프로그램이나 서비스와 연결해 주는 개발 도구입니다. 이를 활용하면 코드를 통해 데이터를 자동으로 읽거나 쓸 수 있어, 설문지 응답을 노션에 바로 기록하거나 일정 관리 앱과 연동하는 등의 업무 자동화가 가능해집니다. 현대적인 REST API 방식과 JSON 데이터 형식을 따르고 있어 개발자가 다루기 편리하며, 특정 페이지에만 접근 권한을 부여하는 보안 설정으로 데이터를 안전하게 관리할 수 있습니다. 결과적으로 노션 API는 노션을 단순한 메모장을 넘어 하나의 거대한 데이터베이스 서버처럼 활용할 수 있게 해줍니다.`}
+                  {api.description ||
+                    `노션 API는 노션의 데이터베이스와 페이지를 외부 프로그램이나 서비스와 연결해 주는 개발 도구입니다. 이를 활용하면 코드를 통해 데이터를 자동으로 읽거나 쓸 수 있어, 설문지 응답을 노션에 바로 기록하거나 일정 관리 앱과 연동하는 등의 업무 자동화가 가능해집니다. 현대적인 REST API 방식과 JSON 데이터 형식을 따르고 있어 개발자가 다루기 편리하며, 특정 페이지에만 접근 권한을 부여하는 보안 설정으로 데이터를 안전하게 관리할 수 있습니다. 결과적으로 노션 API는 노션을 단순한 메모장을 넘어 하나의 거대한 데이터베이스 서버처럼 활용할 수 있게 해줍니다.`}
                 </p>
               </div>
 
@@ -298,9 +322,12 @@ export default function APIDetailPage({ params }: { params: { id: string } }) {
               <div>
                 <h3 className="text-lg font-medium text-[#0f172a] mb-4">카테고리</h3>
                 <div className="flex gap-3 flex-wrap items-center">
-                  {(api.categories && api.categories.length > 0 ? api.categories : ['데이터베이스', '페이지 및 블록', '사용자', '코멘트', '검색']).map((cat, idx) => (
-                    <div 
-                      key={idx} 
+                  {(api.categories && api.categories.length > 0
+                    ? api.categories
+                    : ['데이터베이스', '페이지 및 블록', '사용자', '코멘트', '검색']
+                  ).map((cat, idx) => (
+                    <div
+                      key={idx}
                       className="px-4 py-1.5 bg-white/50 rounded-[16px] shadow-[0px_1px_3px_0px_rgba(33,150,243,0.25)] border-[0.5px] border-sky-500 flex items-center justify-center"
                     >
                       <span className="text-sm font-medium text-[#0c4a6e]"># {cat}</span>
@@ -311,16 +338,16 @@ export default function APIDetailPage({ params }: { params: { id: string } }) {
 
               {/* Wiki Editor Section */}
               <div>
-                 <div className="mt-8">
-                   <h3 className="text-xl font-medium text-[#0c4a6e] mb-4">API 위키</h3>
-                   <div className="w-full">
-                   <WikiEditor
-                     apiId={api.id}
-                     initialContent={api.wiki_content || ''}
-                     onSave={() => fetchData({ silent: true })}
-                   />
-                   </div>
-                 </div>
+                <div className="mt-8">
+                  <h3 className="text-xl font-medium text-[#0c4a6e] mb-4">API 위키</h3>
+                  <div className="w-full">
+                    <WikiEditor
+                      apiId={api.id}
+                      initialContent={api.wiki_content || ''}
+                      onSave={() => fetchData({ silent: true })}
+                    />
+                  </div>
+                </div>
               </div>
             </>
           )}
@@ -347,9 +374,13 @@ export default function APIDetailPage({ params }: { params: { id: string } }) {
                     <div className="flex items-center justify-between">
                       <div>
                         <h4 className="text-sm font-semibold text-[#0f172a]">CSV 업로드 / 수정</h4>
-                        <p className="text-xs text-gray-500 mt-1">첫 줄에 헤더가 없어도 자동으로 열을 만듭니다.</p>
+                        <p className="text-xs text-gray-500 mt-1">
+                          첫 줄에 헤더가 없어도 자동으로 열을 만듭니다.
+                        </p>
                       </div>
-                      <span className="text-xs text-[#0c4a6e]">신규 업로드 {pointRules.upload}점 · 수정 {pointRules.update}점</span>
+                      <span className="text-xs text-[#0c4a6e]">
+                        신규 업로드 {pointRules.upload}점 · 수정 {pointRules.update}점
+                      </span>
                     </div>
                     <textarea
                       className="w-full min-h-[180px] rounded-lg border border-gray-200 p-3 text-sm font-mono text-gray-700 focus:outline-none focus:ring-2 focus:ring-sky-500"
@@ -366,14 +397,16 @@ export default function APIDetailPage({ params }: { params: { id: string } }) {
                         {savingCsv ? '저장 중...' : 'CSV 저장'}
                       </button>
                       <button
-                        onClick={() => { setEditingCsv(false); setCsvInput(csvString); setSaveMessage(''); }}
+                        onClick={() => {
+                          setEditingCsv(false);
+                          setCsvInput(csvString);
+                          setSaveMessage('');
+                        }}
                         className="px-4 py-2 rounded-md border border-gray-200 text-sm font-medium text-gray-700 hover:border-sky-300"
                       >
                         취소
                       </button>
-                      {saveMessage && (
-                        <span className="text-sm text-gray-600">{saveMessage}</span>
-                      )}
+                      {saveMessage && <span className="text-sm text-gray-600">{saveMessage}</span>}
                     </div>
                   </div>
                 )}
@@ -384,7 +417,9 @@ export default function APIDetailPage({ params }: { params: { id: string } }) {
                       <thead>
                         <tr className="border-b border-gray-200">
                           {pricingTable.headers.map((header, idx) => (
-                            <th key={idx} className="py-2 pr-4 font-semibold text-[#0c4a6e]">{header}</th>
+                            <th key={idx} className="py-2 pr-4 font-semibold text-[#0c4a6e]">
+                              {header}
+                            </th>
                           ))}
                         </tr>
                       </thead>
@@ -392,7 +427,9 @@ export default function APIDetailPage({ params }: { params: { id: string } }) {
                         {pricingTable.rows.map((row, rIdx) => (
                           <tr key={rIdx} className="border-b border-gray-100 last:border-0">
                             {row.map((cell, cIdx) => (
-                              <td key={cIdx} className="py-2 pr-4 align-top">{cell}</td>
+                              <td key={cIdx} className="py-2 pr-4 align-top">
+                                {cell}
+                              </td>
                             ))}
                           </tr>
                         ))}
@@ -400,11 +437,16 @@ export default function APIDetailPage({ params }: { params: { id: string } }) {
                     </table>
                   </div>
                 ) : (
-                  <div className="text-sm text-gray-500">등록된 요금표가 없습니다. 업데이트 버튼을 눌러 CSV를 추가하세요.</div>
+                  <div className="text-sm text-gray-500">
+                    등록된 요금표가 없습니다. 업데이트 버튼을 눌러 CSV를 추가하세요.
+                  </div>
                 )}
               </div>
 
-              {(api?.pricing && ((api.pricing as any).free || (api.pricing as any).basic || (api.pricing as any).pro)) ? (
+              {api?.pricing &&
+              ((api.pricing as any).free ||
+                (api.pricing as any).basic ||
+                (api.pricing as any).pro) ? (
                 <div className="rounded-2xl bg-white border border-gray-200 p-6 shadow-sm">
                   <h3 className="text-lg font-semibold text-[#0f172a] mb-4">요금제 요약</h3>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -417,8 +459,13 @@ export default function APIDetailPage({ params }: { params: { id: string } }) {
                       const value = (api?.pricing as any)?.[tier];
                       if (!value) return null;
                       return (
-                        <div key={tier} className="rounded-xl border border-gray-200 bg-gray-50 p-4">
-                          <div className="text-sm font-semibold text-[#0c4a6e] mb-2">{labelMap[tier]}</div>
+                        <div
+                          key={tier}
+                          className="rounded-xl border border-gray-200 bg-gray-50 p-4"
+                        >
+                          <div className="text-sm font-semibold text-[#0c4a6e] mb-2">
+                            {labelMap[tier]}
+                          </div>
                           <p className="text-sm text-gray-700 whitespace-pre-line">{value}</p>
                         </div>
                       );
@@ -447,7 +494,7 @@ export default function APIDetailPage({ params }: { params: { id: string } }) {
           <div className="mt-24 pb-16">
             <h3 className="text-xl font-medium text-[#0c4a6e] mb-6">비슷한 API</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {relatedAPIs.map(item => (
+              {relatedAPIs.map((item) => (
                 <APICard key={item.id} api={item} hideCompare={true} />
               ))}
             </div>

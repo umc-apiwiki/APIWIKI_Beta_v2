@@ -64,9 +64,9 @@ function ExploreContent() {
         const response = await fetch(`/api/apis?status=approved&_t=${Date.now()}`, {
           cache: 'no-store',
           headers: {
-            'Pragma': 'no-cache',
-            'Cache-Control': 'no-cache'
-          }
+            Pragma: 'no-cache',
+            'Cache-Control': 'no-cache',
+          },
         });
         if (response.ok) {
           const data = await response.json();
@@ -96,7 +96,7 @@ function ExploreContent() {
     const queryParam = searchParams.get('q') || '';
     setSelectedCategory(categoryParam);
     setSearchQuery(queryParam);
-    
+
     // 검색어가 있으면 기본 정렬을 '정확도순'으로 변경
     if (queryParam) {
       setSortBy('정확도순');
@@ -112,43 +112,44 @@ function ExploreContent() {
 
     // Category filter (URL 파라미터에서)
     if (selectedCategory) {
-      result = result.filter(api =>
-        api.categories && api.categories.some(cat => cat === selectedCategory)
+      result = result.filter(
+        (api) => api.categories && api.categories.some((cat) => cat === selectedCategory)
       );
     }
 
     // Search filter
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
-      result = result.filter(api =>
-        api.name.toLowerCase().includes(query) ||
-        api.description.toLowerCase().includes(query) ||
-        (api.company && api.company.toLowerCase().includes(query)) ||
-        api.categories.some(cat => cat.toLowerCase().includes(query)) ||
-        (api.tags && api.tags.some(tag => tag.toLowerCase().includes(query))) ||
-        (api.features && api.features.some(f => f.toLowerCase().includes(query)))
+      result = result.filter(
+        (api) =>
+          api.name.toLowerCase().includes(query) ||
+          api.description.toLowerCase().includes(query) ||
+          (api.company && api.company.toLowerCase().includes(query)) ||
+          api.categories.some((cat) => cat.toLowerCase().includes(query)) ||
+          (api.tags && api.tags.some((tag) => tag.toLowerCase().includes(query))) ||
+          (api.features && api.features.some((f) => f.toLowerCase().includes(query)))
       );
     }
 
     // Price filter
     if (priceFilter.length > 0) {
-      result = result.filter(api => api.price && priceFilter.includes(api.price));
+      result = result.filter((api) => api.price && priceFilter.includes(api.price));
     }
 
     // Rating filter
     if (ratingFilter > 0) {
-      result = result.filter(api => api.rating !== undefined && api.rating >= ratingFilter);
+      result = result.filter((api) => api.rating !== undefined && api.rating >= ratingFilter);
     }
 
     // Country filter (if mock data has country list)
     if (countryFilter.length > 0) {
-      result = result.filter(api => {
+      result = result.filter((api) => {
         // api may not have countries field; fall back to checking company-country heuristic if available
         // Prefer `api.countries` if present
         // @ts-ignore - Framer Motion AnimatePresence typing issue with children
         const countries: string[] = api.countries || [];
         if (countries.length > 0) {
-          return countryFilter.some(c => countries.includes(c));
+          return countryFilter.some((c) => countries.includes(c));
         }
         return true; // if no country data, don't filter out
       });
@@ -156,11 +157,11 @@ function ExploreContent() {
 
     // Auth method filter
     if (authMethodFilter.length > 0) {
-      result = result.filter(api => {
+      result = result.filter((api) => {
         // @ts-ignore - Framer Motion AnimatePresence typing issue with children
         const methods: string[] = api.authMethods || [];
         if (methods.length > 0) {
-          return authMethodFilter.some(m => methods.includes(m));
+          return authMethodFilter.some((m) => methods.includes(m));
         }
         return true;
       });
@@ -168,11 +169,11 @@ function ExploreContent() {
 
     // Documentation language filter
     if (docLanguageFilter.length > 0) {
-      result = result.filter(api => {
+      result = result.filter((api) => {
         // @ts-ignore - Framer Motion AnimatePresence typing issue with children
         const langs: string[] = api.docsLanguages || [];
         if (langs.length > 0) {
-          return docLanguageFilter.some(l => langs.includes(l));
+          return docLanguageFilter.some((l) => langs.includes(l));
         }
         return true;
       });
@@ -181,41 +182,41 @@ function ExploreContent() {
     // Company filter
     if (companyFilter.length > 0) {
       // Ignore entries without company to satisfy type expectations and avoid false matches
-      result = result.filter(api => api.company && companyFilter.includes(api.company));
+      result = result.filter((api) => api.company && companyFilter.includes(api.company));
     }
 
     // Sort
     switch (sortBy) {
       case '정확도순':
         if (searchQuery) {
-            const query = searchQuery.toLowerCase();
-            result.sort((a, b) => {
-                const getScore = (api: API) => {
-                    let score = 0;
-                    const name = api.name.toLowerCase();
-                    const desc = api.description.toLowerCase();
-                    const company = api.company ? api.company.toLowerCase() : '';
-                    
-                    if (name === query) score += 100;
-                    else if (name.startsWith(query)) score += 80;
-                    else if (name.includes(query)) score += 60;
-                    
-                    if (company.includes(query)) score += 50;
-                    if (desc.includes(query)) score += 40;
-                    
-                    if (api.categories.some(c => c.toLowerCase().includes(query))) score += 20;
-                    if (api.tags && api.tags.some(t => t.toLowerCase().includes(query))) score += 20;
-                    
-                    // Add rating as a tie-breaker
-                    score += (api.rating || 0);
+          const query = searchQuery.toLowerCase();
+          result.sort((a, b) => {
+            const getScore = (api: API) => {
+              let score = 0;
+              const name = api.name.toLowerCase();
+              const desc = api.description.toLowerCase();
+              const company = api.company ? api.company.toLowerCase() : '';
 
-                    return score;
-                };
-                return getScore(b) - getScore(a);
-            });
+              if (name === query) score += 100;
+              else if (name.startsWith(query)) score += 80;
+              else if (name.includes(query)) score += 60;
+
+              if (company.includes(query)) score += 50;
+              if (desc.includes(query)) score += 40;
+
+              if (api.categories.some((c) => c.toLowerCase().includes(query))) score += 20;
+              if (api.tags && api.tags.some((t) => t.toLowerCase().includes(query))) score += 20;
+
+              // Add rating as a tie-breaker
+              score += api.rating || 0;
+
+              return score;
+            };
+            return getScore(b) - getScore(a);
+          });
         } else {
-            // Fallback if no query
-             result.sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
+          // Fallback if no query
+          result.sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
         }
         break;
       case '인기순':
@@ -225,7 +226,9 @@ function ExploreContent() {
       case '최신순':
         // Assuming createdat exists, if not fallback to nothing (or id)
         // @ts-ignore - Framer Motion AnimatePresence typing issue with children
-        result.sort((a, b) => new Date(b.createdat || 0).getTime() - new Date(a.createdat || 0).getTime());
+        result.sort(
+          (a, b) => new Date(b.createdat || 0).getTime() - new Date(a.createdat || 0).getTime()
+        );
         break;
       case '후기 많은 순':
         // Fallback to 0 when users count is missing to keep comparator safe
@@ -245,7 +248,18 @@ function ExploreContent() {
     setDisplayedAPIs(result.slice(0, ITEMS_PER_PAGE));
     setPage(1);
     setHasMore(result.length > ITEMS_PER_PAGE);
-  }, [apis, searchQuery, selectedCategory, sortBy, priceFilter, ratingFilter, countryFilter, authMethodFilter, docLanguageFilter, companyFilter]);
+  }, [
+    apis,
+    searchQuery,
+    selectedCategory,
+    sortBy,
+    priceFilter,
+    ratingFilter,
+    countryFilter,
+    authMethodFilter,
+    docLanguageFilter,
+    companyFilter,
+  ]);
 
   // 무한 스크롤 로드
   const loadMore = useCallback(() => {
@@ -257,7 +271,7 @@ function ExploreContent() {
     const newItems = filteredAPIs.slice(startIndex, endIndex);
 
     if (newItems.length > 0) {
-      setDisplayedAPIs(prev => [...prev, ...newItems]);
+      setDisplayedAPIs((prev) => [...prev, ...newItems]);
       setPage(nextPage);
       setHasMore(endIndex < filteredAPIs.length);
     } else {
@@ -268,7 +282,7 @@ function ExploreContent() {
   // Intersection Observer
   useEffect(() => {
     const observer = new IntersectionObserver(
-      entries => {
+      (entries) => {
         if (entries[0].isIntersecting && hasMore) {
           loadMore();
         }
@@ -311,8 +325,6 @@ function ExploreContent() {
     return () => window.removeEventListener('scroll', onScroll);
   }, [loadMore, hasMore]);
 
-
-
   // 필터 적용 핸들러
   const handleApplyFilters = (filters: {
     priceFilter: string[];
@@ -331,10 +343,12 @@ function ExploreContent() {
   };
 
   const toggleCompare = (apiId: string) => {
-    setCompareList(prev =>
+    setCompareList((prev) =>
       prev.includes(apiId)
-        ? prev.filter(id => id !== apiId)
-        : prev.length < 4 ? [...prev, apiId] : prev
+        ? prev.filter((id) => id !== apiId)
+        : prev.length < 4
+          ? [...prev, apiId]
+          : prev
     );
   };
 
@@ -363,13 +377,13 @@ function ExploreContent() {
   };
 
   return (
-    <motion.div 
+    <motion.div
       className={styles.explorePage}
       style={{ backgroundColor: 'var(--bg-light)' }}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      transition={{ duration: 0.5, ease: "easeInOut" }}
+      transition={{ duration: 0.5, ease: 'easeInOut' }}
     >
       {/* Header */}
       <Header />
@@ -378,8 +392,11 @@ function ExploreContent() {
       <div className="bg-glow" />
 
       {/* 검색바 - 페이지 최상단 */}
-      <div className={isMobile ? "w-full px-4" : "w-full flex justify-center"} style={{ marginTop: isMobile ? '1rem' : '120px', marginBottom: isMobile ? '1rem' : '2rem' }}>
-        <div className={isMobile ? "w-full" : "w-[800px] max-w-[90vw]"}>
+      <div
+        className={isMobile ? 'w-full px-4' : 'w-full flex justify-center'}
+        style={{ marginTop: isMobile ? '1rem' : '120px', marginBottom: isMobile ? '1rem' : '2rem' }}
+      >
+        <div className={isMobile ? 'w-full' : 'w-[800px] max-w-[90vw]'}>
           {loading ? (
             <div className="h-[3.25rem] w-full rounded-2xl bg-gray-100 animate-pulse border border-gray-200" />
           ) : isMobile ? (
@@ -400,7 +417,11 @@ function ExploreContent() {
               </div>
             </motion.div>
           ) : (
-            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25, ease: 'easeOut' }}>
+            <motion.div
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.25, ease: 'easeOut' }}
+            >
               <SearchBar
                 initialQuery={searchQuery}
                 onSearch={(query) => {
@@ -417,10 +438,7 @@ function ExploreContent() {
       </div>
 
       {/* 모바일 검색 모달 */}
-      <MobileSearchModal
-        isOpen={isSearchModalOpen}
-        onClose={() => setIsSearchModalOpen(false)}
-      />
+      <MobileSearchModal isOpen={isSearchModalOpen} onClose={() => setIsSearchModalOpen(false)} />
 
       <div className="grid-container py-6">
         {/* 메인 콘텐츠 영역 (Full width now) */}
@@ -428,7 +446,8 @@ function ExploreContent() {
           {/* 정렬 옵션 및 결과 수 */}
           <div className="flex items-center justify-between mb-6">
             <p className="text-[14px]" style={{ color: 'var(--text-gray)' }}>
-              {!isMobile && searchQuery && `"${searchQuery}" 에 대한`}검색결과 약 {filteredAPIs.length.toLocaleString()}개
+              {!isMobile && searchQuery && `"${searchQuery}" 에 대한`}검색결과 약{' '}
+              {filteredAPIs.length.toLocaleString()}개
             </p>
             <div className="flex items-center gap-4 relative">
               {/* Filter Button */}
@@ -437,7 +456,20 @@ function ExploreContent() {
                 className="flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors"
               >
                 <span>Filters</span>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 3h18v18H3z"/><path d="M9 3v18"/></svg>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M3 3h18v18H3z" />
+                  <path d="M9 3v18" />
+                </svg>
               </button>
 
               {/* Sort By Dropdown (Custom) */}
@@ -449,24 +481,35 @@ function ExploreContent() {
                   aria-expanded={isSortOpen}
                 >
                   Sort By
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
                     <polyline points="6 9 12 15 18 9"></polyline>
                   </svg>
                 </button>
                 {/* Dropdown Menu */}
                 {isSortOpen && (
                   <div className="absolute right-0 top-full mt-2 w-40 bg-white rounded-lg shadow-xl border border-gray-100 z-50">
-                     <div className="py-2">
-                       {['정확도순', '인기순', '최신순', '후기 많은 순', '비용 낮은 순'].map(option => (
-                         <button
-                           key={option}
-                           onClick={() => handleSortSelect(option)}
-                           className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${sortBy === option ? 'text-blue-600 font-medium' : 'text-gray-700'}`}
-                         >
-                           {option}
-                         </button>
-                       ))}
-                     </div>
+                    <div className="py-2">
+                      {['정확도순', '인기순', '최신순', '후기 많은 순', '비용 낮은 순'].map(
+                        (option) => (
+                          <button
+                            key={option}
+                            onClick={() => handleSortSelect(option)}
+                            className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${sortBy === option ? 'text-blue-600 font-medium' : 'text-gray-700'}`}
+                          >
+                            {option}
+                          </button>
+                        )
+                      )}
+                    </div>
                   </div>
                 )}
               </div>
@@ -475,10 +518,13 @@ function ExploreContent() {
 
           {/* 비교하기 컨트롤 */}
           {compareList.length > 0 && (
-            <div className="rounded-[15px] p-4 mb-6 flex items-center justify-between card-shadow" style={{ 
-              backgroundColor: 'rgba(33, 150, 243, 0.1)',
-              border: '0.5px solid var(--primary-blue)'
-            }}>
+            <div
+              className="rounded-[15px] p-4 mb-6 flex items-center justify-between card-shadow"
+              style={{
+                backgroundColor: 'rgba(33, 150, 243, 0.1)',
+                border: '0.5px solid var(--primary-blue)',
+              }}
+            >
               <span className="text-sm" style={{ color: 'var(--primary-blue)' }}>
                 {compareList.length}개 선택됨 (최대 4개)
               </span>
@@ -506,7 +552,10 @@ function ExploreContent() {
           {loading && displayedAPIs.length === 0 ? (
             <div className="flex justify-center items-center py-20">
               <div className="text-center">
-                <div className="inline-block w-10 h-10 border-4 border-t-transparent rounded-full animate-spin" style={{ borderColor: '#2196F3', borderTopColor: 'transparent' }}></div>
+                <div
+                  className="inline-block w-10 h-10 border-4 border-t-transparent rounded-full animate-spin"
+                  style={{ borderColor: '#2196F3', borderTopColor: 'transparent' }}
+                ></div>
                 <p className="mt-4 text-sm text-gray-600">검색 결과를 불러오는 중...</p>
               </div>
             </div>
@@ -564,7 +613,11 @@ function ExploreContent() {
       <CompareModal
         isOpen={isCompareOpen}
         onClose={() => setIsCompareOpen(false)}
-        apis={compareList.map(id => displayedAPIs.find(api => api.id === id)).filter(Boolean) as API[]}
+        apis={
+          compareList
+            .map((id) => displayedAPIs.find((api) => api.id === id))
+            .filter(Boolean) as API[]
+        }
       />
     </motion.div>
   );
@@ -572,14 +625,16 @@ function ExploreContent() {
 
 export default function ExplorePage() {
   return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-          <p className="text-gray-600">로딩 중...</p>
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-white flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+            <p className="text-gray-600">로딩 중...</p>
+          </div>
         </div>
-      </div>
-    }>
+      }
+    >
       <ExploreContent />
     </Suspense>
   );

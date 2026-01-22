@@ -20,7 +20,7 @@ export async function GET() {
     }
 
     // 모든 카테고리를 중복 제거하여 반환
-    const allCategories = data?.flatMap(api => api.categories || []) || [];
+    const allCategories = data?.flatMap((api) => api.categories || []) || [];
     const uniqueCategories = Array.from(new Set(allCategories)).sort();
 
     return NextResponse.json(uniqueCategories);

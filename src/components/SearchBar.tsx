@@ -19,12 +19,12 @@ interface SearchBarProps {
 const RECENT_SEARCHES_KEY = 'recent_searches';
 const MAX_RECENT_SEARCHES = 5;
 
-export default function SearchBar({ 
+export default function SearchBar({
   initialQuery = '',
-  placeholder = "궁금한 API를 검색해보세요",
+  placeholder = '궁금한 API를 검색해보세요',
   onSearch,
   showDropdown = true,
-  onFocusChange
+  onFocusChange,
 }: SearchBarProps) {
   const [query, setQuery] = useState(initialQuery);
   const [isFocused, setIsFocused] = useState(false);
@@ -85,9 +85,11 @@ export default function SearchBar({
   const saveRecentSearch = (searchTerm: string) => {
     if (!searchTerm.trim()) return;
 
-    const updated = [searchTerm, ...recentSearches.filter(s => s !== searchTerm)]
-      .slice(0, MAX_RECENT_SEARCHES);
-    
+    const updated = [searchTerm, ...recentSearches.filter((s) => s !== searchTerm)].slice(
+      0,
+      MAX_RECENT_SEARCHES
+    );
+
     setRecentSearches(updated);
     localStorage.setItem(RECENT_SEARCHES_KEY, JSON.stringify(updated));
   };
@@ -148,7 +150,7 @@ export default function SearchBar({
   const handleItemClick = (searchTerm: string) => {
     setQuery(searchTerm);
     saveRecentSearch(searchTerm);
-    
+
     if (onSearch) {
       onSearch(searchTerm);
     } else {
@@ -159,18 +161,23 @@ export default function SearchBar({
 
   return (
     <div ref={wrapperRef} className="relative w-full h-[3.125rem] z-50">
-      <motion.div 
+      <motion.div
         className={`absolute top-0 left-0 w-full bg-white overflow-hidden`}
-        transition={{ type: "spring", stiffness: 400, damping: 30 }}
+        transition={{ type: 'spring', stiffness: 400, damping: 30 }}
         animate={{
-          height: isFocused && showDropdown && (recentSearches.length > 0 || query.trim().length > 0) ? 'auto' : '3.125rem',
-          boxShadow: isFocused ? '0px 4px 20px rgba(1, 149, 255, 0.2)' : '0px 2px 5px rgba(1, 149, 255, 0.2)',
-          borderRadius: '1.25rem'
+          height:
+            isFocused && showDropdown && (recentSearches.length > 0 || query.trim().length > 0)
+              ? 'auto'
+              : '3.125rem',
+          boxShadow: isFocused
+            ? '0px 4px 20px rgba(1, 149, 255, 0.2)'
+            : '0px 2px 5px rgba(1, 149, 255, 0.2)',
+          borderRadius: '1.25rem',
         }}
         style={{
           // 1px 이하로 border를 줄이려면 box-shadow를 사용
-          // border: isFocused ? '1px solid #2196F3' : '1px solid var(--primary-blue)', 
-          zIndex: 51
+          // border: isFocused ? '1px solid #2196F3' : '1px solid var(--primary-blue)',
+          zIndex: 51,
         }}
       >
         {/* Input Area - Part of the same box */}
@@ -184,20 +191,15 @@ export default function SearchBar({
             placeholder={placeholder}
             className="w-full h-full px-6 pr-[3.125rem] border-0 bg-transparent text-base outline-none text-[var(--text-dark)]"
           />
-          <div 
+          <div
             className="absolute right-5 top-1/2 -translate-y-1/2 w-6 h-6 z-[150] cursor-pointer hover:opacity-80 transition-opacity"
             onClick={handleSearch}
           >
-            <Image 
-              src="/mingcute_search-line.svg" 
-              alt="Search" 
-              width={24} 
-              height={24}
-            />
+            <Image src="/mingcute_search-line.svg" alt="Search" width={24} height={24} />
           </div>
         </div>
 
-      {/* Results Area - Part of the same box */}
+        {/* Results Area - Part of the same box */}
         <AnimatePresence>
           {isFocused && showDropdown && (
             <motion.div
@@ -217,14 +219,23 @@ export default function SearchBar({
                         className="flex items-center gap-3 h-10 cursor-pointer hover:bg-sky-500/10 rounded-[5px] px-2 transition-colors"
                         onClick={() => handleItemClick(item)}
                       >
-                         <div className="opacity-50 flex items-center justify-center">
-                           <Image src="/mingcute_search-line.svg" alt="Search" width={18} height={18} />
-                         </div>
+                        <div className="opacity-50 flex items-center justify-center">
+                          <Image
+                            src="/mingcute_search-line.svg"
+                            alt="Search"
+                            width={18}
+                            height={18}
+                          />
+                        </div>
                         <span className="text-sm text-slate-700">
-                          {item.split(new RegExp(`(${query})`, 'gi')).map((part, i) => 
-                            part.toLowerCase() === query.toLowerCase() 
-                              ? <span key={i} className="font-bold text-blue-600">{part}</span> 
-                              : part
+                          {item.split(new RegExp(`(${query})`, 'gi')).map((part, i) =>
+                            part.toLowerCase() === query.toLowerCase() ? (
+                              <span key={i} className="font-bold text-blue-600">
+                                {part}
+                              </span>
+                            ) : (
+                              part
+                            )
                           )}
                         </span>
                       </div>
@@ -239,8 +250,8 @@ export default function SearchBar({
                   {recentSearches.length > 0 && (
                     <>
                       <div className="flex items-center justify-between mb-2 px-1">
-                        <div 
-                          className="text-sm font-semibold flex items-center gap-2" 
+                        <div
+                          className="text-sm font-semibold flex items-center gap-2"
                           style={{ color: '#1769AA' }}
                         >
                           Recent
@@ -255,7 +266,7 @@ export default function SearchBar({
                           모두 지우기
                         </button>
                       </div>
-                      
+
                       <div className="flex flex-col gap-1">
                         {recentSearches.map((item, idx) => (
                           <div
@@ -265,30 +276,26 @@ export default function SearchBar({
                           >
                             <div className="flex items-center gap-3">
                               <div className="opacity-50 flex items-center justify-center">
-                                 <Image src="/mdi_recent.svg" alt="Recent" width={20} height={20} />
+                                <Image src="/mdi_recent.svg" alt="Recent" width={20} height={20} />
                               </div>
-                              <span 
-                                className="text-sm font-medium text-slate-900"
-                              >
-                                {item}
-                              </span>
+                              <span className="text-sm font-medium text-slate-900">{item}</span>
                             </div>
-                            
+
                             <button
                               onClick={(e) => {
                                 e.stopPropagation();
-                                const updated = recentSearches.filter(s => s !== item);
+                                const updated = recentSearches.filter((s) => s !== item);
                                 setRecentSearches(updated);
                                 localStorage.setItem(RECENT_SEARCHES_KEY, JSON.stringify(updated));
                               }}
                               className="hidden group-hover:block p-1 hover:bg-black/5 rounded-full transition-colors"
                               title="검색어 삭제"
                             >
-                              <Image 
-                                src="/search_save_remove.svg" 
-                                alt="Remove" 
-                                width={18} 
-                                height={18} 
+                              <Image
+                                src="/search_save_remove.svg"
+                                alt="Remove"
+                                width={18}
+                                height={18}
                               />
                             </button>
                           </div>

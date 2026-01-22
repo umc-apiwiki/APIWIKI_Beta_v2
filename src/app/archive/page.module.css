@@ -13,19 +13,19 @@
   }
 
   /* 그리드 레이아웃 */
-  .archivePage [class*="grid"] {
+  .archivePage [class*='grid'] {
     grid-template-columns: 1fr !important;
     gap: 1rem !important;
   }
 
   /* 필터 및 정렬 */
-  .archivePage [class*="filter"] {
+  .archivePage [class*='filter'] {
     flex-direction: column;
     gap: 0.75rem;
   }
 
   /* 카드 */
-  .archivePage [class*="card"] {
+  .archivePage [class*='card'] {
     padding: 1rem;
   }
 

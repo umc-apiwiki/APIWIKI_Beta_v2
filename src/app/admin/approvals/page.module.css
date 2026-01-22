@@ -13,19 +13,19 @@
   }
 
   /* API 카드 그리드 */
-  .approvalsPage [class*="grid"] {
+  .approvalsPage [class*='grid'] {
     grid-template-columns: 1fr !important;
     gap: 1rem !important;
   }
 
   /* 탭 메뉴 */
-  .approvalsPage [class*="flex"][class*="border-b"] {
+  .approvalsPage [class*='flex'][class*='border-b'] {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
   }
 
-  .approvalsPage [class*="flex"][class*="border-b"]::-webkit-scrollbar {
+  .approvalsPage [class*='flex'][class*='border-b']::-webkit-scrollbar {
     display: none;
   }
 

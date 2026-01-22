@@ -33,33 +33,38 @@
 3. 각 섹션별로 실행하여 결과 확인:
 
 **3-1. 테이블 존재 확인**
+
 ```sql
-SELECT table_name 
-FROM information_schema.tables 
-WHERE table_schema = 'public' 
+SELECT table_name
+FROM information_schema.tables
+WHERE table_schema = 'public'
 AND table_name IN ('User', 'Api', 'boards', 'comments', 'feedback', 'user_activities', 'wiki_edits')
 ORDER BY table_name;
 ```
+
 ✅ 예상 결과: 7개 테이블
 
 **3-2. ENUM 타입 확인**
+
 ```sql
-SELECT typname, typtype 
-FROM pg_type 
-WHERE typtype = 'e' 
+SELECT typname, typtype
+FROM pg_type
+WHERE typtype = 'e'
 AND typname IN ('user_grade', 'api_status', 'board_type', 'feedback_type', 'feedback_status', 'activity_type')
 ORDER BY typname;
 ```
+
 ✅ 예상 결과: 6개 ENUM 타입
 
 **3-3. 외래 키 확인**
+
 ```sql
 SELECT
-    tc.table_name AS from_table, 
-    kcu.column_name AS from_column, 
+    tc.table_name AS from_table,
+    kcu.column_name AS from_column,
     ccu.table_name AS to_table,
     ccu.column_name AS to_column
-FROM information_schema.table_constraints AS tc 
+FROM information_schema.table_constraints AS tc
 JOIN information_schema.key_column_usage AS kcu
   ON tc.constraint_name = kcu.constraint_name
 JOIN information_schema.constraint_column_usage AS ccu
@@ -68,9 +73,11 @@ WHERE tc.constraint_type = 'FOREIGN KEY'
 AND tc.table_name IN ('Api', 'boards', 'comments', 'feedback', 'user_activities', 'wiki_edits')
 ORDER BY tc.table_name;
 ```
+
 ✅ 예상 결과: 최소 8개의 외래 키 관계
 
 **3-4. 인덱스 확인**
+
 ```sql
 SELECT tablename, indexname
 FROM pg_indexes
@@ -78,6 +85,7 @@ WHERE schemaname = 'public'
 AND tablename IN ('boards', 'comments', 'feedback', 'user_activities', 'wiki_edits', 'Api')
 ORDER BY tablename, indexname;
 ```
+
 ✅ 예상 결과: 각 테이블에 여러 인덱스 생성됨
 
 #### Step 4: Table Editor에서 시각적 확인
@@ -109,20 +117,24 @@ ORDER BY tablename, indexname;
 ### 문제 해결
 
 #### 오류: "type already exists"
+
 - ENUM 타입이 이미 존재하는 경우
 - 해결: SQL 파일에서 해당 CREATE TYPE 문을 주석 처리하거나 제거
 
 #### 오류: "column already exists"
+
 - 컬럼이 이미 존재하는 경우
 - 해결: `IF NOT EXISTS` 구문이 있으므로 정상. 무시하고 진행
 
 #### 오류: "relation already exists"
+
 - 테이블이 이미 존재하는 경우
 - 해결: `IF NOT EXISTS` 구문이 있으므로 정상. 무시하고 진행
 
 ### 다음 단계
 
 스키마 검증이 완료되면:
+
 1. Task 2.2 완료 표시
 2. Git 커밋 수행
 3. Task 2.3 (TypeScript 타입 정의) 진행

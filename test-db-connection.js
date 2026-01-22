@@ -91,7 +91,6 @@ async function testConnection() {
     console.log('');
 
     console.log('✅ 데이터베이스 연결 테스트 완료!');
-    
   } catch (error) {
     console.error('❌ 테스트 중 오류 발생:', error.message);
     process.exit(1);

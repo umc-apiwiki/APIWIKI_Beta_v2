@@ -4,7 +4,9 @@ const supabaseUrl = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE
 const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SERVICE_KEY;
 
 if (!supabaseUrl || !serviceRoleKey) {
-  throw new Error('Supabase admin env vars are missing: set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY');
+  throw new Error(
+    'Supabase admin env vars are missing: set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY'
+  );
 }
 
 export const supabaseAdmin = createClient(supabaseUrl, serviceRoleKey, {

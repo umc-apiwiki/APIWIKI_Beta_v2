@@ -1,66 +1,4 @@
 
-D:\workspace\APIWIKI_Beta_v2\check-db-columns.js
-  0:0  error  Parsing error: ESLint was configured to run on `<tsconfigRootDir>/check-db-columns.js` using `parserOptions.project`: <tsconfigRootDir>/tsconfig.json
-However, that TSConfig does not include this file. Either:
-- Change ESLint's list of included files to not include this file
-- Change that TSConfig to include this file
-- Create a new TSConfig that includes this file and include it in your parserOptions.project
-See the typescript-eslint docs for more info: https://typescript-eslint.io/linting/troubleshooting#i-get-errors-telling-me-eslint-was-configured-to-run--however-that-tsconfig-does-not--none-of-those-tsconfigs-include-this-file
-
-D:\workspace\APIWIKI_Beta_v2\next-env.d.ts
-  1:31   error  Delete `␍`  prettier/prettier
-  2:50   error  Delete `␍`  prettier/prettier
-  3:1    error  Delete `␍`  prettier/prettier
-  4:40   error  Delete `␍`  prettier/prettier
-  5:106  error  Delete `␍`  prettier/prettier
-
-D:\workspace\APIWIKI_Beta_v2\next.config.js
-  0:0  error  Parsing error: ESLint was configured to run on `<tsconfigRootDir>/next.config.js` using `parserOptions.project`: <tsconfigRootDir>/tsconfig.json
-However, that TSConfig does not include this file. Either:
-- Change ESLint's list of included files to not include this file
-- Change that TSConfig to include this file
-- Create a new TSConfig that includes this file and include it in your parserOptions.project
-See the typescript-eslint docs for more info: https://typescript-eslint.io/linting/troubleshooting#i-get-errors-telling-me-eslint-was-configured-to-run--however-that-tsconfig-does-not--none-of-those-tsconfigs-include-this-file
-
-D:\workspace\APIWIKI_Beta_v2\postcss.config.js
-  0:0  error  Parsing error: ESLint was configured to run on `<tsconfigRootDir>/postcss.config.js` using `parserOptions.project`: <tsconfigRootDir>/tsconfig.json
-However, that TSConfig does not include this file. Either:
-- Change ESLint's list of included files to not include this file
-- Change that TSConfig to include this file
-- Create a new TSConfig that includes this file and include it in your parserOptions.project
-See the typescript-eslint docs for more info: https://typescript-eslint.io/linting/troubleshooting#i-get-errors-telling-me-eslint-was-configured-to-run--however-that-tsconfig-does-not--none-of-those-tsconfigs-include-this-file
-
-D:\workspace\APIWIKI_Beta_v2\scripts\migrate-mock-data.ts
-   4:1  warning  Unexpected console statement  no-console
-   5:1  warning  Unexpected console statement  no-console
-   6:1  warning  Unexpected console statement  no-console
-   7:1  warning  Unexpected console statement  no-console
-   8:1  warning  Unexpected console statement  no-console
-   9:1  warning  Unexpected console statement  no-console
-  10:1  warning  Unexpected console statement  no-console
-  11:1  warning  Unexpected console statement  no-console
-  12:1  warning  Unexpected console statement  no-console
-  13:1  warning  Unexpected console statement  no-console
-  14:1  warning  Unexpected console statement  no-console
-  15:1  warning  Unexpected console statement  no-console
-  16:1  warning  Unexpected console statement  no-console
-  17:1  warning  Unexpected console statement  no-console
-  18:1  warning  Unexpected console statement  no-console
-  19:1  warning  Unexpected console statement  no-console
-  20:1  warning  Unexpected console statement  no-console
-  21:1  warning  Unexpected console statement  no-console
-  22:1  warning  Unexpected console statement  no-console
-  23:1  warning  Unexpected console statement  no-console
-  24:1  warning  Unexpected console statement  no-console
-
-D:\workspace\APIWIKI_Beta_v2\scripts\seed-database.js
-  0:0  error  Parsing error: ESLint was configured to run on `<tsconfigRootDir>/scripts\seed-database.js` using `parserOptions.project`: <tsconfigRootDir>/tsconfig.json
-However, that TSConfig does not include this file. Either:
-- Change ESLint's list of included files to not include this file
-- Change that TSConfig to include this file
-- Create a new TSConfig that includes this file and include it in your parserOptions.project
-See the typescript-eslint docs for more info: https://typescript-eslint.io/linting/troubleshooting#i-get-errors-telling-me-eslint-was-configured-to-run--however-that-tsconfig-does-not--none-of-those-tsconfigs-include-this-file
-
 D:\workspace\APIWIKI_Beta_v2\src\app\about\page.tsx
   4:10  warning  'useState' is defined but never used. Allowed unused vars must match /^_/u   @typescript-eslint/no-unused-vars
   4:20  warning  'useEffect' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
@@ -308,22 +246,6 @@ D:\workspace\APIWIKI_Beta_v2\src\lib\supabaseHelpers.ts
   223:5   warning  Unexpected console statement                                                     no-console
   312:5   warning  Unexpected console statement                                                     no-console
 
-D:\workspace\APIWIKI_Beta_v2\test-db-connection.js
-  0:0  error  Parsing error: ESLint was configured to run on `<tsconfigRootDir>/test-db-connection.js` using `parserOptions.project`: <tsconfigRootDir>/tsconfig.json
-However, that TSConfig does not include this file. Either:
-- Change ESLint's list of included files to not include this file
-- Change that TSConfig to include this file
-- Create a new TSConfig that includes this file and include it in your parserOptions.project
-See the typescript-eslint docs for more info: https://typescript-eslint.io/linting/troubleshooting#i-get-errors-telling-me-eslint-was-configured-to-run--however-that-tsconfig-does-not--none-of-those-tsconfigs-include-this-file
-
-D:\workspace\APIWIKI_Beta_v2\test-db-write.js
-  0:0  error  Parsing error: ESLint was configured to run on `<tsconfigRootDir>/test-db-write.js` using `parserOptions.project`: <tsconfigRootDir>/tsconfig.json
-However, that TSConfig does not include this file. Either:
-- Change ESLint's list of included files to not include this file
-- Change that TSConfig to include this file
-- Create a new TSConfig that includes this file and include it in your parserOptions.project
-See the typescript-eslint docs for more info: https://typescript-eslint.io/linting/troubleshooting#i-get-errors-telling-me-eslint-was-configured-to-run--however-that-tsconfig-does-not--none-of-those-tsconfigs-include-this-file
-
-✖ 187 problems (11 errors, 176 warnings)
-  5 errors and 2 warnings potentially fixable with the `--fix` option.
+✖ 155 problems (0 errors, 155 warnings)
+  0 errors and 2 warnings potentially fixable with the `--fix` option.
 
