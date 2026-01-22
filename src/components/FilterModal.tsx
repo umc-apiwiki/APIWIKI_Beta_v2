@@ -109,7 +109,7 @@ export default function FilterModal({
     <ModalBase isOpen={isOpen} onClose={onClose} title="Filters">
       <div className="flex flex-col h-[60dvh] md:h-auto">
         {/* Tabs */}
-        <div className="flex border-b overflow-x-auto no-scrollbar mb-4">
+        <div className="flex border-b overflow-x-auto scrollbar-hide mb-4">
           {TABS.map((tab) => (
             <button
               key={tab.id}
