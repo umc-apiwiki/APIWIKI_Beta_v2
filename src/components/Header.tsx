@@ -10,6 +10,7 @@ import { isAdmin, canSubmitAPI } from '@/lib/permissions';
 import LoginModal from './LoginModal';
 import SignupModal from './SignupModal';
 import APIRegistrationModal from './APIRegistrationModal';
+import styles from './Header.module.css';
 
 interface HeaderProps {
     transparent?: boolean;
@@ -53,7 +54,7 @@ export default function Header({ transparent = false, className = '' }: HeaderPr
     return (
         <>
             <nav 
-                className={`fixed top-0 left-0 right-0 z-[1000] transition-all duration-300 ${className}`}
+                className={`${styles.header} fixed top-0 left-0 right-0 z-[1000] transition-all duration-300 ${className}`}
                 style={{
                     display: 'grid',
                     gridTemplateColumns: 'repeat(12, 1fr)',

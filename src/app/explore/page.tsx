@@ -5,13 +5,16 @@ import { useState, useEffect, useRef, useCallback, Suspense } from 'react';
 import { motion } from 'motion/react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import APICard from '@/components/APICard';
 import Header from '@/components/Header';
 import SearchBar from '@/components/SearchBar';
 import CompareModal from '@/components/CompareModal';
 import FilterModal from '@/components/FilterModal';
+import MobileSearchModal from '@/components/mobile/MobileSearchModal';
 import { searchAPIs, getAllCategories, type SearchFilters } from '@/lib/apiService';
 import type { API } from '@/types';
+import styles from './page.module.css';
 
 function ExploreContent() {
   const searchParams = useSearchParams();
@@ -34,6 +37,16 @@ function ExploreContent() {
   const [favorites, setFavorites] = useState<string[]>([]);
 
   const [isFiltersVisible, setIsFiltersVisible] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
+
+  // 모바일 감지
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth <= 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // 필터 상태들
   const [priceFilter, setPriceFilter] = useState<string[]>([]);
@@ -380,7 +393,7 @@ function ExploreContent() {
 
   return (
     <motion.div 
-      className="min-h-screen" 
+      className={styles.explorePage}
       style={{ backgroundColor: 'var(--bg-light)' }}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
@@ -394,10 +407,24 @@ function ExploreContent() {
       <div className="bg-glow" />
 
       {/* 검색바 - 페이지 최상단 */}
-      <div className="w-full flex justify-center" style={{ marginTop: '120px', marginBottom: '2rem' }}>
+      <div className="w-full flex justify-center" style={{ marginTop: isMobile ? '4.5rem' : '120px', marginBottom: isMobile ? '1rem' : '2rem' }}>
         <div className="w-[800px] max-w-[90vw]">
           {loading ? (
             <div className="h-[3.25rem] w-full rounded-2xl bg-gray-100 animate-pulse border border-gray-200" />
+          ) : isMobile ? (
+            /* 모바일: 검색 버튼 클릭 시 모달 열기 */
+            <motion.div
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.25, ease: 'easeOut' }}
+              onClick={() => setIsSearchModalOpen(true)}
+              className="flex items-center gap-3 h-[3.25rem] w-full rounded-2xl bg-white border border-gray-200 px-4 cursor-pointer shadow-sm"
+            >
+              <Image src="/mingcute_search-line.svg" alt="Search" width={20} height={20} />
+              <span className="text-gray-400 text-sm">
+                {searchQuery || '궁금한 API를 검색해보세요'}
+              </span>
+            </motion.div>
           ) : (
             <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25, ease: 'easeOut' }}>
               <SearchBar
@@ -415,32 +442,26 @@ function ExploreContent() {
         </div>
       </div>
 
+      {/* 모바일 검색 모달 */}
+      <MobileSearchModal
+        isOpen={isSearchModalOpen}
+        onClose={() => setIsSearchModalOpen(false)}
+      />
+
       <div className="grid-container py-6">
         {/* 메인 콘텐츠 영역 (Full width now) */}
         <main className="col-12">
           {/* 정렬 옵션 및 결과 수 */}
           <div className="flex items-center justify-between mb-6">
             <p className="text-[14px]" style={{ color: 'var(--text-gray)' }}>
-              {searchQuery && `"${searchQuery}" 에 대한`}검색결과 약 {filteredAPIs.length.toLocaleString()}개
+              {!isMobile && searchQuery && `"${searchQuery}" 에 대한`}검색결과 약 {filteredAPIs.length.toLocaleString()}개
             </p>
             <div className="flex items-center gap-4 relative">
               {/* Filter Button */}
-              <button 
+              <button
                 onClick={() => setIsFiltersVisible(true)}
                 className="flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors"
               >
-                <span>Hide Filters</span>
-                {/* Keeping the text 'Hide Filters' as per screenshot reference if intended, 
-                    but logic suggests 'Filters' is better for a modal trigger. 
-                    However, user sent screenshot showing 'Hide Filters X'. 
-                    Wait, if it's a MODAL, 'Hide Filters' on the page makes no sense. 
-                    I will change it to 'Filters' or keep it if user implies the screenshot is the desired look.
-                    The screenshot 'uploaded_image_1...' shows 'Hide Filters 3 X' next to 'Sort By'.
-                    Actually that looks like 'active filters' or separate functionality.
-                    But user said "Change filter to modal". 
-                    So on the page, there should be a button to OPEN the modal.
-                    I'll name it "Filters" for clarity, or "All Filters". 
-                */}
                 <span>Filters</span>
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 3h18v18H3z"/><path d="M9 3v18"/></svg>
               </button>
@@ -508,23 +529,14 @@ function ExploreContent() {
           )}
 
           {/* API 카드 그리드 */}
-          <div className="grid grid-cols-12 gap-4">
+          <div className={styles.apiGrid}>
             {displayedAPIs.map((api, idx) => (
-              <div key={`${api.id}-${idx}`} className="col-3">
-                <APICard 
-                  api={api} 
+              <div key={`${api.id}-${idx}`} className={styles.apiCardWrapper}>
+                <APICard
+                  api={api}
                   onToggleCompare={() => toggleCompare(api.id)}
                   isCompareSelected={compareList.includes(api.id)}
                 />
-                 <button
-                  onClick={(e) => {
-                    e.preventDefault();
-                    toggleFavorite(api.id);
-                  }}
-                  className="absolute top-4 right-4 text-2xl hover:scale-110 transition-transform z-10"
-                >
-                  {favorites.includes(api.id) ? '⭐' : '☆'}
-                </button>
               </div>
             ))}
           </div>

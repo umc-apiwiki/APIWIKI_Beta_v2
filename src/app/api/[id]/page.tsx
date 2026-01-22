@@ -9,6 +9,7 @@ import APICard from '@/components/APICard';
 import WikiEditor from '@/components/WikiEditor';
 import PointNotificationModal from '@/components/PointNotificationModal';
 import { API } from '@/types';
+import styles from './page.module.css';
 
 export default function APIDetailPage({ params }: { params: { id: string } }) {
   const router = useRouter();
@@ -215,7 +216,7 @@ export default function APIDetailPage({ params }: { params: { id: string } }) {
   ];
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: 'var(--bg-light)' }}>
+    <div className={`min-h-screen ${styles.apiDetailPage}`} style={{ backgroundColor: 'var(--bg-light)' }}>
       <Header />
       
       <div className="max-w-6xl mx-auto px-6 py-8 pt-28 relative">

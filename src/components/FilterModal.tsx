@@ -29,13 +29,8 @@ type Props = {
 
 const TABS = [
   { id: 'price', label: '가격' },
-  { id: 'rating', label: '랭킹' }, // '평점' in code, '랭킹' in screenshot? 'Ranking' usually implies order, but 'Rating' filter is 'stars'. Used '랭킹/평점' logic.
+  { id: 'rating', label: '랭킹' },
   { id: 'auth', label: 'API 인증 방식' },
-  { id: 'docs', label: '제공 문서' }, // Screenshot: '제료 문서'? -> '제공 문서' likely.
-  // 'company' and 'country' are extra, maybe put them in another tab or 'Other'? 
-  // For now I'll add them to 'Other' or just list them. Screenshot shows limited tabs. 
-  // Let's add 'Company' & 'Country' as separate tabs or combined.
-  { id: 'country', label: '국가' },
   { id: 'company', label: '기업' },
 ];
 
@@ -80,20 +75,8 @@ export default function FilterModal({
     );
   };
 
-  const toggleTempCountryFilter = (value: string) => {
-    setTempCountryFilter(prev =>
-      prev.includes(value) ? prev.filter(v => v !== value) : [...prev, value]
-    );
-  };
-
   const toggleTempAuthMethodFilter = (value: string) => {
     setTempAuthMethodFilter(prev =>
-      prev.includes(value) ? prev.filter(v => v !== value) : [...prev, value]
-    );
-  };
-
-  const toggleTempDocLanguageFilter = (value: string) => {
-    setTempDocLanguageFilter(prev =>
       prev.includes(value) ? prev.filter(v => v !== value) : [...prev, value]
     );
   };
@@ -197,37 +180,6 @@ export default function FilterModal({
             </div>
           )}
 
-          {activeTab === 'docs' && (
-             <div className="space-y-3">
-              {['한국어', '영어', '일본어', '중국어'].map(lang => (
-                <label key={lang} className="flex items-center gap-3 p-2 hover:bg-gray-50 rounded cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={tempDocLanguageFilter.includes(lang)}
-                    onChange={() => toggleTempDocLanguageFilter(lang)}
-                    className="w-5 h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                  />
-                  <span className="text-sm">{lang}</span>
-                </label>
-              ))}
-            </div>
-          )}
-
-          {activeTab === 'country' && (
-             <div className="space-y-3">
-              {['한국', '미국', '일본', '중국'].map(country => (
-                <label key={country} className="flex items-center gap-3 p-2 hover:bg-gray-50 rounded cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={tempCountryFilter.includes(country)}
-                    onChange={() => toggleTempCountryFilter(country)}
-                    className="w-5 h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                  />
-                  <span className="text-sm">{country}</span>
-                </label>
-              ))}
-            </div>
-          )}
 
            {activeTab === 'company' && (
              <div className="space-y-3">

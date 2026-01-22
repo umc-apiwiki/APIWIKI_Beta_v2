@@ -10,11 +10,9 @@ import { useAuth } from '@/hooks/useAuth';
 import { isAdmin } from '@/lib/permissions';
 import CommentSection from '@/components/CommentSection';
 import type { Board, BoardType } from '@/types';
+import styles from './page.module.css';
 
 const BOARD_TITLES: Record<BoardType, string> = {
-    inquiry: '문의 게시판',
-    qna: 'Q&A 게시판',
-    free: '자유 게시판',
     community: '커뮤니티',
 };
 
@@ -94,7 +92,7 @@ export default function BoardDetailPage({ params }: { params: { type: BoardType;
 
     return (
         <motion.div 
-            className="min-h-screen relative overflow-hidden"
+            className={`min-h-screen relative overflow-hidden ${styles.boardDetailPage}`}
             style={{ backgroundColor: 'var(--bg-light)' }}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -121,28 +119,6 @@ export default function BoardDetailPage({ params }: { params: { type: BoardType;
             <Header />
 
             <div className="grid-container pt-32 pb-60 relative z-10">
-                {/* Back Button */}
-                <div className="col-12 mb-8">
-                    <Link 
-                        href={`/boards/${params.type}`} 
-                        className="text-[14px] inline-flex items-center gap-2 px-4 py-2 transition-all hover:gap-3"
-                        style={{ color: 'var(--text-gray)' }}
-                    >
-                        <motion.svg 
-                            width="16" 
-                            height="16" 
-                            viewBox="0 0 24 24" 
-                            fill="none" 
-                            xmlns="http://www.w3.org/2000/svg"
-                            whileHover={{ x: -3 }}
-                            transition={{ duration: 0.2 }}
-                        >
-                            <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                        </motion.svg>
-                        {BOARD_TITLES[params.type]}로 돌아가기
-                    </Link>
-                </div>
-
                 {/* Board Content */}
                 <motion.div 
                     className="bg-white card-shadow col-12 p-8 mb-6" 

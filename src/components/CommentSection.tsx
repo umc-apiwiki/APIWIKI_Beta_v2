@@ -1,7 +1,7 @@
 // src/components/CommentSection.tsx
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import PointNotificationModal from './PointNotificationModal';
 import { useAuth } from '@/hooks/useAuth';
@@ -22,6 +22,7 @@ export default function CommentSection({ boardId }: CommentSectionProps) {
         author_name: '',
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const isSubmittingRef = useRef(false); // 동기적 중복 방지용
     const [error, setError] = useState('');
     const [showPointsModal, setShowPointsModal] = useState(false);
 
@@ -47,15 +48,22 @@ export default function CommentSection({ boardId }: CommentSectionProps) {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        // 동기적 중복 제출 방지
+        if (isSubmittingRef.current) return;
+        isSubmittingRef.current = true;
+
         setError('');
 
         if (!formData.content.trim()) {
             setError('댓글 내용을 입력해주세요');
+            isSubmittingRef.current = false;
             return;
         }
 
         if (!isAuthenticated && !formData.author_name?.trim()) {
             setError('작성자 이름을 입력해주세요');
+            isSubmittingRef.current = false;
             return;
         }
 
@@ -66,7 +74,7 @@ export default function CommentSection({ boardId }: CommentSectionProps) {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                credentials: 'include', // 인증 쿠키 전송
+                credentials: 'include',
                 body: JSON.stringify(formData),
             });
 
@@ -74,24 +82,23 @@ export default function CommentSection({ boardId }: CommentSectionProps) {
 
             if (!response.ok) {
                 if (result.requiresAuth || response.status === 401) {
-                     // 로그인이 필요한 경우
                      alert('로그인이 필요합니다. 다시 로그인해주세요.');
                      window.location.reload();
-                     throw new Error('로그인이 필요합니다.');
+                     return;
                 }
                 throw new Error(result.error || '댓글 작성에 실패했습니다');
             }
 
-            // 성공 시 폼 초기화 및 댓글 목록 새로고침
+            // 성공
             setFormData({ board_id: boardId, content: '', author_name: '' });
             await fetchComments();
             setShowPointsModal(true);
-        } catch (err: any) {
-            if (err.message !== '로그인이 필요합니다.') {
-                setError(err.message);
-            }
-        } finally {
             setIsSubmitting(false);
+            isSubmittingRef.current = false;
+        } catch (err: any) {
+            setError(err.message);
+            setIsSubmitting(false);
+            isSubmittingRef.current = false;
         }
     };
 

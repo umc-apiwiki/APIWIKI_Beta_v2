@@ -3,6 +3,7 @@
 import Header from '@/components/Header';
 import APICard from '@/components/APICard';
 import { API } from '@/types';
+import styles from './page.module.css';
 
 // Mock data generator for archive
 const generateMockAPIs = (count: number, startIndex: number): API[] => {
@@ -38,7 +39,7 @@ const archiveData = [
 
 export default function ArchivePage() {
     return (
-        <div className="min-h-screen bg-[#F5F7FA]">
+        <div className={`min-h-screen bg-[#F5F7FA] ${styles.archivePage}`}>
             <Header />
             
             <div className="max-w-[1440px] mx-auto px-8 pt-32 pb-20">

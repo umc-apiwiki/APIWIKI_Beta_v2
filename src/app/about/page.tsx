@@ -4,11 +4,12 @@ import { motion } from 'motion/react';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Header from '@/components/Header';
+import styles from './page.module.css';
 
 export default function AboutPage() {
   return (
     <motion.div 
-      className="min-h-screen" 
+      className={styles.aboutPage}
       style={{ backgroundColor: 'var(--bg-light)' }}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}

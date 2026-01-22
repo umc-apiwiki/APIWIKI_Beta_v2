@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -27,6 +27,7 @@ export default function WikiEditor({ apiId, initialContent = '', onSave }: WikiE
   const [showSummaryModal, setShowSummaryModal] = useState(false);
   const [summary, setSummary] = useState('');
   const [isSaving, setIsSaving] = useState(false);
+  const isSavingRef = useRef(false); // 동기적 중복 방지용
   const [showPointsModal, setShowPointsModal] = useState(false);
 
   // Update text if initialContent changes (e.g. fresh fetch)
@@ -43,8 +44,13 @@ export default function WikiEditor({ apiId, initialContent = '', onSave }: WikiE
   };
 
   const submitSave = async () => {
+    // 동기적 중복 제출 방지
+    if (isSavingRef.current) return;
+    isSavingRef.current = true;
+
     if (summary.length < 5) {
         alert('편집 요약을 5자 이상 입력해주세요 (예: API 설명 추가)');
+        isSavingRef.current = false;
         return;
     }
 
@@ -67,13 +73,14 @@ export default function WikiEditor({ apiId, initialContent = '', onSave }: WikiE
             throw new Error(result.message || '저장 실패');
         }
 
-        // alert(result.message || '저장되었습니다!'); // 모달로 대체
+        // 성공
         setEditing(false);
         setShowSummaryModal(false);
         setSummary('');
-        setShowPointsModal(true); // 포인트 모달 표시
+        setShowPointsModal(true);
+        setIsSaving(false);
+        isSavingRef.current = false;
 
-        // 모달 표시 후 데이터만 새로고침 (전체 리로드 제거)
         if (onSave) {
           setTimeout(() => {
             onSave();
@@ -81,8 +88,8 @@ export default function WikiEditor({ apiId, initialContent = '', onSave }: WikiE
         }
     } catch (error: any) {
         alert(error.message);
-    } finally {
         setIsSaving(false);
+        isSavingRef.current = false;
     }
   };
 

@@ -7,6 +7,7 @@ import { motion } from 'motion/react';
 import Header from '@/components/Header';
 import { getUserActivities, getById } from '@/lib/supabaseHelpers';
 import type { UserActivity, ActivityType, User } from '@/types';
+import styles from './page.module.css';
 
 export default function ActivityHistoryPage() {
     const { user, isAuthenticated, isLoading } = useAuth();
@@ -87,7 +88,7 @@ export default function ActivityHistoryPage() {
     if (!isAuthenticated) return null;
 
     return (
-        <div className="min-h-screen" style={{ backgroundColor: 'var(--bg-light)' }}>
+        <div className={`min-h-screen ${styles.historyPage}`} style={{ backgroundColor: 'var(--bg-light)' }}>
             <Header />
             
             {/* Background Glow */}

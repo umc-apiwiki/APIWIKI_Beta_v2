@@ -1,0 +1,48 @@
+/* 히스토리 페이지 모바일 대응 */
+
+@media (max-width: 768px) {
+  .historyPage {
+    padding-bottom: 5rem; /* 하단 네비게이션 공간 */
+  }
+
+  /* 메인 컨텐츠 상단 여백 */
+  .historyPage > div {
+    padding-top: 1rem !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+
+  /* 포인트 카드 */
+  .historyPage [class*="card"] {
+    margin: 1rem 0;
+    padding: 1rem;
+  }
+
+  /* 활동 리스트 */
+  .historyPage [class*="activity"] {
+    padding: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  /* 그리드를 단일 컬럼으로 */
+  .historyPage [class*="grid"] {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+
+  /* 텍스트 크기 조정 */
+  .historyPage h1 {
+    font-size: 1.5rem !important;
+  }
+
+  .historyPage h2 {
+    font-size: 1.25rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .historyPage > div {
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+  }
+}

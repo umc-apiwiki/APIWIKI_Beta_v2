@@ -1,7 +1,7 @@
 // src/components/BoardForm.tsx
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import PointNotificationModal from './PointNotificationModal';
 import { useAuth } from '@/hooks/useAuth';
@@ -22,6 +22,7 @@ export default function BoardForm({ type, onCancel }: BoardFormProps) {
         author_name: '',
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const isSubmittingRef = useRef(false); // 동기적 중복 방지용
     const [error, setError] = useState('');
     const [showPointsModal, setShowPointsModal] = useState(false);
 
@@ -32,16 +33,23 @@ export default function BoardForm({ type, onCancel }: BoardFormProps) {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        // 동기적 중복 제출 방지 (useRef 사용)
+        if (isSubmittingRef.current) return;
+        isSubmittingRef.current = true;
+
         setError('');
 
         // 유효성 검사
         if (!formData.title.trim() || !formData.content.trim()) {
             setError('제목과 내용을 입력해주세요');
+            isSubmittingRef.current = false;
             return;
         }
 
         if (!isAuthenticated && !formData.author_name?.trim()) {
             setError('작성자 이름을 입력해주세요');
+            isSubmittingRef.current = false;
             return;
         }
 
@@ -52,7 +60,7 @@ export default function BoardForm({ type, onCancel }: BoardFormProps) {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                credentials: 'include', // 인증 정보를 포함하여 서버 세션 확인 가능하도록 설정
+                credentials: 'include',
                 body: JSON.stringify(formData),
             });
 
@@ -60,29 +68,26 @@ export default function BoardForm({ type, onCancel }: BoardFormProps) {
 
             if (!response.ok) {
                 if (result.requiresAuth || response.status === 401) {
-                    // 로그인이 필요한 경우
                     alert('로그인이 필요합니다. 다시 로그인해주세요.');
                     window.location.reload();
-                    throw new Error('로그인이 필요합니다.');
+                    return;
                 }
                 throw new Error(result.error || '게시글 작성에 실패했습니다');
             }
 
-            // 성공 시 알림 모달 표시 및 지연 이동
+            // 성공 - 버튼 비활성화 유지 (페이지 이동 예정)
             setShowPointsModal(true);
-
-            // 데이터 갱신을 위해 미리 리프레시 호출
             router.refresh();
 
-            // 모달을 볼 시간을 준 후 이동
             setTimeout(() => {
                 router.push(`/boards/${type}`);
                 if (onCancel) onCancel();
             }, 2000);
+            // 성공 시에는 isSubmittingRef를 false로 돌리지 않음
         } catch (err: any) {
             setError(err.message);
-        } finally {
             setIsSubmitting(false);
+            isSubmittingRef.current = false;
         }
     };
 

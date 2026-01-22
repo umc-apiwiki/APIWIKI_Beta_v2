@@ -36,9 +36,12 @@ export default function MobileSearchModal({ isOpen, onClose }: MobileSearchModal
     }
   }, []);
 
-  // 뒤로가기 감지
+  // 뒤로가기 감지 및 하단 네비게이션 숨김
   useEffect(() => {
     if (!isOpen) return;
+
+    // 하단 네비게이션 숨김을 위해 body에 클래스 추가
+    document.body.classList.add('hide-mobile-nav');
 
     const handlePopState = () => {
       onClose();
@@ -51,6 +54,8 @@ export default function MobileSearchModal({ isOpen, onClose }: MobileSearchModal
 
     return () => {
       window.removeEventListener('popstate', handlePopState);
+      // 하단 네비게이션 다시 표시
+      document.body.classList.remove('hide-mobile-nav');
     };
   }, [isOpen, onClose]);
 

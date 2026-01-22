@@ -1,0 +1,47 @@
+/* 아카이브 페이지 모바일 대응 */
+
+@media (max-width: 768px) {
+  .archivePage {
+    padding-bottom: 5rem; /* 하단 네비게이션 공간 */
+  }
+
+  /* 메인 컨텐츠 */
+  .archivePage > div {
+    padding-top: 1rem !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+
+  /* 그리드 레이아웃 */
+  .archivePage [class*="grid"] {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+
+  /* 필터 및 정렬 */
+  .archivePage [class*="filter"] {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  /* 카드 */
+  .archivePage [class*="card"] {
+    padding: 1rem;
+  }
+
+  /* 텍스트 크기 */
+  .archivePage h1 {
+    font-size: 1.5rem !important;
+  }
+
+  .archivePage h2 {
+    font-size: 1.25rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .archivePage > div {
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+  }
+}

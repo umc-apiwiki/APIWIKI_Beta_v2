@@ -3,7 +3,6 @@
 
 import { useRef, useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Bell } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import MobileBottomNavigation from '@/components/mobile/MobileBottomNavigation';
@@ -162,13 +161,6 @@ export default function MobileHomePage() {
             API Wiki
           </span>
         </div>
-        <button 
-          onClick={() => router.push('/profile')}
-          className={styles.notificationBtn}
-          aria-label="알림"
-        >
-          <Bell size={20} className="text-sky-900" />
-        </button>
       </header>
 
       {/* 메인 컨텐츠 */}

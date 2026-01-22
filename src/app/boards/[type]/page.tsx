@@ -8,27 +8,13 @@ import Link from 'next/link';
 import Header from '@/components/Header';
 import BoardForm from '@/components/BoardForm';
 import type { Board, BoardType } from '@/types';
+import styles from './page.module.css';
 
 const BOARD_TITLES: Record<BoardType, string> = {
-    inquiry: '문의 게시판',
-    qna: 'Q&A 게시판',
-    free: '자유 게시판',
     community: '커뮤니티',
 };
 
 const BOARD_CONFIGS: Record<BoardType, { gradient: string; description: string }> = {
-    inquiry: {
-        gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-        description: '서비스 이용 중 궁금한 점을 문의하세요'
-    },
-    qna: {
-        gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-        description: 'API 사용법과 기술적인 질문을 나누세요'
-    },
-    free: {
-        gradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
-        description: '자유롭게 의견을 나누는 공간입니다'
-    },
     community: {
         gradient: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
         description: '커뮤니티에서 다양한 이야기를 나누세요'
@@ -64,11 +50,11 @@ export default function BoardTypePage({ params }: { params: { type: BoardType } 
         fetchBoards();
     }, [fetchBoards]);
 
-    const config = BOARD_CONFIGS[params.type] || BOARD_CONFIGS.free;
+    const config = BOARD_CONFIGS[params.type] || BOARD_CONFIGS.community;
 
     return (
         <motion.div 
-            className="min-h-screen relative overflow-hidden" 
+            className={styles.boardPage}
             style={{ backgroundColor: 'var(--bg-light)' }}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -95,52 +81,42 @@ export default function BoardTypePage({ params }: { params: { type: BoardType } 
 
             <Header />
             
-            <div className="grid-container pt-32 pb-60 relative z-10">
-                {/* Header */}
-                <div className="col-12 mb-8">
-                    <Link 
-                        href="/boards" 
-                        className="text-[14px] mb-4 inline-flex items-center gap-2 transition-colors hover:text-[var(--primary-blue)]"
-                        style={{ color: 'var(--text-gray)' }}
-                    >
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                        </svg>
-                        게시판 목록으로
-                    </Link>
-                </div>
-
-                {/* Action Bar */}
-                <motion.div 
-                    className="col-12 flex justify-between items-center mb-8"
+            <div className="grid-container pt-28 md:pt-36 pb-32 md:pb-60 relative z-10">
+                {/* 헤더 영역 - 제목과 글쓰기 버튼 */}
+                <motion.div
+                    className="col-12 flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6 md:mb-8"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: 0.2 }}
+                    transition={{ duration: 0.5, delay: 0.1 }}
                 >
-                    <div className="flex items-center gap-4">
-                        <span className="text-[16px] font-semibold" style={{ color: 'var(--text-dark)' }}>
-                            총 {boards.length}개의 게시글
-                        </span>
+                    <div>
+                        <h1 className="text-xl md:text-2xl font-bold mb-1" style={{ color: 'var(--text-dark)' }}>
+                            커뮤니티 게시판
+                        </h1>
+                        <p className="text-sm text-gray-500 hidden md:block">자유롭게 의견을 나누고 소통해보세요</p>
                     </div>
                     <motion.button
                         onClick={() => setShowForm(!showForm)}
-                        className={`${showForm ? 'border border-gray-200 text-[#0c4a6e] bg-white hover:border-sky-400' : 'bg-[#0c4a6e] text-white hover:bg-[#0a3b56]'} px-4 py-2 rounded-md text-sm font-semibold flex items-center gap-2 shadow-sm transition-colors`}
-                        whileHover={{ scale: 1.02, y: -1 }}
-                        whileTap={{ scale: 0.99 }}
+                        className={`${showForm
+                            ? 'border border-gray-200 text-gray-600 bg-white hover:border-gray-300'
+                            : 'bg-gradient-to-r from-sky-500 to-blue-600 text-white hover:from-sky-600 hover:to-blue-700 shadow-md hover:shadow-lg'
+                        } px-5 py-2.5 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 transition-all w-full md:w-auto`}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
                     >
                         {showForm ? (
                             <>
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M6 6L18 18M6 18L18 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
                                 </svg>
                                 목록으로
                             </>
                         ) : (
                             <>
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M12 5V19M5 12H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
                                 </svg>
-                                글쓰기
+                                새 글 작성
                             </>
                         )}
                     </motion.button>
@@ -168,75 +144,83 @@ export default function BoardTypePage({ params }: { params: { type: BoardType } 
                                 <p className="mt-4 text-[16px]" style={{ color: 'var(--text-gray)' }}>로딩 중...</p>
                             </motion.div>
                         ) : boards.length === 0 ? (
-                            <motion.div 
-                                className="bg-white card-shadow col-12 py-20 text-center"
-                                style={{ borderRadius: '20px' }}
+                            <motion.div
+                                className="col-12 bg-white rounded-2xl p-8 md:p-12 text-center border border-gray-100"
+                                style={{ boxShadow: '0 4px 20px rgba(0, 0, 0, 0.04)' }}
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                             >
-                                <h3 className="text-[24px] font-semibold mb-2" style={{ color: 'var(--text-dark)' }}>
+                                <div className="w-16 h-16 md:w-20 md:h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-sky-50 to-blue-100 flex items-center justify-center">
+                                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" className="text-sky-500">
+                                        <path d="M19 3H5C3.89543 3 3 3.89543 3 5V19C3 20.1046 3.89543 21 5 21H19C20.1046 21 21 20.1046 21 19V5C21 3.89543 20.1046 3 19 3Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                        <path d="M8 7H16M8 12H16M8 17H12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                    </svg>
+                                </div>
+                                <h3 className="text-lg md:text-xl font-semibold mb-2" style={{ color: 'var(--text-dark)' }}>
                                     아직 게시글이 없습니다
                                 </h3>
-                                <p className="text-[16px] mb-6" style={{ color: 'var(--text-gray)' }}>
-                                    첫 게시글을 작성해보세요!
+                                <p className="text-sm md:text-base mb-6" style={{ color: 'var(--text-gray)' }}>
+                                    첫 번째 게시글을 작성해보세요!
                                 </p>
                                 <motion.button
                                     onClick={() => setShowForm(true)}
-                                    className="px-4 py-2 rounded-md bg-[#0c4a6e] text-white text-sm font-semibold shadow-sm hover:bg-[#0a3b56]"
-                                    whileHover={{ scale: 1.02, y: -1 }}
-                                    whileTap={{ scale: 0.99 }}
+                                    className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 text-white text-sm font-semibold shadow-md hover:shadow-lg transition-all"
+                                    whileHover={{ scale: 1.02 }}
+                                    whileTap={{ scale: 0.98 }}
                                 >
-                                    글쓰기
+                                    <span className="flex items-center gap-2">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                            <path d="M12 5V19M5 12H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                                        </svg>
+                                        첫 글 작성하기
+                                    </span>
                                 </motion.button>
                             </motion.div>
                         ) : (
                             <>
-                                <div className="bg-white card-shadow col-12 mb-20" style={{ borderRadius: '20px', overflow: 'hidden' }}>
+                                <div className="col-12 space-y-3 md:space-y-4 mb-20">
                                     {boards.map((board, index) => (
                                         <motion.div
                                             key={board.id}
-                                            initial={{ opacity: 0, x: -20 }}
-                                            animate={{ opacity: 1, x: 0 }}
+                                            initial={{ opacity: 0, y: 15 }}
+                                            animate={{ opacity: 1, y: 0 }}
                                             transition={{ duration: 0.3, delay: index * 0.05 }}
                                         >
                                             <Link
                                                 href={`/boards/${params.type}/${board.id}`}
-                                                className="block p-5 border-b transition-all hover:bg-gray-50 group"
-                                                style={{ borderColor: 'rgba(0, 0, 0, 0.05)' }}
+                                                className="block bg-white rounded-2xl p-4 md:p-5 transition-all hover:shadow-lg group border border-gray-100 hover:border-sky-200"
+                                                style={{ boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04)' }}
                                             >
-                                                <div className="flex items-start justify-between gap-4">
-                                                    <div className="flex-1">
-                                                        <h3 className="text-[20px] font-semibold mb-2 group-hover:text-[var(--primary-blue)] transition-colors" style={{ color: 'var(--text-dark)' }}>
+                                                <div className="flex items-center gap-3 md:gap-4">
+                                                    {/* 작성자 아바타 */}
+                                                    <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-gradient-to-br from-sky-100 to-blue-100 flex items-center justify-center flex-shrink-0">
+                                                        <span className="text-sky-600 font-bold text-sm md:text-base">
+                                                            {(board.author?.name || board.author_name || '익명').charAt(0)}
+                                                        </span>
+                                                    </div>
+
+                                                    <div className="flex-1 min-w-0">
+                                                        <h3 className="text-base md:text-lg font-semibold mb-1 group-hover:text-sky-600 transition-colors truncate" style={{ color: 'var(--text-dark)' }}>
                                                             {board.title}
                                                         </h3>
-                                                        <div className="flex items-center gap-4 text-[14px]" style={{ color: 'var(--text-gray)' }}>
-                                                            <div className="flex items-center gap-2">
-                                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                    <circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="2"/>
-                                                                    <path d="M6 21C6 17.134 8.686 14 12 14C15.314 14 18 17.134 18 21" stroke="currentColor" strokeWidth="2"/>
-                                                                </svg>
-                                                                <span>{board.author?.name || board.author_name}</span>
-                                                            </div>
-                                                            <div className="flex items-center gap-2">
-                                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                    <rect x="3" y="6" width="18" height="15" rx="2" stroke="currentColor" strokeWidth="2"/>
-                                                                    <path d="M3 10H21M7 3V6M17 3V6" stroke="currentColor" strokeWidth="2"/>
-                                                                </svg>
-                                                                <span>{new Date(board.created_at).toLocaleDateString('ko-KR')}</span>
-                                                            </div>
+                                                        <div className="flex items-center gap-2 md:gap-3 text-xs md:text-sm" style={{ color: 'var(--text-gray)' }}>
+                                                            <span className="font-medium">{board.author?.name || board.author_name}</span>
+                                                            <span className="text-gray-300">•</span>
+                                                            <span>{new Date(board.created_at).toLocaleDateString('ko-KR')}</span>
                                                         </div>
                                                     </div>
-                                                    <motion.svg 
-                                                        width="24" 
-                                                        height="24" 
-                                                        viewBox="0 0 24 24" 
-                                                        fill="none" 
+
+                                                    {/* 화살표 아이콘 */}
+                                                    <svg
+                                                        width="20"
+                                                        height="20"
+                                                        viewBox="0 0 24 24"
+                                                        fill="none"
                                                         xmlns="http://www.w3.org/2000/svg"
-                                                        className="opacity-0 group-hover:opacity-100 transition-opacity"
-                                                        style={{ color: 'var(--primary-blue)' }}
+                                                        className="text-gray-300 group-hover:text-sky-500 transition-colors flex-shrink-0"
                                                     >
                                                         <path d="M9 5L16 12L9 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                                    </motion.svg>
+                                                    </svg>
                                                 </div>
                                             </Link>
                                         </motion.div>

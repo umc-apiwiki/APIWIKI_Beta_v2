@@ -4,13 +4,26 @@
 import { type ChangeEvent, type FormEvent, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'motion/react';
-import { Check, Loader2, Lock, Mail, Sparkles, User } from 'lucide-react';
+import { Check, Loader2, Lock, LogOut, Mail, Sparkles, User } from 'lucide-react';
 import Header from '@/components/Header';
+import LoginModal from '@/components/LoginModal';
+import SignupModal from '@/components/SignupModal';
 import { useAuth } from '@/hooks/useAuth';
+import styles from './page.module.css';
 
 export default function ProfilePage() {
     const router = useRouter();
-    const { user, isAuthenticated, isLoading } = useAuth();
+    const { user, isAuthenticated, isLoading, signOut } = useAuth();
+    const [isMobile, setIsMobile] = useState(false);
+    const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+    // 모바일 감지
+    useEffect(() => {
+        const checkMobile = () => setIsMobile(window.innerWidth <= 768);
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
     const [formData, setFormData] = useState({
         name: '',
         bio: '',
@@ -23,10 +36,21 @@ export default function ProfilePage() {
     const [isSaving, setIsSaving] = useState(false);
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');
+    const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+    const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
 
     useEffect(() => {
         if (!isLoading && !isAuthenticated) {
-            router.push('/');
+            // 모바일인 경우 로그인 모달 표시
+            const isMobileDevice = window.innerWidth <= 768;
+            console.log('Profile auth check:', { isLoading, isAuthenticated, isMobileDevice });
+            
+            if (isMobileDevice) {
+                console.log('Opening login modal for mobile');
+                setIsLoginModalOpen(true);
+            } else {
+                router.push('/');
+            }
         }
     }, [isAuthenticated, isLoading, router]);
 
@@ -81,6 +105,36 @@ export default function ProfilePage() {
             setMessage('');
         } finally {
             setIsCheckingName(false);
+        }
+    };
+
+    const handleSwitchToSignup = () => {
+        setIsLoginModalOpen(false);
+        setIsSignupModalOpen(true);
+    };
+
+    const handleSwitchToLogin = () => {
+        setIsSignupModalOpen(false);
+        setIsLoginModalOpen(true);
+    };
+
+    const handleLoginModalClose = () => {
+        setIsLoginModalOpen(false);
+        // 모바일에서 로그인 모달을 닫으면 홈으로 이동
+        if (window.innerWidth <= 768 && !isAuthenticated) {
+            router.push('/');
+        }
+    };
+
+    const handleLogout = async () => {
+        setIsLoggingOut(true);
+        try {
+            await signOut();
+            router.push('/');
+        } catch (err) {
+            console.error('로그아웃 실패:', err);
+        } finally {
+            setIsLoggingOut(false);
         }
     };
 
@@ -171,7 +225,7 @@ export default function ProfilePage() {
 
     return (
         <motion.div
-            className="min-h-screen"
+            className={`min-h-screen ${styles.profilePage}`}
             style={{ backgroundColor: 'var(--bg-light)' }}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -341,7 +395,38 @@ export default function ProfilePage() {
                         </form>
                     </motion.div>
                 </div>
+
+                {/* 모바일 로그아웃 버튼 */}
+                {isMobile && (
+                    <motion.div
+                        className="mt-6"
+                        initial={{ opacity: 0, y: 15 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.15 }}
+                    >
+                        <button
+                            onClick={handleLogout}
+                            disabled={isLoggingOut}
+                            className="w-full h-12 rounded-xl bg-rose-50 border border-rose-200 text-rose-600 font-semibold flex items-center justify-center gap-2 hover:bg-rose-100 transition-colors disabled:opacity-60"
+                        >
+                            <LogOut className="w-5 h-5" />
+                            {isLoggingOut ? '로그아웃 중...' : '로그아웃'}
+                        </button>
+                    </motion.div>
+                )}
             </div>
+
+            {/* 로그인/회원가입 모달 */}
+            <LoginModal
+                isOpen={isLoginModalOpen}
+                onClose={handleLoginModalClose}
+                onSwitchToSignup={handleSwitchToSignup}
+            />
+            <SignupModal
+                isOpen={isSignupModalOpen}
+                onClose={() => setIsSignupModalOpen(false)}
+                onSwitchToLogin={handleSwitchToLogin}
+            />
         </motion.div>
     );
 }
