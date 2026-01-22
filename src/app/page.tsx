@@ -2,13 +2,12 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import SearchBar from '@/components/SearchBar';
 import APICard from '@/components/APICard';
 import NewsCard from '@/components/NewsCard';
 import Header from '@/components/Header';
 import CategoryCarousel from '@/components/CategoryCarousel';
-import MobileHomePage from '@/components/mobile/MobileHomePage';
 import Image from 'next/image';
 import { API, NewsItem } from '@/types';
 
@@ -18,6 +17,7 @@ export default function HomePage() {
   const [popularAPIs, setPopularAPIs] = useState<API[]>([]);
   const [suggestedAPIs, setSuggestedAPIs] = useState<API[]>([]);
   const [newsItems, setNewsItems] = useState<NewsItem[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -70,6 +70,8 @@ export default function HomePage() {
         ]);
       } catch (error) {
         console.error('Error fetching data:', error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -77,14 +79,7 @@ export default function HomePage() {
   }, []);
 
   return (
-    <>
-      {/* 모바일 버전 (768px 미만) */}
-      <div className="md:hidden">
-        <MobileHomePage />
-      </div>
-
-      {/* 데스크톱 버전 (768px 이상) */}
-      <div className={`hidden md:block min-h-screen relative ${isActive ? 'active' : ''}`} style={{ backgroundColor: 'var(--bg-light)' }}>
+    <div className={`min-h-screen relative ${isActive ? 'active' : ''}`} style={{ backgroundColor: 'var(--bg-light)' }}>
       {/* 배경 그라데이션 효과 */}
       <motion.div 
         className="bg-glow"
@@ -367,7 +362,6 @@ export default function HomePage() {
         </div>
         </motion.div>
       )}
-      </div>
-    </>
+    </div>
   );
 }
