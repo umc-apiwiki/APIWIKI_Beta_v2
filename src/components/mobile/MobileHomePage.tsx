@@ -11,10 +11,12 @@ import MobileAPICard from '@/components/mobile/MobileAPICard';
 import MobileNewsCard from '@/components/mobile/MobileNewsCard';
 import { categories } from '@/data/mockData';
 import { API, NewsItem } from '@/types';
+import { useAuth } from '@/hooks/useAuth';
 import styles from './MobileHomePage.module.css';
 
 export default function MobileHomePage() {
   const router = useRouter();
+  const { isAuthenticated, user } = useAuth();
   const scrollRef = useRef<HTMLDivElement>(null);
   const scrollContentRef = useRef<HTMLDivElement>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -161,6 +163,9 @@ export default function MobileHomePage() {
             API Wiki
           </span>
         </div>
+        {isAuthenticated && (
+          <span className={styles.pointsText}>{(user?.activity_score ?? 0).toLocaleString()}p</span>
+        )}
       </header>
 
       {/* 메인 컨텐츠 */}

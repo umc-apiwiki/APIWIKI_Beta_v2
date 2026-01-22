@@ -273,7 +273,7 @@ h6 {
 /* 카드 스타일 */
 .card-shadow {
   box-shadow: var(--shadow-blue);
-  border: 0.5px solid var(--primary-blue);
+  /* border: 0.5px solid var(--primary-blue); */
   transition: all 0.3s ease;
 }
 

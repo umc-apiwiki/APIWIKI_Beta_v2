@@ -78,9 +78,11 @@
 }
 
 .iconActive {
-  color: #0ea5e9;
+  /* Blue color for active state */
+  color: #2196f3;
 }
 
 .iconInactive {
-  color: #9ca3af;
+  /* Black color for inactive state */
+  color: #000000;
 }
