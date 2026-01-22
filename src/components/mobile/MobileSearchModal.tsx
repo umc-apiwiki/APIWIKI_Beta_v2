@@ -86,19 +86,6 @@ export default function MobileSearchModal({ isOpen, onClose }: MobileSearchModal
             {/* 검색바 */}
             <div className={styles.searchBar}>
               <div className={styles.searchContainer}>
-                <button 
-                  type="button" 
-                  onClick={onClose}
-                  className={styles.backButton}
-                  aria-label="뒤로가기"
-                >
-                  <Image 
-                    src="/arrow-left.svg" 
-                    alt="Back" 
-                    width={20} 
-                    height={20}
-                  />
-                </button>
                 <span className={styles.searchPlaceholder}>궁금한 API를 검색해보세요</span>
                 <div className={styles.searchIcon}>
                   <Image 
