@@ -3,7 +3,7 @@
 
 import { useRef, useState } from 'react';
 import { motion } from 'motion/react';
-import { Bell, ChevronDown } from 'lucide-react';
+import { Bell } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import MobileBottomNavigation from './MobileBottomNavigation';
@@ -16,6 +16,7 @@ export default function MobileHomePage() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
+  const [isScrolling, setIsScrolling] = useState(false);
 
   const handleScroll = () => {
     if (scrollRef.current) {
@@ -24,6 +25,16 @@ export default function MobileHomePage() {
       const progress = maxScroll > 0 ? (scrollLeft / maxScroll) * 100 : 0;
       setScrollProgress(progress);
     }
+  };
+
+  const handleScrollToTop = () => {
+    if (isScrolling) return;
+    setIsScrolling(true);
+    // 애니메이션 후 페이지 새로고침
+    setTimeout(() => {
+      router.push('/');
+      router.refresh();
+    }, 500);
   };
 
   return (
@@ -136,20 +147,27 @@ export default function MobileHomePage() {
             />
           </div>
         </motion.div>
-
-        {/* 스크롤 인디케이터 */}
-        <motion.div 
-          className={styles.scrollIndicator}
-          animate={{ y: [0, 6, 0] }}
-          transition={{
-            duration: 2,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-        >
-          <ChevronDown size={20} className="text-neutral-300" />
-        </motion.div>
       </main>
+
+      {/* 스크롤 인디케이터 - 하단 고정 */}
+      <motion.button
+        className={styles.scrollIndicator}
+        onClick={handleScrollToTop}
+        animate={isScrolling ? { y: -1000, opacity: 0 } : { y: [0, -6, 0] }}
+        transition={{
+          duration: isScrolling ? 0.5 : 2,
+          repeat: isScrolling ? 0 : Infinity,
+          ease: isScrolling ? "easeInOut" : "easeInOut"
+        }}
+        aria-label="위로 스크롤"
+      >
+        <Image 
+          src="/nav-arrow-up-solid.svg" 
+          alt="Scroll to top" 
+          width={24} 
+          height={24}
+        />
+      </motion.button>
 
       {/* 하단 네비게이션 */}
       <MobileBottomNavigation />

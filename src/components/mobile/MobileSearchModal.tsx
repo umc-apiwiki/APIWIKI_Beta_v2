@@ -86,15 +86,28 @@ export default function MobileSearchModal({ isOpen, onClose }: MobileSearchModal
             {/* 검색바 */}
             <div className={styles.searchBar}>
               <div className={styles.searchContainer}>
-                <span className={styles.searchPlaceholder}>궁금한 API를 검색해보세요</span>
-                <div className={styles.searchIcon}>
+                <input
+                  type="text"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  onKeyDown={handleKeyPress}
+                  placeholder="궁금한 API를 검색해보세요"
+                  className={styles.searchInput}
+                  autoFocus
+                />
+                <button 
+                  type="button" 
+                  onClick={() => handleSearch()}
+                  className={styles.searchIcon}
+                  aria-label="검색"
+                >
                   <Image 
                     src="/mingcute_search-line.svg" 
                     alt="Search" 
                     width={20} 
                     height={20}
                   />
-                </div>
+                </button>
               </div>
             </div>
 
