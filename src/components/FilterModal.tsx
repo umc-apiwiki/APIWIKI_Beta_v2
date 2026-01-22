@@ -109,7 +109,7 @@ export default function FilterModal({
     <ModalBase isOpen={isOpen} onClose={onClose} title="Filters">
       <div className="flex flex-col h-[60dvh] md:h-auto">
         {/* Tabs */}
-        <div className="flex border-b overflow-x-auto scrollbar-hide mb-4">
+        <div className="flex border-b overflow-x-auto scrollbar-hide mb-4 flex-shrink-0">
           {TABS.map((tab) => (
             <button
               key={tab.id}
@@ -248,7 +248,7 @@ export default function FilterModal({
         </div>
 
         {/* Footer Action */}
-        <div className="mt-6 pt-4 border-t">
+        <div className="mt-6 pt-4 border-t flex-shrink-0">
           <button
             onClick={handleApply}
             className="w-full py-3 bg-[#1769AA] text-white font-medium rounded-lg hover:bg-blue-700 transition-colors shadow-md"
