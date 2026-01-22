@@ -123,7 +123,7 @@ export default function MobileHomePage() {
           <div className={styles.progressBarWrapper}>
             <div 
               className={styles.progressIndicator}
-              style={{ left: `calc(${scrollProgress}% - 0.75rem)` }}
+              style={{ left: `calc((100% - 0.6rem) * ${scrollProgress / 100})` }}
             />
           </div>
         </motion.div>

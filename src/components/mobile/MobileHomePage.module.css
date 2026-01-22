@@ -209,7 +209,7 @@
 .progressBarWrapper {
   width: 10%;
   max-width: 200px;
-  height: 0.25rem;
+  height: 0.3rem;
   background-color: #e5e7eb;
   border-radius: 9999px;
   margin: 0.5rem auto 0 auto;
@@ -219,13 +219,13 @@
 
 .progressIndicator {
   position: absolute;
-  width: 1rem;
+  width: 0.6rem;
   height: 0.2rem;
   background-color: #0ea5e9;
   border-radius: 9999px;
   top: 50%;
   transform: translateY(-50%);
-  transition: left 0.3s ease-out;
+  transition: left 0.2s ease-out;
   box-shadow: 0 1px 3px rgba(14, 165, 233, 0.4);
 }
 
