@@ -182,11 +182,7 @@ export default function LoginModal({ isOpen, onClose, onSwitchToSignup }: LoginM
                 disabled={isLoading}
                 className={styles.socialButton}
               >
-                <img
-                  src="https://www.svgrepo.com/show/475656/google-color.svg"
-                  alt="G"
-                  className={styles.socialIcon}
-                />
+                <img src="/google_logo.svg" alt="G" className={styles.socialIcon} />
                 <span className={styles.socialText}>Sign up with Google</span>
               </button>
               <button disabled={true} className={styles.socialButton}>
