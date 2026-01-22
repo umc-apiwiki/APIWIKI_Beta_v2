@@ -124,6 +124,7 @@ export interface API {
   approved_by?: string;
   approved_at?: string;
   createdAt?: string;
+  createdat?: string; // DB Column name (lowercase)
   updatedAt?: string;
 }
 

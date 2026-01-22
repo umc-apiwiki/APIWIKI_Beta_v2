@@ -21,7 +21,6 @@ export default function MobileSearchModal({ isOpen, onClose }: MobileSearchModal
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const router = useRouter();
   const modalRef = useRef<HTMLDivElement>(null);
-  const lastScrollY = useRef(0);
 
   useEffect(() => {
     const stored = localStorage.getItem(RECENT_SEARCHES_KEY);
@@ -49,7 +48,7 @@ export default function MobileSearchModal({ isOpen, onClose }: MobileSearchModal
         const response = await fetch(`/api/apis?q=${encodeURIComponent(query)}&limit=5`);
         if (response.ok) {
           const result = await response.json();
-          const names = result.map((api: any) => api.name);
+          const names = result.map((api: { name: string }) => api.name);
           setSuggestions(names);
         }
       } catch (error) {
@@ -164,11 +163,6 @@ export default function MobileSearchModal({ isOpen, onClose }: MobileSearchModal
     if (e.key === 'Enter') {
       handleSearch();
     }
-  };
-
-  const clearRecentSearches = () => {
-    setRecentSearches([]);
-    localStorage.removeItem(RECENT_SEARCHES_KEY);
   };
 
   const removeRecentSearch = (searchTerm: string) => {

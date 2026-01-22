@@ -9,13 +9,6 @@ import BoardForm from '@/components/BoardForm';
 import type { Board, BoardType } from '@/types';
 import styles from './page.module.css';
 
-const BOARD_CONFIGS: Record<BoardType, { gradient: string; description: string }> = {
-  community: {
-    gradient: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
-    description: '커뮤니티에서 다양한 이야기를 나누세요',
-  },
-};
-
 export default function BoardTypePage({ params }: { params: { type: BoardType } }) {
   const [boards, setBoards] = useState<Board[]>([]);
   const [loading, setLoading] = useState(true);
