@@ -20,7 +20,10 @@ export default function APICarousel({ apis, step = 4, visible = 4 }: APICarousel
     const container = scrollRef.current;
     if (!container) return;
     const scrollAmount = container.clientWidth;
-    container.scrollBy({ left: direction === 'left' ? -scrollAmount : scrollAmount, behavior: 'smooth' });
+    container.scrollBy({
+      left: direction === 'left' ? -scrollAmount : scrollAmount,
+      behavior: 'smooth',
+    });
   };
 
   return (
@@ -32,13 +35,14 @@ export default function APICarousel({ apis, step = 4, visible = 4 }: APICarousel
       >
         <ChevronLeft size={20} />
       </button>
-      
-      <div 
-        ref={scrollRef}
-        className="flex gap-4 overflow-x-auto scrollbar-hide pb-4"
-      >
+
+      <div ref={scrollRef} className="flex gap-4 overflow-x-auto scrollbar-hide pb-4">
         {apis.map((api) => (
-          <div key={api.id} className="flex-shrink-0" style={{ flex: `0 0 calc((100% - ${(visible - 1) * 16}px) / ${visible})` }}>
+          <div
+            key={api.id}
+            className="flex-shrink-0"
+            style={{ flex: `0 0 calc((100% - ${(visible - 1) * 16}px) / ${visible})` }}
+          >
             <APICard api={api} />
           </div>
         ))}

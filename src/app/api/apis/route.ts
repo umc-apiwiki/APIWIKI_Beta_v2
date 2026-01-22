@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
     // It's better to require login to track 'created_by' for points later.
     // Assuming login required for now to award points easily.
     if (!session?.user?.id) {
-        return NextResponse.json({ error: '인증이 필요합니다.' }, { status: 401 });
+      return NextResponse.json({ error: '인증이 필요합니다.' }, { status: 401 });
     }
 
     const body = await request.json();
@@ -29,9 +29,10 @@ export async function POST(request: NextRequest) {
     // Prepare data
     // Use 'Api' table.
     // Check schema cols: name, company, description, categories, price, logo, features, pricing (jsonb), status, created_by, slug (generate)
-    
+
     // Simple slug gen
-    const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '-' + Date.now().toString().slice(-4);
+    const slug =
+      name.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '-' + Date.now().toString().slice(-4);
 
     const { data, error } = await supabase
       .from('Api')
@@ -46,23 +47,25 @@ export async function POST(request: NextRequest) {
         pricing,
         status: 'pending', // Default strictly pending
         created_by: session.user.id,
-        slug
+        slug,
       })
       .select()
       .single();
 
     if (error) {
       console.error('API Creation DB Error:', JSON.stringify(error, null, 2));
-      return NextResponse.json({ 
-        error: 'DB 저장 실패', 
-        details: error.message, 
-        hint: error.hint,
-        code: error.code 
-      }, { status: 500 });
+      return NextResponse.json(
+        {
+          error: 'DB 저장 실패',
+          details: error.message,
+          hint: error.hint,
+          code: error.code,
+        },
+        { status: 500 }
+      );
     }
 
     return NextResponse.json({ success: true, data });
-
   } catch (err: any) {
     console.error('API Registration Error:', err);
     return NextResponse.json({ error: '서버 오류' }, { status: 500 });
@@ -81,9 +84,7 @@ export async function GET(request: NextRequest) {
     const page = parseInt(searchParams.get('page') || '1');
     const limit = parseInt(searchParams.get('limit') || '100');
 
-    let supabaseQuery = supabase
-      .from('Api')
-      .select('*, logo', { count: 'exact' });
+    let supabaseQuery = supabase.from('Api').select('*, logo', { count: 'exact' });
 
     // 상태 필터 (기본값: approved)
     if (status) {
@@ -125,10 +126,7 @@ export async function GET(request: NextRequest) {
 
     if (error) {
       console.error('API 조회 오류:', error);
-      return NextResponse.json(
-        { error: 'API 조회 실패', details: error.message },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: 'API 조회 실패', details: error.message }, { status: 500 });
     }
 
     // 응답 헤더에 총 개수 포함

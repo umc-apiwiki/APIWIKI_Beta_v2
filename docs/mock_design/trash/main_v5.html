@@ -1,242 +1,246 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>API Wiki - 개발자가 함께 만드는 API 지식</title>
-    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
+    <link
+      rel="stylesheet"
+      as="style"
+      crossorigin
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css"
+    />
     <style>
-        :root {
-            --primary-blue: #2196F3;
-            --bg-light: #F9FBFE;
-            --text-dark: rgba(0, 0, 0, 0.70);
-            --text-gray: #565656;
-            --shadow-blue: 1px 1px 10px 2px rgba(33, 150, 243, 0.25);
-            --grid-margin: 24px;
-            --grid-gutter: 24px;
-        }
+      :root {
+        --primary-blue: #2196f3;
+        --bg-light: #f9fbfe;
+        --text-dark: rgba(0, 0, 0, 0.7);
+        --text-gray: #565656;
+        --shadow-blue: 1px 1px 10px 2px rgba(33, 150, 243, 0.25);
+        --grid-margin: 24px;
+        --grid-gutter: 24px;
+      }
 
-        body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            font-family: 'Pretendard', sans-serif;
-            background-color: var(--bg-light);
-            overflow-x: hidden;
-        }
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        font-family: 'Pretendard', sans-serif;
+        background-color: var(--bg-light);
+        overflow-x: hidden;
+      }
 
-        .bg-glow {
-            position: absolute;
-            width: 500px;
-            height: 500px;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(0, 149, 255, 0.2);
-            border-radius: 50%;
-            filter: blur(120px);
-            z-index: 0;
-        }
+      .bg-glow {
+        position: absolute;
+        width: 500px;
+        height: 500px;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(0, 149, 255, 0.2);
+        border-radius: 50%;
+        filter: blur(120px);
+        z-index: 0;
+      }
 
-        /* -----------------------------------------------------------
+      /* -----------------------------------------------------------
            네비게이션 바 수정: 12컬럼 그리드 적용
            1칸(공백) / 2칸(로고) / 6칸(메뉴중앙) / 2칸(로그인) / 1칸(공백)
         ----------------------------------------------------------- */
-        nav {
-            display: grid;
-            grid-template-columns: repeat(12, 1fr);
-            gap: var(--grid-gutter);
-            padding: 20px var(--grid-margin);
-            align-items: center;
-            position: relative;
-            z-index: 10;
-        }
+      nav {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: var(--grid-gutter);
+        padding: 20px var(--grid-margin);
+        align-items: center;
+        position: relative;
+        z-index: 10;
+      }
 
-        .logo-area {
-            grid-column: 2 / span 2; /* 왼쪽 1칸 띄우고 2칸 차지 */
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 28px;
-            font-weight: 300; /* 로고 텍스트 스타일 유지 */
-            color: var(--primary-blue);
-            white-space: nowrap;
-        }
+      .logo-area {
+        grid-column: 2 / span 2; /* 왼쪽 1칸 띄우고 2칸 차지 */
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 28px;
+        font-weight: 300; /* 로고 텍스트 스타일 유지 */
+        color: var(--primary-blue);
+        white-space: nowrap;
+      }
 
-        .logo-img {
-            height: 40px;
-            width: auto;
-        }
+      .logo-img {
+        height: 40px;
+        width: auto;
+      }
 
-        /* 메뉴를 화면 정중앙 6칸에 배치 */
-        .nav-links {
-            grid-column: 4 / span 6;
-            display: flex;
-            gap: 40px;
-            justify-content: center; /* 내부 텍스트들 중앙 정렬 */
-            align-items: center;
-        }
+      /* 메뉴를 화면 정중앙 6칸에 배치 */
+      .nav-links {
+        grid-column: 4 / span 6;
+        display: flex;
+        gap: 40px;
+        justify-content: center; /* 내부 텍스트들 중앙 정렬 */
+        align-items: center;
+      }
 
-        .nav-links a {
-            text-decoration: none;
-            color: var(--text-gray);
-            font-size: 18px;
-            font-weight: 500;
-            transition: color 0.3s;
-        }
+      .nav-links a {
+        text-decoration: none;
+        color: var(--text-gray);
+        font-size: 18px;
+        font-weight: 500;
+        transition: color 0.3s;
+      }
 
-        .nav-links a:hover {
-            color: var(--primary-blue);
-        }
+      .nav-links a:hover {
+        color: var(--primary-blue);
+      }
 
-        .login-btn {
-            grid-column: 10 / span 2; /* 오른쪽 1칸 남기고 2칸 차지 */
-            text-align: right;
-            font-size: 20px;
-            font-weight: 600;
-            color: var(--text-gray);
-            cursor: pointer;
-        }
+      .login-btn {
+        grid-column: 10 / span 2; /* 오른쪽 1칸 남기고 2칸 차지 */
+        text-align: right;
+        font-size: 20px;
+        font-weight: 600;
+        color: var(--text-gray);
+        cursor: pointer;
+      }
 
-        /* 메인 컨텐츠 및 기타 스타일 */
-        main {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: calc(100vh - 200px);
-            position: relative;
-            z-index: 5;
-            text-align: center;
-        }
+      /* 메인 컨텐츠 및 기타 스타일 */
+      main {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: calc(100vh - 200px);
+        position: relative;
+        z-index: 5;
+        text-align: center;
+      }
 
-        h1 {
-            font-size: 80px;
-            font-weight: 700;
-            margin: 0;
-            color: var(--text-dark);
-        }
+      h1 {
+        font-size: 80px;
+        font-weight: 700;
+        margin: 0;
+        color: var(--text-dark);
+      }
 
-        .subtitle {
-            font-size: 22px;
-            color: rgba(0, 0, 0, 0.6);
-            margin-top: 10px;
-            margin-bottom: 50px;
-        }
+      .subtitle {
+        font-size: 22px;
+        color: rgba(0, 0, 0, 0.6);
+        margin-top: 10px;
+        margin-bottom: 50px;
+      }
 
-        .search-container {
-            position: relative;
-            width: 730px;
-            margin-bottom: 40px;
-        }
+      .search-container {
+        position: relative;
+        width: 730px;
+        margin-bottom: 40px;
+      }
 
-        .search-input {
-            width: 100%;
-            height: 60px;
-            padding: 0 60px 0 30px;
-            border-radius: 40px;
-            border: 0.5px solid var(--primary-blue);
-            background: white;
-            box-shadow: var(--shadow-blue);
-            font-size: 18px;
-            outline: none;
-            box-sizing: border-box;
-        }
+      .search-input {
+        width: 100%;
+        height: 60px;
+        padding: 0 60px 0 30px;
+        border-radius: 40px;
+        border: 0.5px solid var(--primary-blue);
+        background: white;
+        box-shadow: var(--shadow-blue);
+        font-size: 18px;
+        outline: none;
+        box-sizing: border-box;
+      }
 
-        .search-icon-btn {
-            position: absolute;
-            right: 25px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 28px;
-            height: 28px;
-            cursor: pointer;
-        }
+      .search-icon-btn {
+        position: absolute;
+        right: 25px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 28px;
+        height: 28px;
+        cursor: pointer;
+      }
 
-        .tags-container {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            justify-content: center;
-            max-width: 800px;
-        }
+      .tags-container {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+        justify-content: center;
+        max-width: 800px;
+      }
 
-        .tag {
-            padding: 8px 22px;
-            background: white;
-            border: 0.5px solid var(--primary-blue);
-            box-shadow: var(--shadow-blue);
-            border-radius: 20px;
-            color: var(--primary-blue);
-            font-size: 18px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
+      .tag {
+        padding: 8px 22px;
+        background: white;
+        border: 0.5px solid var(--primary-blue);
+        box-shadow: var(--shadow-blue);
+        border-radius: 20px;
+        color: var(--primary-blue);
+        font-size: 18px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
 
-        .tag:hover {
-            background: var(--primary-blue);
-            color: white;
-        }
+      .tag:hover {
+        background: var(--primary-blue);
+        color: white;
+      }
 
-        .bottom-nav {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 100;
-            cursor: pointer;
-            transition: transform 0.3s;
-        }
+      .bottom-nav {
+        position: fixed;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 100;
+        cursor: pointer;
+        transition: transform 0.3s;
+      }
 
-        .arrow-up-icon {
-            width: 40px;
-            height: auto;
-            opacity: 0.7;
-        }
+      .arrow-up-icon {
+        width: 40px;
+        height: auto;
+        opacity: 0.7;
+      }
     </style>
-</head>
-<body>
-
+  </head>
+  <body>
     <div class="bg-glow"></div>
 
     <nav>
-        <div class="logo-area">
-            <img src="logo.png" alt="Logo" class="logo-img">
-            <span>API Wiki</span>
-        </div>
-        <div class="nav-links">
-            <a href="#">Community</a>
-            <a href="#">Category</a>
-            <a href="#">About Us</a>
-        </div>
-        <div class="login-btn">Login</div>
+      <div class="logo-area">
+        <img src="logo.png" alt="Logo" class="logo-img" />
+        <span>API Wiki</span>
+      </div>
+      <div class="nav-links">
+        <a href="#">Community</a>
+        <a href="#">Category</a>
+        <a href="#">About Us</a>
+      </div>
+      <div class="login-btn">Login</div>
     </nav>
 
     <main>
-        <h1>API Wiki</h1>
-        <p class="subtitle">개발자가 함께 만드는 API 지식, 실시간으로 업데이트됩니다</p>
+      <h1>API Wiki</h1>
+      <p class="subtitle">개발자가 함께 만드는 API 지식, 실시간으로 업데이트됩니다</p>
 
-        <div class="search-container">
-            <input type="text" class="search-input" placeholder="궁금한 API를 검색해보세요">
-            <img src="search_icon.png" alt="Search" class="search-icon-btn">
-        </div>
+      <div class="search-container">
+        <input type="text" class="search-input" placeholder="궁금한 API를 검색해보세요" />
+        <img src="search_icon.png" alt="Search" class="search-icon-btn" />
+      </div>
 
-        <div class="tags-container">
-            <div class="tag">결제</div>
-            <div class="tag">소셜로그인</div>
-            <div class="tag">지도</div>
-            <div class="tag">날씨</div>
-            <div class="tag">AI</div>
-            <div class="tag">이메일</div>
-            <div class="tag">금융</div>
-        </div>
+      <div class="tags-container">
+        <div class="tag">결제</div>
+        <div class="tag">소셜로그인</div>
+        <div class="tag">지도</div>
+        <div class="tag">날씨</div>
+        <div class="tag">AI</div>
+        <div class="tag">이메일</div>
+        <div class="tag">금융</div>
+      </div>
     </main>
 
     <div class="bottom-nav">
-        <img src="nav-arrow-up-icon.png" alt="Open Modal" class="arrow-up-icon">
+      <img src="nav-arrow-up-icon.png" alt="Open Modal" class="arrow-up-icon" />
     </div>
-
-</body>
+  </body>
 </html>

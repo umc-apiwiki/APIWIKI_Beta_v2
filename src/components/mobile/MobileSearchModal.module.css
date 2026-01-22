@@ -1,0 +1,154 @@
+/* MobileSearchModal.module.css */
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: white;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal {
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.searchBar {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background-color: white;
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+
+.searchContainer {
+  width: 100%;
+  height: 2.8rem;
+  position: relative;
+  background-color: white;
+  border-radius: 1.25rem;
+  overflow: hidden;
+  box-shadow: 0px 2px 5px rgba(1, 149, 255, 0.2);
+  display: flex;
+  align-items: center;
+  padding: 0 3.5rem 0 1.25rem;
+}
+
+.searchInput {
+  flex: 1;
+  font-size: 0.875rem;
+  color: #1f2937;
+  border: none;
+  outline: none;
+  background: transparent;
+  padding: 0;
+}
+
+.searchInput::placeholder {
+  color: #9ca3af;
+}
+
+.searchIcon {
+  position: absolute;
+  right: 1.25rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1.25rem;
+  height: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.sectionTitle {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1769aa;
+}
+
+.recentList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.recentItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background-color: white;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.recentItem:active {
+  background-color: #f3f4f6;
+}
+
+.recentIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  opacity: 0.5;
+}
+
+.recentText {
+  flex: 1;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #1f2937;
+}
+
+.removeButton {
+  width: 1.5rem;
+  height: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  opacity: 0.5;
+  transition: opacity 0.2s;
+}
+
+.removeButton:active {
+  opacity: 1;
+}
+
+.highlight {
+  font-weight: 700;
+  color: #2563eb;
+}

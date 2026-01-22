@@ -1,0 +1,13 @@
+/* Header.module.css - 모바일에서 숨김 처리 */
+
+.header {
+  /* 데스크톱에서는 표시 */
+  display: grid;
+}
+
+/* 모바일에서는 Header 완전히 숨김 (768px 이하) */
+@media (max-width: 768px) {
+  .header {
+    display: none !important;
+  }
+}

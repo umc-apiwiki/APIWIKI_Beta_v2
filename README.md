@@ -5,6 +5,7 @@
 API 위키는 개발자들이 실제 사용 경험을 공유하며 함께 만드는 API 선택 가이드 플랫폼입니다.
 
 ### 핵심 기능
+
 - 🔍 **API 통합 검색** - 다양한 API를 한 곳에서 검색하고 비교
 - 📊 **실사용자 후기** - 실제 사용 경험 기반 평가
 - 💰 **비용 계산기** - 예상 사용량 기반 비용 산정
@@ -12,7 +13,9 @@ API 위키는 개발자들이 실제 사용 경험을 공유하며 함께 만드
 - 🎯 **카테고리별 탐색** - 결제, 지도, AI 등 카테고리 분류
 
 ## 🚀 빠른 시작
-  d
+
+d
+
 ### 1. 프로젝트 생성
 
 ```bash
@@ -29,7 +32,7 @@ cd api-wiki
 # lucide-react 아이콘 라이브러리 설치
 npm install lucide-react
 ```
- 
+
 ### 3. 프로젝트 구조 생성
 
 ```
@@ -86,24 +89,22 @@ npm run dev
 
 - **`/`** (src/app/page.tsx) - 홈 페이지
   - 검색바, 카테고리, 인기 API, 추천 API, 뉴스
-  
 - **`/explore`** (src/app/explore/page.tsx) - 탐색 페이지
   - 검색 필터, 정렬, API 그리드
-  
 - **`/api/[id]`** (src/app/api/[id]/page.tsx) - API 상세 페이지
   - 개요, 비용 정보, 후기, 코드 예제 탭
 
 ### Components
 
-| 컴포넌트 | 설명 |
-|---------|------|
-| `Header.tsx` | 상단 네비게이션 바 (로고, 메뉴, 로그인 버튼) |
-| `Footer.tsx` | 하단 푸터 |
-| `SearchBar.tsx` | 검색 입력창 및 버튼 |
-| `CategoryCarousel.tsx` | 카테고리 가로 스크롤 |
-| `APICard.tsx` | API 정보 카드 |
-| `NewsCard.tsx` | 뉴스 카드 |
-| `APICarousel.tsx` | API 카드 가로 스크롤 |
+| 컴포넌트               | 설명                                         |
+| ---------------------- | -------------------------------------------- |
+| `Header.tsx`           | 상단 네비게이션 바 (로고, 메뉴, 로그인 버튼) |
+| `Footer.tsx`           | 하단 푸터                                    |
+| `SearchBar.tsx`        | 검색 입력창 및 버튼                          |
+| `CategoryCarousel.tsx` | 카테고리 가로 스크롤                         |
+| `APICard.tsx`          | API 정보 카드                                |
+| `NewsCard.tsx`         | 뉴스 카드                                    |
+| `APICarousel.tsx`      | API 카드 가로 스크롤                         |
 
 ### Data & Types
 
@@ -116,18 +117,10 @@ npm run dev
 
 ```css
 /* Primary Colors */
---blue-500: #4A90E2 (메인 색상)
---cyan-400: #81FFEF (그라디언트 시작)
---pink-400: #F067B4 (그라디언트 끝)
-
-/* Status Colors */
---green-500: #34A853 (무료)
---yellow-500: #FBBC05 (혼합)
---red-500: #EA4335 (유료)
-
-/* Neutral Colors */
---gray-50: #F9FAFB (배경)
---gray-900: #111827 (텍스트)
+--blue-500: #4a90e2 (메인 색상) --cyan-400: #81ffef (그라디언트 시작) --pink-400: #f067b4
+  (그라디언트 끝) /* Status Colors */ --green-500: #34a853 (무료) --yellow-500: #fbbc05 (혼합)
+  --red-500: #ea4335 (유료) /* Neutral Colors */ --gray-50: #f9fafb (배경) --gray-900: #111827
+  (텍스트);
 ```
 
 ### 타이포그래피
@@ -153,9 +146,7 @@ const query = searchParams.get('q') || '';
 
 ```typescript
 // 검색 필터
-result = result.filter(api => 
-  api.name.toLowerCase().includes(query.toLowerCase())
-);
+result = result.filter((api) => api.name.toLowerCase().includes(query.toLowerCase()));
 
 // 정렬
 result.sort((a, b) => b.rating - a.rating); // 인기순
@@ -193,18 +184,21 @@ lg:grid-cols-3
 ## 🚧 다음 단계 (To-Do)
 
 ### Phase 1 - MVP 완성
+
 - [ ] 로그인/회원가입 모달 구현
 - [ ] 북마크 기능 (LocalStorage)
 - [ ] 비교하기 모달
 - [ ] 후기 작성 폼
 
 ### Phase 2 - 백엔드 연동
+
 - [ ] Next.js API Routes 생성
 - [ ] 데이터베이스 연결 (PostgreSQL/MongoDB)
 - [ ] 실제 API 데이터 연동
 - [ ] 사용자 인증 (NextAuth.js)
 
 ### Phase 3 - 고급 기능
+
 - [ ] 위키 편집 기능
 - [ ] 실시간 API 테스트 환경
 - [ ] AI 기반 API 추천

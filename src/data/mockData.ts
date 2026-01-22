@@ -27,15 +27,14 @@ const _mockAPIs: MockAPI[] = [
     pricing: {
       free: '일일 10,000 할당량',
       basic: '월 $100 - 100,000 할당량',
-      pro: '월 $1,000 - 1,000,000 할당량'
-    }
-    ,
+      pro: '월 $1,000 - 1,000,000 할당량',
+    },
     countries: ['전세계'],
     authMethods: ['OAuth2', 'APIKey'],
     docsLanguages: ['영어'],
     relatedIds: ['19', '2', '6'],
     viewsLast7Days: 120000,
-    recommendedForStacks: ['React', 'Node.js']
+    recommendedForStacks: ['React', 'Node.js'],
   },
   {
     id: '2',
@@ -51,15 +50,14 @@ const _mockAPIs: MockAPI[] = [
     pricing: {
       free: '무료 (제한적)',
       basic: '월 $50 - 상업적 이용',
-      pro: '커스텀 플랜'
-    }
-    ,
+      pro: '커스텀 플랜',
+    },
     countries: ['전세계'],
     authMethods: ['APIKey'],
     docsLanguages: ['영어'],
     relatedIds: ['5', '6', '8'],
     viewsLast7Days: 76000,
-    recommendedForStacks: ['Leaflet', 'OpenLayers']
+    recommendedForStacks: ['Leaflet', 'OpenLayers'],
   },
   {
     id: '3',
@@ -73,15 +71,14 @@ const _mockAPIs: MockAPI[] = [
     categories: ['소셜로그인', '인증'],
     features: ['OAuth 2.0', '원클릭 로그인', '프로필 정보', '보안'],
     pricing: {
-      free: '완전 무료'
-    }
-    ,
+      free: '완전 무료',
+    },
     countries: ['전세계'],
     authMethods: ['OAuth2'],
     docsLanguages: ['영어', '한국어'],
     relatedIds: ['12', '30'],
     viewsLast7Days: 98000,
-    recommendedForStacks: ['Web', 'Android', 'iOS']
+    recommendedForStacks: ['Web', 'Android', 'iOS'],
   },
   {
     id: '4',
@@ -96,15 +93,14 @@ const _mockAPIs: MockAPI[] = [
     features: ['텍스트 생성', '대화형 AI', '번역', '요약'],
     pricing: {
       basic: '토큰당 $0.002',
-      pro: '토큰당 $0.06 (GPT-5)'
-    }
-    ,
+      pro: '토큰당 $0.06 (GPT-5)',
+    },
     countries: ['전세계'],
     authMethods: ['APIKey', 'OAuth2'],
     docsLanguages: ['영어'],
     relatedIds: ['8', '17', '30'],
     viewsLast7Days: 220000,
-    recommendedForStacks: ['Python', 'Node.js']
+    recommendedForStacks: ['Python', 'Node.js'],
   },
   {
     id: '5',
@@ -119,15 +115,14 @@ const _mockAPIs: MockAPI[] = [
     features: ['지도 표시', '길찾기', 'POI 검색', '로드뷰'],
     pricing: {
       free: '일일 30만건 무료',
-      basic: '초과분 건당 0.05원'
-    }
-    ,
+      basic: '초과분 건당 0.05원',
+    },
     countries: ['한국'],
     authMethods: ['APIKey'],
     docsLanguages: ['한국어', '영어'],
     relatedIds: ['6', '2'],
     viewsLast7Days: 45000,
-    recommendedForStacks: ['React', 'Vue']
+    recommendedForStacks: ['React', 'Vue'],
   },
   {
     id: '6',
@@ -141,15 +136,14 @@ const _mockAPIs: MockAPI[] = [
     categories: ['지도', '위치'],
     features: ['지도 표시', '로컬 검색', '로드뷰', '길찾기'],
     pricing: {
-      free: '일일 30만건 무료'
-    }
-    ,
+      free: '일일 30만건 무료',
+    },
     countries: ['한국'],
     authMethods: ['APIKey', 'OAuth2'],
     docsLanguages: ['한국어'],
     relatedIds: ['5', '2'],
     viewsLast7Days: 52000,
-    recommendedForStacks: ['Web', 'Android']
+    recommendedForStacks: ['Web', 'Android'],
   },
   {
     id: '7',
@@ -165,15 +159,14 @@ const _mockAPIs: MockAPI[] = [
     pricing: {
       free: '월 100건 무료',
       basic: '건당 0.9%',
-      pro: '건당 0.7%'
-    }
-    ,
+      pro: '건당 0.7%',
+    },
     countries: ['한국'],
     authMethods: ['APIKey'],
     docsLanguages: ['한국어'],
     relatedIds: ['10', '22'],
     viewsLast7Days: 31000,
-    recommendedForStacks: ['Backend', 'Node.js']
+    recommendedForStacks: ['Backend', 'Node.js'],
   },
   {
     id: '8',
@@ -189,15 +182,14 @@ const _mockAPIs: MockAPI[] = [
     pricing: {
       free: '첫 12개월 5GB 무료',
       basic: 'GB당 $0.023',
-      pro: 'GB당 $0.021 (대용량)'
-    }
-    ,
+      pro: 'GB당 $0.021 (대용량)',
+    },
     countries: ['전세계'],
     authMethods: ['APIKey', 'IAM'],
     docsLanguages: ['영어'],
     relatedIds: ['17', '26'],
     viewsLast7Days: 150000,
-    recommendedForStacks: ['Node.js', 'Python']
+    recommendedForStacks: ['Node.js', 'Python'],
   },
   {
     id: '9',
@@ -213,15 +205,14 @@ const _mockAPIs: MockAPI[] = [
     pricing: {
       free: '월 100건 무료',
       basic: '월 $19.95 - 50,000건',
-      pro: '월 $89.95 - 100,000건'
-    }
-    ,
+      pro: '월 $89.95 - 100,000건',
+    },
     countries: ['전세계'],
     authMethods: ['APIKey'],
     docsLanguages: ['영어'],
     relatedIds: ['15', '13'],
     viewsLast7Days: 22000,
-    recommendedForStacks: ['Backend', 'Python']
+    recommendedForStacks: ['Backend', 'Python'],
   },
   {
     id: '10',
@@ -237,15 +228,14 @@ const _mockAPIs: MockAPI[] = [
     pricing: {
       free: '기본 무료',
       basic: '건당 2.9% + $0.30',
-      pro: '커스텀 요금제'
-    }
-    ,
+      pro: '커스텀 요금제',
+    },
     countries: ['전세계'],
     authMethods: ['APIKey'],
     docsLanguages: ['영어'],
     relatedIds: ['7', '22'],
     viewsLast7Days: 98000,
-    recommendedForStacks: ['Backend', 'Ruby', 'Node.js']
+    recommendedForStacks: ['Backend', 'Ruby', 'Node.js'],
   },
   {
     id: '11',
@@ -261,8 +251,8 @@ const _mockAPIs: MockAPI[] = [
     pricing: {
       free: '일일 1,000건 무료',
       basic: '월 $40 - 100,000건',
-      pro: '월 $180 - 500,000건'
-    }
+      pro: '월 $180 - 500,000건',
+    },
   },
   {
     id: '12',
@@ -277,8 +267,8 @@ const _mockAPIs: MockAPI[] = [
     features: ['이메일 인증', '소셜 로그인', '전화번호 인증', '익명 로그인'],
     pricing: {
       free: '무제한 무료',
-      basic: '부가 기능 유료'
-    }
+      basic: '부가 기능 유료',
+    },
   },
   {
     id: '13',
@@ -293,8 +283,8 @@ const _mockAPIs: MockAPI[] = [
     features: ['SMS 발송', '음성 통화', 'MMS', '국제 발송'],
     pricing: {
       basic: '건당 $0.0075',
-      pro: '대량 할인 가능'
-    }
+      pro: '대량 할인 가능',
+    },
   },
   {
     id: '14',
@@ -308,8 +298,8 @@ const _mockAPIs: MockAPI[] = [
     categories: ['데이터', '개발도구'],
     features: ['저장소 관리', 'Issue 추적', 'PR 관리', '통계'],
     pricing: {
-      free: '시간당 5,000건'
-    }
+      free: '시간당 5,000건',
+    },
   },
   {
     id: '15',
@@ -323,8 +313,8 @@ const _mockAPIs: MockAPI[] = [
     categories: ['알림', '통신'],
     features: ['메시지 전송', '봇 생성', '채널 관리', '파일 공유'],
     pricing: {
-      free: '무료'
-    }
+      free: '무료',
+    },
   },
   {
     id: '16',
@@ -338,8 +328,8 @@ const _mockAPIs: MockAPI[] = [
     categories: ['알림', '통신', 'SNS'],
     features: ['봇 생성', '메시지 전송', '음성 채널', '웹훅'],
     pricing: {
-      free: '완전 무료'
-    }
+      free: '완전 무료',
+    },
   },
   {
     id: '17',
@@ -355,8 +345,8 @@ const _mockAPIs: MockAPI[] = [
     pricing: {
       free: '기본 무료',
       basic: '월 $20',
-      pro: '월 $200'
-    }
+      pro: '월 $200',
+    },
   },
   {
     id: '18',
@@ -370,8 +360,8 @@ const _mockAPIs: MockAPI[] = [
     categories: ['데이터', '생산성'],
     features: ['데이터베이스 CRUD', '페이지 생성', '블록 관리', '검색'],
     pricing: {
-      free: '무료'
-    }
+      free: '무료',
+    },
   },
   {
     id: '19',
@@ -385,8 +375,8 @@ const _mockAPIs: MockAPI[] = [
     categories: ['미디어', 'SNS'],
     features: ['음악 검색', '플레이리스트', '재생 제어', '추천'],
     pricing: {
-      free: '완전 무료'
-    }
+      free: '완전 무료',
+    },
   },
   {
     id: '20',
@@ -402,8 +392,8 @@ const _mockAPIs: MockAPI[] = [
     pricing: {
       free: '월 1,500건',
       basic: '월 $100 - 10,000건',
-      pro: '월 $5,000 - 1,000,000건'
-    }
+      pro: '월 $5,000 - 1,000,000건',
+    },
   },
   {
     id: '21',
@@ -417,8 +407,8 @@ const _mockAPIs: MockAPI[] = [
     categories: ['SNS', '미디어'],
     features: ['게시물 업로드', '댓글 관리', '분석', '스토리'],
     pricing: {
-      free: '무료 (비즈니스 계정)'
-    }
+      free: '무료 (비즈니스 계정)',
+    },
   },
   {
     id: '22',
@@ -434,8 +424,8 @@ const _mockAPIs: MockAPI[] = [
     pricing: {
       free: '월 50건 무료',
       basic: '건당 1.2%',
-      pro: '건당 0.9%'
-    }
+      pro: '건당 0.9%',
+    },
   },
   {
     id: '23',
@@ -450,8 +440,8 @@ const _mockAPIs: MockAPI[] = [
     features: ['휴대폰 본인인증', '전자서명', '신분증 진위확인', 'AML'],
     pricing: {
       basic: '건당 300원',
-      pro: '대량 할인'
-    }
+      pro: '대량 할인',
+    },
   },
   {
     id: '24',
@@ -466,8 +456,8 @@ const _mockAPIs: MockAPI[] = [
     features: ['알림톡', '친구톡', '템플릿 관리', '예약 발송'],
     pricing: {
       basic: '건당 8원',
-      pro: '건당 6원 (대량)'
-    }
+      pro: '건당 6원 (대량)',
+    },
   },
   {
     id: '25',
@@ -483,8 +473,8 @@ const _mockAPIs: MockAPI[] = [
     pricing: {
       free: '30MB 무료',
       basic: '월 $5 - 250MB',
-      pro: '월 $56 - 5GB'
-    }
+      pro: '월 $56 - 5GB',
+    },
   },
   {
     id: '26',
@@ -500,8 +490,8 @@ const _mockAPIs: MockAPI[] = [
     pricing: {
       free: '512MB 무료',
       basic: '월 $57 - 10GB',
-      pro: '월 $177 - 40GB'
-    }
+      pro: '월 $177 - 40GB',
+    },
   },
   {
     id: '27',
@@ -517,8 +507,8 @@ const _mockAPIs: MockAPI[] = [
     pricing: {
       free: '월 100만건 무료',
       basic: '100만건당 $0.20',
-      pro: '커스텀'
-    }
+      pro: '커스텀',
+    },
   },
   {
     id: '28',
@@ -533,8 +523,8 @@ const _mockAPIs: MockAPI[] = [
     features: ['방문자 추적', '이벤트 분석', '전환 추적', '보고서'],
     pricing: {
       free: '완전 무료',
-      pro: '월 $150,000 (GA4 360)'
-    }
+      pro: '월 $150,000 (GA4 360)',
+    },
   },
   {
     id: '29',
@@ -550,8 +540,8 @@ const _mockAPIs: MockAPI[] = [
     pricing: {
       free: '월 10,000건 무료',
       basic: '월 $1 - 100,000건',
-      pro: '월 $299 - 1,000,000건'
-    }
+      pro: '월 $299 - 1,000,000건',
+    },
   },
   {
     id: '30',
@@ -568,8 +558,8 @@ const _mockAPIs: MockAPI[] = [
     pricing: {
       free: '월 7,000명 무료',
       basic: '월 $35 - 1,000명',
-      pro: '월 $240 - 1,000명'
-    }
+      pro: '월 $240 - 1,000명',
+    },
   },
   {
     id: '31',
@@ -586,8 +576,8 @@ const _mockAPIs: MockAPI[] = [
     pricing: {
       free: '월 500건 무료',
       basic: '월 $13 - 5,000건',
-      pro: '월 $299 - 무제한'
-    }
+      pro: '월 $299 - 무제한',
+    },
   },
   {
     id: '32',
@@ -604,8 +594,8 @@ const _mockAPIs: MockAPI[] = [
     pricing: {
       free: '월 $200 크레딧',
       basic: '1,000건당 $5',
-      pro: '커스텀'
-    }
+      pro: '커스텀',
+    },
   },
   {
     id: '33',
@@ -620,8 +610,8 @@ const _mockAPIs: MockAPI[] = [
     tags: ['쇼핑몰', '이커머스', '결제', '상품관리', '주문관리'],
     features: ['상품 관리', '주문 처리', '재고 관리', '결제'],
     pricing: {
-      free: '무료 (Shopify 가입 필요)'
-    }
+      free: '무료 (Shopify 가입 필요)',
+    },
   },
   {
     id: '34',
@@ -638,8 +628,8 @@ const _mockAPIs: MockAPI[] = [
     pricing: {
       free: '오픈소스 무료',
       basic: '월 $95',
-      pro: '월 $175'
-    }
+      pro: '월 $175',
+    },
   },
   {
     id: '35',
@@ -656,8 +646,8 @@ const _mockAPIs: MockAPI[] = [
     pricing: {
       free: '기본 무료',
       basic: '건당 3.4% + $0.30',
-      pro: '커스텀'
-    }
+      pro: '커스텀',
+    },
   },
   {
     id: '36',
@@ -672,8 +662,8 @@ const _mockAPIs: MockAPI[] = [
     tags: ['화상회의', 'Zoom', '웨비나', '미팅', '영상통화'],
     features: ['미팅 생성', '웨비나', '녹화', '참가자 관리'],
     pricing: {
-      free: '무료 (Zoom 계정 필요)'
-    }
+      free: '무료 (Zoom 계정 필요)',
+    },
   },
   {
     id: '37',
@@ -688,8 +678,8 @@ const _mockAPIs: MockAPI[] = [
     tags: ['파일저장', '클라우드', '동기화', '공유', '백업'],
     features: ['파일 업로드', '공유', '동기화', '버전 관리'],
     pricing: {
-      free: '무료 (Dropbox 계정 필요)'
-    }
+      free: '무료 (Dropbox 계정 필요)',
+    },
   },
   {
     id: '38',
@@ -706,8 +696,8 @@ const _mockAPIs: MockAPI[] = [
     pricing: {
       free: '무료 (제한적)',
       basic: '월 $50',
-      pro: '월 $800'
-    }
+      pro: '월 $800',
+    },
   },
   {
     id: '39',
@@ -724,8 +714,8 @@ const _mockAPIs: MockAPI[] = [
     pricing: {
       free: '무료 (제한적)',
       basic: '월 $19/사용자',
-      pro: '월 $49/사용자'
-    }
+      pro: '월 $49/사용자',
+    },
   },
   {
     id: '40',
@@ -741,8 +731,8 @@ const _mockAPIs: MockAPI[] = [
     features: ['고객 관리', '영업 자동화', '분석', '통합'],
     pricing: {
       basic: '월 $25/사용자',
-      pro: '월 $150/사용자'
-    }
+      pro: '월 $150/사용자',
+    },
   },
   {
     id: '41',
@@ -757,8 +747,8 @@ const _mockAPIs: MockAPI[] = [
     tags: ['프로젝트관리', '칸반', '태스크', '협업', '보드'],
     features: ['보드 관리', '카드 생성', '리스트', '라벨'],
     pricing: {
-      free: '무료'
-    }
+      free: '무료',
+    },
   },
   {
     id: '42',
@@ -775,8 +765,8 @@ const _mockAPIs: MockAPI[] = [
     pricing: {
       free: '10명까지 무료',
       basic: '월 $7.75/사용자',
-      pro: '월 $15.25/사용자'
-    }
+      pro: '월 $15.25/사용자',
+    },
   },
   {
     id: '43',
@@ -793,8 +783,8 @@ const _mockAPIs: MockAPI[] = [
     pricing: {
       free: '무료 (제한적)',
       basic: '월 $10.99/사용자',
-      pro: '월 $24.99/사용자'
-    }
+      pro: '월 $24.99/사용자',
+    },
   },
   {
     id: '44',
@@ -811,8 +801,8 @@ const _mockAPIs: MockAPI[] = [
     pricing: {
       free: '무료',
       basic: '월 $4/사용자',
-      pro: '월 $19/사용자'
-    }
+      pro: '월 $19/사용자',
+    },
   },
   {
     id: '45',
@@ -829,8 +819,8 @@ const _mockAPIs: MockAPI[] = [
     pricing: {
       free: '5명까지 무료',
       basic: '월 $3/사용자',
-      pro: '월 $6/사용자'
-    }
+      pro: '월 $6/사용자',
+    },
   },
   {
     id: '46',
@@ -847,8 +837,8 @@ const _mockAPIs: MockAPI[] = [
     pricing: {
       free: '월 6,000분 무료',
       basic: '월 $30',
-      pro: '커스텀'
-    }
+      pro: '커스텀',
+    },
   },
   {
     id: '47',
@@ -863,8 +853,8 @@ const _mockAPIs: MockAPI[] = [
     tags: ['CI/CD', 'Jenkins', '빌드', '자동화', '오픈소스'],
     features: ['빌드 자동화', '플러그인', '파이프라인', '배포'],
     pricing: {
-      free: '오픈소스 무료'
-    }
+      free: '오픈소스 무료',
+    },
   },
   {
     id: '48',
@@ -881,8 +871,8 @@ const _mockAPIs: MockAPI[] = [
     pricing: {
       free: '무료 (제한적)',
       basic: '월 $5',
-      pro: '월 $7/사용자'
-    }
+      pro: '월 $7/사용자',
+    },
   },
   {
     id: '49',
@@ -897,8 +887,8 @@ const _mockAPIs: MockAPI[] = [
     tags: ['Kubernetes', '오케스트레이션', '컨테이너', 'K8s', 'DevOps'],
     features: ['파드 관리', '서비스', '배포', '스케일링'],
     pricing: {
-      free: '오픈소스 무료'
-    }
+      free: '오픈소스 무료',
+    },
   },
   {
     id: '50',
@@ -915,8 +905,8 @@ const _mockAPIs: MockAPI[] = [
     pricing: {
       free: '무료 dyno',
       basic: '월 $7/dyno',
-      pro: '월 $50/dyno'
-    }
+      pro: '월 $50/dyno',
+    },
   },
   {
     id: '51',
@@ -933,8 +923,8 @@ const _mockAPIs: MockAPI[] = [
     pricing: {
       free: '무료 (제한적)',
       basic: '월 $20',
-      pro: '월 $50/사용자'
-    }
+      pro: '월 $50/사용자',
+    },
   },
   {
     id: '52',
@@ -951,8 +941,8 @@ const _mockAPIs: MockAPI[] = [
     pricing: {
       free: '무료 (제한적)',
       basic: '월 $19',
-      pro: '월 $99'
-    }
+      pro: '월 $99',
+    },
   },
   {
     id: '53',
@@ -969,8 +959,8 @@ const _mockAPIs: MockAPI[] = [
     pricing: {
       free: '월 25 크레딧',
       basic: '월 $89',
-      pro: '월 $224'
-    }
+      pro: '월 $224',
+    },
   },
   {
     id: '54',
@@ -985,8 +975,8 @@ const _mockAPIs: MockAPI[] = [
     tags: ['이미지', '호스팅', '공유', 'CDN', '갤러리'],
     features: ['이미지 업로드', '공유', '앨범', '댓글'],
     pricing: {
-      free: '무료 (제한적)'
-    }
+      free: '무료 (제한적)',
+    },
   },
   {
     id: '55',
@@ -1001,8 +991,8 @@ const _mockAPIs: MockAPI[] = [
     tags: ['이미지', '사진', '무료', '고화질', '스톡'],
     features: ['이미지 검색', '다운로드', '컬렉션', '사용자'],
     pricing: {
-      free: '무료'
-    }
+      free: '무료',
+    },
   },
   {
     id: '56',
@@ -1017,8 +1007,8 @@ const _mockAPIs: MockAPI[] = [
     tags: ['GIF', '애니메이션', '검색', '스티커', '밈'],
     features: ['GIF 검색', '트렌딩', '스티커', '업로드'],
     pricing: {
-      free: '무료'
-    }
+      free: '무료',
+    },
   },
   {
     id: '57',
@@ -1035,8 +1025,8 @@ const _mockAPIs: MockAPI[] = [
     pricing: {
       free: '무료 (제한적)',
       basic: '월 $7',
-      pro: '월 $20'
-    }
+      pro: '월 $20',
+    },
   },
   {
     id: '58',
@@ -1051,8 +1041,8 @@ const _mockAPIs: MockAPI[] = [
     tags: ['음악', '오디오', '스트리밍', '플레이어', '팟캐스트'],
     features: ['트랙 검색', '재생', '플레이리스트', '사용자'],
     pricing: {
-      free: '무료'
-    }
+      free: '무료',
+    },
   },
   {
     id: '59',
@@ -1069,8 +1059,8 @@ const _mockAPIs: MockAPI[] = [
     pricing: {
       free: '무료 (제한적)',
       basic: '월 $25',
-      pro: '월 $833'
-    }
+      pro: '월 $833',
+    },
   },
   {
     id: '60',
@@ -1087,8 +1077,8 @@ const _mockAPIs: MockAPI[] = [
     pricing: {
       free: '무료 (제한적)',
       basic: '월 $49',
-      pro: '커스텀'
-    }
+      pro: '커스텀',
+    },
   },
   {
     id: '61',
@@ -1105,8 +1095,8 @@ const _mockAPIs: MockAPI[] = [
     pricing: {
       free: '무료 (제한적)',
       basic: '월 $120',
-      pro: '커스텀'
-    }
+      pro: '커스텀',
+    },
   },
   {
     id: '62',
@@ -1122,8 +1112,8 @@ const _mockAPIs: MockAPI[] = [
     features: ['라이브 챗', '메시징', '봇', '헬프센터'],
     pricing: {
       basic: '월 $39',
-      pro: '월 $99'
-    }
+      pro: '월 $99',
+    },
   },
   {
     id: '63',
@@ -1139,8 +1129,8 @@ const _mockAPIs: MockAPI[] = [
     features: ['인시던트 관리', '온콜', '에스컬레이션', '알림'],
     pricing: {
       basic: '월 $21/사용자',
-      pro: '월 $41/사용자'
-    }
+      pro: '월 $41/사용자',
+    },
   },
   {
     id: '64',
@@ -1156,8 +1146,8 @@ const _mockAPIs: MockAPI[] = [
     features: ['인프라 모니터링', 'APM', '로그 관리', '보안'],
     pricing: {
       basic: '월 $15/호스트',
-      pro: '월 $23/호스트'
-    }
+      pro: '월 $23/호스트',
+    },
   },
   {
     id: '65',
@@ -1174,8 +1164,8 @@ const _mockAPIs: MockAPI[] = [
     pricing: {
       free: '월 100GB 무료',
       basic: '월 $49',
-      pro: '월 $349'
-    }
+      pro: '월 $349',
+    },
   },
   {
     id: '66',
@@ -1192,8 +1182,8 @@ const _mockAPIs: MockAPI[] = [
     pricing: {
       free: '월 5,000 에러',
       basic: '월 $26',
-      pro: '월 $80'
-    }
+      pro: '월 $80',
+    },
   },
   {
     id: '67',
@@ -1209,8 +1199,8 @@ const _mockAPIs: MockAPI[] = [
     features: ['세션 리플레이', '에러 추적', '성능', '분석'],
     pricing: {
       basic: '월 $99',
-      pro: '월 $249'
-    }
+      pro: '월 $249',
+    },
   },
   {
     id: '68',
@@ -1227,8 +1217,8 @@ const _mockAPIs: MockAPI[] = [
     pricing: {
       free: '무료 (제한적)',
       basic: '월 $300',
-      pro: '커스텀'
-    }
+      pro: '커스텀',
+    },
   },
   {
     id: '69',
@@ -1243,8 +1233,8 @@ const _mockAPIs: MockAPI[] = [
     tags: ['CMS', '헤드리스', '오픈소스', 'Node.js', 'API'],
     features: ['콘텐츠 관리', 'REST/GraphQL', '플러그인', '커스터마이징'],
     pricing: {
-      free: '오픈소스 무료'
-    }
+      free: '오픈소스 무료',
+    },
   },
   {
     id: '70',
@@ -1261,8 +1251,8 @@ const _mockAPIs: MockAPI[] = [
     pricing: {
       free: '무료 (제한적)',
       basic: '월 $99',
-      pro: '월 $949'
-    }
+      pro: '월 $949',
+    },
   },
   {
     id: '71',
@@ -1277,8 +1267,8 @@ const _mockAPIs: MockAPI[] = [
     tags: ['WordPress', 'CMS', '블로그', 'REST', 'WP'],
     features: ['게시물 관리', '미디어', '사용자', '테마'],
     pricing: {
-      free: '오픈소스 무료'
-    }
+      free: '오픈소스 무료',
+    },
   },
   {
     id: '72',
@@ -1295,8 +1285,8 @@ const _mockAPIs: MockAPI[] = [
     pricing: {
       free: '무료 (제한적)',
       basic: '월 $10/사용자',
-      pro: '월 $20/사용자'
-    }
+      pro: '월 $20/사용자',
+    },
   },
   {
     id: '73',
@@ -1313,8 +1303,8 @@ const _mockAPIs: MockAPI[] = [
     pricing: {
       free: '무료 (제한적)',
       basic: '월 $25',
-      pro: '월 $599'
-    }
+      pro: '월 $599',
+    },
   },
   {
     id: '74',
@@ -1331,8 +1321,8 @@ const _mockAPIs: MockAPI[] = [
     pricing: {
       free: '오픈소스 무료',
       basic: '월 $99',
-      pro: '월 $299'
-    }
+      pro: '월 $299',
+    },
   },
   {
     id: '75',
@@ -1349,8 +1339,8 @@ const _mockAPIs: MockAPI[] = [
     pricing: {
       free: '무료 (제한적)',
       basic: '월 $29',
-      pro: '커스텀'
-    }
+      pro: '커스텀',
+    },
   },
   {
     id: '76',
@@ -1367,8 +1357,8 @@ const _mockAPIs: MockAPI[] = [
     pricing: {
       free: '무료 (제한적)',
       basic: '월 $12/사용자',
-      pro: '월 $29/사용자'
-    }
+      pro: '월 $29/사용자',
+    },
   },
   {
     id: '77',
@@ -1385,8 +1375,8 @@ const _mockAPIs: MockAPI[] = [
     pricing: {
       free: '오픈소스 무료',
       basic: '월 $75',
-      pro: '월 $300'
-    }
+      pro: '월 $300',
+    },
   },
   {
     id: '78',
@@ -1403,8 +1393,8 @@ const _mockAPIs: MockAPI[] = [
     pricing: {
       free: '무료 (제한적)',
       basic: '월 $50',
-      pro: '커스텀'
-    }
+      pro: '커스텀',
+    },
   },
   {
     id: '79',
@@ -1419,8 +1409,8 @@ const _mockAPIs: MockAPI[] = [
     tags: ['스트리밍', '게임', 'Twitch', '라이브', '방송'],
     features: ['스트림 정보', '채팅', '클립', '사용자'],
     pricing: {
-      free: '무료'
-    }
+      free: '무료',
+    },
   },
   {
     id: '80',
@@ -1437,8 +1427,8 @@ const _mockAPIs: MockAPI[] = [
     pricing: {
       free: '제한적 무료',
       basic: '파트너쉽 필요',
-      pro: '커스텀'
-    }
+      pro: '커스텀',
+    },
   },
   {
     id: '81',
@@ -1453,8 +1443,8 @@ const _mockAPIs: MockAPI[] = [
     tags: ['Pinterest', '이미지', '비주얼검색', '핀', '보드'],
     features: ['핀 생성', '보드', '검색', '분석'],
     pricing: {
-      free: '무료'
-    }
+      free: '무료',
+    },
   },
   {
     id: '82',
@@ -1469,8 +1459,8 @@ const _mockAPIs: MockAPI[] = [
     tags: ['Reddit', '커뮤니티', '포럼', '서브레딧', '게시글'],
     features: ['게시글', '댓글', '투표', '서브레딧'],
     pricing: {
-      free: '무료'
-    }
+      free: '무료',
+    },
   },
   {
     id: '83',
@@ -1485,8 +1475,8 @@ const _mockAPIs: MockAPI[] = [
     tags: ['Telegram', '봇', '메신저', '채팅', '자동화'],
     features: ['봇 생성', '메시지', '명령어', '인라인 키보드'],
     pricing: {
-      free: '완전 무료'
-    }
+      free: '완전 무료',
+    },
   },
   {
     id: '84',
@@ -1502,8 +1492,8 @@ const _mockAPIs: MockAPI[] = [
     features: ['메시지 전송', '템플릿', '미디어', '상태'],
     pricing: {
       basic: '메시지당 요금',
-      pro: '볼륨 할인'
-    }
+      pro: '볼륨 할인',
+    },
   },
   {
     id: '85',
@@ -1519,8 +1509,8 @@ const _mockAPIs: MockAPI[] = [
     features: ['메시지', '리치메뉴', 'Flex Message', '봇'],
     pricing: {
       free: '월 1,000건 무료',
-      basic: '추가 건당 요금'
-    }
+      basic: '추가 건당 요금',
+    },
   },
   {
     id: '86',
@@ -1537,8 +1527,8 @@ const _mockAPIs: MockAPI[] = [
     pricing: {
       free: '월 1,000건 무료',
       basic: '1,000건당 $1.50',
-      pro: '볼륨 할인'
-    }
+      pro: '볼륨 할인',
+    },
   },
   {
     id: '87',
@@ -1554,8 +1544,8 @@ const _mockAPIs: MockAPI[] = [
     features: ['얼굴 분석', '객체 탐지', 'Celebrity 인식', '텍스트 감지'],
     pricing: {
       basic: '이미지당 $0.001',
-      pro: '볼륨 할인'
-    }
+      pro: '볼륨 할인',
+    },
   },
   {
     id: '88',
@@ -1572,8 +1562,8 @@ const _mockAPIs: MockAPI[] = [
     pricing: {
       free: 'Lite 플랜',
       basic: '종량제',
-      pro: '커스텀'
-    }
+      pro: '커스텀',
+    },
   },
   {
     id: '89',
@@ -1589,8 +1579,8 @@ const _mockAPIs: MockAPI[] = [
     features: ['텍스트 번역', '언어 감지', '100+ 언어', 'NMT'],
     pricing: {
       basic: '100만 글자당 $20',
-      pro: '볼륨 할인'
-    }
+      pro: '볼륨 할인',
+    },
   },
   {
     id: '90',
@@ -1607,105 +1597,131 @@ const _mockAPIs: MockAPI[] = [
     pricing: {
       free: '월 500,000자 무료',
       basic: '월 $5.49',
-      pro: '월 $27.49'
-    }
-  }
+      pro: '월 $27.49',
+    },
+  },
 ];
 
 export const newsItems: NewsItem[] = [
   {
     id: '1',
     title: '카카오맵 API 중단으로 혹시 겪은 사람 있나요',
-    content: 'javascript appkey를 사용하고 도메인도 제대로 등록되어있고 잘쓰고 있었는데요! Uncaught ReferenceError: kakao is not defined...',
+    content:
+      'javascript appkey를 사용하고 도메인도 제대로 등록되어있고 잘쓰고 있었는데요! Uncaught ReferenceError: kakao is not defined...',
     author: 'anon40729937',
-    date: '2시간 전'
+    date: '2시간 전',
   },
   {
     id: '2',
     title: 'OpenAI의 ChatGPT API 업데이트 소식',
-    content: 'OpenAI에서 기본 ChatGPT API에 대해서 흥미로운 업데이트를 진행했습니다. 함수 호출(Function calling) 기능이 추가되었습니다...',
+    content:
+      'OpenAI에서 기본 ChatGPT API에 대해서 흥미로운 업데이트를 진행했습니다. 함수 호출(Function calling) 기능이 추가되었습니다...',
     author: 'tilnote',
-    date: '5시간 전'
+    date: '5시간 전',
   },
   {
     id: '3',
     title: '새로운 결제 API, 코리아페이 출시',
-    content: '국내 환경에 최적화된 새로운 결제 API 코리아페이가 출시되었습니다. 간편한 연동과 강력한 보안을 특징으로...',
+    content:
+      '국내 환경에 최적화된 새로운 결제 API 코리아페이가 출시되었습니다. 간편한 연동과 강력한 보안을 특징으로...',
     author: 'API WIKI News',
-    date: '1일 전'
+    date: '1일 전',
   },
   {
     id: '4',
     title: 'Stripe API 정기결제 구현 후기',
-    content: 'SaaS 서비스를 런칭하면서 Stripe API로 정기결제를 구현했습니다. 웹훅 처리와 구독 관리가 정말 편하더라구요...',
+    content:
+      'SaaS 서비스를 런칭하면서 Stripe API로 정기결제를 구현했습니다. 웹훅 처리와 구독 관리가 정말 편하더라구요...',
     author: 'devkim',
-    date: '1일 전'
+    date: '1일 전',
   },
   {
     id: '5',
     title: 'Google Maps vs 카카오맵 API 비교',
-    content: '두 API를 모두 써본 입장에서 비교해봤습니다. 국내 서비스는 확실히 카카오맵이 장소 정보가 정확하고, 글로벌은 Google Maps가...',
+    content:
+      '두 API를 모두 써본 입장에서 비교해봤습니다. 국내 서비스는 확실히 카카오맵이 장소 정보가 정확하고, 글로벌은 Google Maps가...',
     author: 'mapdev',
-    date: '2일 전'
+    date: '2일 전',
   },
   {
     id: '6',
     title: 'Firebase Authentication 보안 이슈 주의',
-    content: '최근 Firebase Auth를 사용하면서 보안 규칙 설정 실수로 인한 데이터 노출 사례가 늘고 있습니다. 꼭 보안 규칙을 제대로 설정하세요...',
+    content:
+      '최근 Firebase Auth를 사용하면서 보안 규칙 설정 실수로 인한 데이터 노출 사례가 늘고 있습니다. 꼭 보안 규칙을 제대로 설정하세요...',
     author: 'security_warn',
-    date: '3일 전'
+    date: '3일 전',
   },
   {
     id: '7',
     title: 'Supabase가 Firebase보다 나은 이유',
-    content: 'PostgreSQL 기반이라 복잡한 쿼리도 가능하고, 오픈소스라 커스터마이징도 자유롭습니다. 실시간 기능도 훌륭하고...',
+    content:
+      'PostgreSQL 기반이라 복잡한 쿼리도 가능하고, 오픈소스라 커스터마이징도 자유롭습니다. 실시간 기능도 훌륭하고...',
     author: 'backend_master',
-    date: '4일 전'
+    date: '4일 전',
   },
   {
     id: '8',
     title: 'Vercel vs Netlify 배포 속도 비교',
-    content: 'Next.js 프로젝트를 두 플랫폼에 배포해봤는데, Vercel이 Next.js 최적화가 더 잘 되어있고 Edge Functions도 빠릅니다...',
+    content:
+      'Next.js 프로젝트를 두 플랫폼에 배포해봤는데, Vercel이 Next.js 최적화가 더 잘 되어있고 Edge Functions도 빠릅니다...',
     author: 'frontend_pro',
-    date: '5일 전'
+    date: '5일 전',
   },
   {
     id: '9',
     title: 'Slack API 봇 만들기 튜토리얼',
-    content: '회사 업무 자동화를 위해 Slack 봇을 만들어봤습니다. Slash Commands와 Interactive Messages 구현 방법 공유합니다...',
+    content:
+      '회사 업무 자동화를 위해 Slack 봇을 만들어봤습니다. Slash Commands와 Interactive Messages 구현 방법 공유합니다...',
     author: 'automate_dev',
-    date: '6일 전'
+    date: '6일 전',
   },
   {
     id: '10',
     title: 'AWS Lambda vs Vercel Functions 비용 비교',
-    content: '서버리스 함수를 운영하면서 실제 비용을 비교해봤습니다. 소규모는 Vercel이, 대규모는 Lambda가 유리한 것 같습니다...',
+    content:
+      '서버리스 함수를 운영하면서 실제 비용을 비교해봤습니다. 소규모는 Vercel이, 대규모는 Lambda가 유리한 것 같습니다...',
     author: 'cost_optimizer',
-    date: '1주일 전'
-  }
+    date: '1주일 전',
+  },
 ];
 
 export const categories = [
-  '결제', '소셜로그인', '지도', '날씨', 'AI', '이메일', '금융', '데이터', '보안',
-  '통신', '미디어', '개발도구', '클라우드', 'CMS', '분석', '모니터링', 'SNS', '협업'
+  '결제',
+  '소셜로그인',
+  '지도',
+  '날씨',
+  'AI',
+  '이메일',
+  '금융',
+  '데이터',
+  '보안',
+  '통신',
+  '미디어',
+  '개발도구',
+  '클라우드',
+  'CMS',
+  '분석',
+  '모니터링',
+  'SNS',
+  '협업',
 ];
 
 // Ensure all mockAPIs have realistic metadata fields. Use simple heuristics where missing.
 const companyCountryMap: Record<string, string[]> = {
-  'Google': ['전세계'],
+  Google: ['전세계'],
   'OpenStreetMap Foundation': ['전세계'],
-  'Naver': ['한국'],
-  'Kakao': ['한국'],
-  'Toss': ['한국'],
-  'Amazon': ['전세계'],
-  'Twilio': ['전세계'],
-  'Stripe': ['전세계'],
-  'OpenWeather': ['전세계'],
-  'MongoDB': ['전세계'],
-  'Okta': ['전세계'],
-  'GitHub': ['전세계'],
-  'Meta': ['전세계'],
-  'Redis': ['전세계']
+  Naver: ['한국'],
+  Kakao: ['한국'],
+  Toss: ['한국'],
+  Amazon: ['전세계'],
+  Twilio: ['전세계'],
+  Stripe: ['전세계'],
+  OpenWeather: ['전세계'],
+  MongoDB: ['전세계'],
+  Okta: ['전세계'],
+  GitHub: ['전세계'],
+  Meta: ['전세계'],
+  Redis: ['전세계'],
 };
 
 for (const api of _mockAPIs) {
@@ -1716,7 +1732,11 @@ for (const api of _mockAPIs) {
   // authMethods heuristic
   // @ts-ignore
   if (!api.authMethods) {
-    if (api.categories.includes('인증') || api.name.toLowerCase().includes('auth') || api.name.toLowerCase().includes('login')) {
+    if (
+      api.categories.includes('인증') ||
+      api.name.toLowerCase().includes('auth') ||
+      api.name.toLowerCase().includes('login')
+    ) {
       // Authentication-related APIs
       // @ts-ignore
       api.authMethods = ['OAuth2', 'APIKey'];
@@ -1735,7 +1755,13 @@ for (const api of _mockAPIs) {
   // @ts-ignore
   if (!api.docsLanguages) {
     // Korean-first for Korean companies
-    if (api.company === 'Naver' || api.company === 'Kakao' || api.company === 'Toss' || api.company === '아임포트' || api.company === 'Kakao') {
+    if (
+      api.company === 'Naver' ||
+      api.company === 'Kakao' ||
+      api.company === 'Toss' ||
+      api.company === '아임포트' ||
+      api.company === 'Kakao'
+    ) {
       // @ts-ignore
       api.docsLanguages = ['한국어', '영어'];
     } else {
@@ -1749,7 +1775,12 @@ for (const api of _mockAPIs) {
   if (!api.relatedIds || api.relatedIds.length === 0) {
     // Use category overlap to find related APIs
     // @ts-ignore
-    const related = _mockAPIs.filter(a => a.id !== api.id && a.categories.some((c: string) => api.categories.includes(c))).slice(0, 4).map(a => a.id);
+    const related = _mockAPIs
+      .filter(
+        (a) => a.id !== api.id && a.categories.some((c: string) => api.categories.includes(c))
+      )
+      .slice(0, 4)
+      .map((a) => a.id);
     // @ts-ignore
     api.relatedIds = related;
   }
@@ -1769,7 +1800,10 @@ for (const api of _mockAPIs) {
     }
     // Normalize to a small recent-views number
     // @ts-ignore
-    api.viewsLast7Days = Math.max(1000, Math.floor((api.rating / 5) * Math.min(500000, usersCount / 1000)));
+    api.viewsLast7Days = Math.max(
+      1000,
+      Math.floor((api.rating / 5) * Math.min(500000, usersCount / 1000))
+    );
   }
 
   // recommendedForStacks default
@@ -1793,14 +1827,14 @@ for (const api of _mockAPIs) {
     tags.push(...api.categories);
     // Add key words from name
     const nameParts = api.name.toLowerCase().split(' ');
-    nameParts.forEach(part => {
+    nameParts.forEach((part) => {
       if (part.length > 2 && !tags.includes(part)) tags.push(part);
     });
     // Add company name
     if (api.company && !tags.includes(api.company)) tags.push(api.company);
     // Add some features if available
     if (api.features) {
-      api.features.slice(0, 3).forEach(f => {
+      api.features.slice(0, 3).forEach((f) => {
         if (!tags.includes(f)) tags.push(f);
       });
     }
@@ -1817,14 +1851,14 @@ export function getRelatedAPIs(api: API, limit: number = 3): API[] {
   // If API defines relatedIds explicitly, use them (preserve order)
   if (api.relatedIds && api.relatedIds.length > 0) {
     return api.relatedIds
-      .map(id => getAPIById(id))
+      .map((id) => getAPIById(id))
       .filter((api): api is API => api !== undefined)
       .slice(0, limit);
   }
 
   // Otherwise, fallback: find APIs sharing at least one category
   return _mockAPIs
-    .filter(a => a.id !== api.id && a.categories?.some(c => api.categories?.includes(c)))
+    .filter((a) => a.id !== api.id && a.categories?.some((c) => api.categories?.includes(c)))
     .slice(0, limit) as API[];
 }
 

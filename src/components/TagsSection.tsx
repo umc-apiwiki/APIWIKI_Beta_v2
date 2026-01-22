@@ -5,8 +5,8 @@ interface TagsSectionProps {
   tags?: string[];
 }
 
-export default function TagsSection({ 
-  tags = ['결제', '소셜로그인', '지도', '날씨', 'AI', '이메일', '금융'] 
+export default function TagsSection({
+  tags = ['결제', '소셜로그인', '지도', '날씨', 'AI', '이메일', '금융'],
 }: TagsSectionProps) {
   return (
     <div className="flex gap-[15px] flex-wrap justify-center max-w-[800px] mb-[80px]">
@@ -17,7 +17,7 @@ export default function TagsSection({
           style={{
             border: '0.5px solid var(--primary-blue)',
             boxShadow: 'var(--shadow-blue)',
-            color: 'var(--primary-blue)'
+            color: 'var(--primary-blue)',
           }}
           onMouseEnter={(e) => {
             e.currentTarget.style.background = 'var(--primary-blue)';

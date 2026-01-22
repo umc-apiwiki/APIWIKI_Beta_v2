@@ -1,6 +1,13 @@
-node_modules
 .next
-out
-coverage
-build
+node_modules
+.history
+public
 dist
+build
+check-db-columns.js
+next.config.js
+postcss.config.js
+scripts/seed-database.js
+test-db-connection.js
+test-db-write.js
+next-env.d.ts

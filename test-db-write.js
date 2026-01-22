@@ -17,7 +17,7 @@ async function testWrite() {
     console.log('1️⃣ 테스트 유저 생성 시도...');
     const testUser = {
       email: `test_${Date.now()}@example.com`,
-      name: '테스트 유저'
+      name: '테스트 유저',
     };
 
     const { data: newUser, error: userError } = await supabase
@@ -68,10 +68,7 @@ async function testWrite() {
 
       // 4. 테스트 데이터 삭제
       console.log('4️⃣ 테스트 데이터 삭제...');
-      const { error: deleteError } = await supabase
-        .from('User')
-        .delete()
-        .eq('id', newUser.id);
+      const { error: deleteError } = await supabase.from('User').delete().eq('id', newUser.id);
 
       if (deleteError) {
         console.error('❌ 데이터 삭제 실패:', deleteError.message);
@@ -89,7 +86,6 @@ async function testWrite() {
     console.log('   - SELECT 쿼리: ✅');
     console.log('   - UPDATE 쿼리: ✅');
     console.log('   - DELETE 쿼리: ✅');
-
   } catch (error) {
     console.error('❌ 테스트 중 오류 발생:', error.message);
     console.error('   전체 오류:', error);

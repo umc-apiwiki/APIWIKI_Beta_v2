@@ -1,0 +1,251 @@
+
+D:\workspace\APIWIKI_Beta_v2\src\app\about\page.tsx
+  4:10  warning  'useState' is defined but never used. Allowed unused vars must match /^_/u   @typescript-eslint/no-unused-vars
+  4:20  warning  'useEffect' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+D:\workspace\APIWIKI_Beta_v2\src\app\admin\approvals\page.tsx
+  115:27  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+D:\workspace\APIWIKI_Beta_v2\src\app\admin\page.tsx
+  47:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  73:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\workspace\APIWIKI_Beta_v2\src\app\api\[id]\page.tsx
+  203:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  447:32  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  448:33  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  449:33  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  459:54  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\workspace\APIWIKI_Beta_v2\src\app\api\admin\pending-apis\route.ts
+  7:27  warning  'request' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+D:\workspace\APIWIKI_Beta_v2\src\app\api\apis\[id]\approve\route.ts
+  57:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\workspace\APIWIKI_Beta_v2\src\app\api\apis\[id]\route.ts
+   92:33  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   94:33  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  115:17  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\workspace\APIWIKI_Beta_v2\src\app\api\apis\approve\route.ts
+  45:23  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\workspace\APIWIKI_Beta_v2\src\app\api\apis\route.ts
+  69:17  warning  Unexpected any. Specify a different type                                              @typescript-eslint/no-explicit-any
+  82:11  warning  'minRating' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+D:\workspace\APIWIKI_Beta_v2\src\app\api\apis\submit\route.ts
+  27:35  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\workspace\APIWIKI_Beta_v2\src\app\api\boards\route.ts
+   88:35  warning  Unexpected any. Specify a different type              @typescript-eslint/no-explicit-any
+  124:9   warning  'boardData' is never reassigned. Use 'const' instead  prefer-const
+  124:20  warning  Unexpected any. Specify a different type              @typescript-eslint/no-explicit-any
+
+D:\workspace\APIWIKI_Beta_v2\src\app\api\comments\route.ts
+   75:35  warning  Unexpected any. Specify a different type                @typescript-eslint/no-explicit-any
+  109:9   warning  'commentData' is never reassigned. Use 'const' instead  prefer-const
+  109:22  warning  Unexpected any. Specify a different type                @typescript-eslint/no-explicit-any
+
+D:\workspace\APIWIKI_Beta_v2\src\app\api\feedback\route.ts
+    6:18  warning  'getAll' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+   22:10  warning  Unexpected any. Specify a different type                                  @typescript-eslint/no-explicit-any
+   73:5   warning  Unexpected console statement                                              no-console
+   85:5   warning  Unexpected console statement                                              no-console
+   96:19  warning  Unexpected any. Specify a different type                                  @typescript-eslint/no-explicit-any
+  125:5   warning  Unexpected console statement                                              no-console
+  155:19  warning  Unexpected any. Specify a different type                                  @typescript-eslint/no-explicit-any
+  205:5   warning  Unexpected console statement                                              no-console
+  219:5   warning  Unexpected console statement                                              no-console
+  226:19  warning  Unexpected any. Specify a different type                                  @typescript-eslint/no-explicit-any
+
+D:\workspace\APIWIKI_Beta_v2\src\app\api\health\route.ts
+  10:13  warning  'data' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+D:\workspace\APIWIKI_Beta_v2\src\app\api\user\profile\route.ts
+  27:35  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  46:23  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  76:5   warning  Unexpected console statement              no-console
+
+D:\workspace\APIWIKI_Beta_v2\src\app\api\users\activity\route.ts
+    6:10  warning  'create' is defined but never used. Allowed unused vars must match /^_/u        @typescript-eslint/no-unused-vars
+    6:18  warning  'update' is defined but never used. Allowed unused vars must match /^_/u        @typescript-eslint/no-unused-vars
+    6:26  warning  'getById' is defined but never used. Allowed unused vars must match /^_/u       @typescript-eslint/no-unused-vars
+    7:15  warning  'UserActivity' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+    7:29  warning  'User' is defined but never used. Allowed unused vars must match /^_/u          @typescript-eslint/no-unused-vars
+   80:19  warning  Unexpected any. Specify a different type                                        @typescript-eslint/no-explicit-any
+  134:19  warning  Unexpected any. Specify a different type                                        @typescript-eslint/no-explicit-any
+
+D:\workspace\APIWIKI_Beta_v2\src\app\api\users\grade\route.ts
+    5:19  warning  'update' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+   94:5   warning  Unexpected console statement                                              no-console
+  110:19  warning  Unexpected any. Specify a different type                                  @typescript-eslint/no-explicit-any
+  171:19  warning  Unexpected any. Specify a different type                                  @typescript-eslint/no-explicit-any
+
+D:\workspace\APIWIKI_Beta_v2\src\app\api\wiki\edit\route.ts
+   22:10  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   97:5   warning  Unexpected console statement              no-console
+  150:5   warning  Unexpected console statement              no-console
+  159:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\workspace\APIWIKI_Beta_v2\src\app\api\wiki\history\route.ts
+  28:5   warning  Unexpected console statement              no-console
+  47:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\workspace\APIWIKI_Beta_v2\src\app\api\wiki\request\route.ts
+   65:5   warning  Unexpected console statement              no-console
+   86:5   warning  Unexpected console statement              no-console
+   95:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  121:5   warning  Unexpected console statement              no-console
+  149:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  185:5   warning  Unexpected console statement              no-console
+  219:7   warning  Unexpected console statement              no-console
+  226:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\workspace\APIWIKI_Beta_v2\src\app\archive\page.tsx
+  30:49  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\workspace\APIWIKI_Beta_v2\src\app\boards\[type]\page.tsx
+  12:7  warning  'BOARD_CONFIGS' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+D:\workspace\APIWIKI_Beta_v2\src\app\history\page.tsx
+   6:10  warning  'motion' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  21:7   warning  Unexpected console statement                                              no-console
+
+D:\workspace\APIWIKI_Beta_v2\src\app\layout.tsx
+  4:15  warning  'Metadata' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+D:\workspace\APIWIKI_Beta_v2\src\app\profile\page.tsx
+  104:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  198:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\workspace\APIWIKI_Beta_v2\src\components\APICard.tsx
+  20:9  warning  'priceLabels' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+D:\workspace\APIWIKI_Beta_v2\src\components\APICarousel.tsx
+  16:45  warning  'step' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+D:\workspace\APIWIKI_Beta_v2\src\components\APIRegistrationForm.tsx
+  130:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\workspace\APIWIKI_Beta_v2\src\components\BoardForm.tsx
+  87:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\workspace\APIWIKI_Beta_v2\src\components\CommentSection.tsx
+   31:6   warning  React Hook useEffect has a missing dependency: 'fetchComments'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+   98:19  warning  Unexpected any. Specify a different type                                                                          @typescript-eslint/no-explicit-any
+  119:19  warning  Unexpected any. Specify a different type                                                                          @typescript-eslint/no-explicit-any
+
+D:\workspace\APIWIKI_Beta_v2\src\components\FilterModal.tsx
+   5:18  warning  'AnimatePresence' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  47:3   warning  'resultCount' is defined but never used. Allowed unused args must match /^_/u      @typescript-eslint/no-unused-vars
+
+D:\workspace\APIWIKI_Beta_v2\src\components\FloatingFeedbackButton.tsx
+  5:18  warning  'AnimatePresence' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+D:\workspace\APIWIKI_Beta_v2\src\components\GradeBadge.tsx
+  105:9  warning  'pointsToNext' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+D:\workspace\APIWIKI_Beta_v2\src\components\LoginModal.tsx
+  136:15  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  185:17  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  193:17  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+D:\workspace\APIWIKI_Beta_v2\src\components\NewsCarousel.tsx
+  15:3  warning  'step' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+D:\workspace\APIWIKI_Beta_v2\src\components\SearchBar.tsx
+  31:10  warning  'showResults' is assigned a value but never used. Allowed unused vars must match /^_/u      @typescript-eslint/no-unused-vars
+  33:10  warning  'trendingAPIs' is assigned a value but never used. Allowed unused vars must match /^_/u     @typescript-eslint/no-unused-vars
+  33:24  warning  'setTrendingAPIs' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+D:\workspace\APIWIKI_Beta_v2\src\components\SignupModal.tsx
+  144:15  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+D:\workspace\APIWIKI_Beta_v2\src\components\UserProfile.tsx
+  31:6  warning  React Hook useEffect has a missing dependency: 'fetchActivities'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+D:\workspace\APIWIKI_Beta_v2\src\components\WikiEditor.tsx
+   89:21  warning  Unexpected any. Specify a different type                                @typescript-eslint/no-explicit-any
+  471:32  warning  'node' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  478:32  warning  'node' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  485:32  warning  'node' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  492:31  warning  'node' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  499:31  warning  'node' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  506:34  warning  'node' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  506:60  warning  Unexpected any. Specify a different type                                @typescript-eslint/no-explicit-any
+  529:32  warning  'node' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  532:32  warning  'node' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  535:40  warning  'node' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  582:28  warning  'node' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  589:28  warning  'node' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  596:28  warning  'node' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  603:27  warning  'node' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  610:27  warning  'node' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  617:30  warning  'node' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  617:56  warning  Unexpected any. Specify a different type                                @typescript-eslint/no-explicit-any
+  640:28  warning  'node' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  643:28  warning  'node' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  646:36  warning  'node' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+D:\workspace\APIWIKI_Beta_v2\src\components\admin\FeedbackList.tsx
+  46:10  warning  'selectedFeedback' is assigned a value but never used. Allowed unused vars must match /^_/u                        @typescript-eslint/no-unused-vars
+  46:28  warning  'setSelectedFeedback' is assigned a value but never used. Allowed unused vars must match /^_/u                     @typescript-eslint/no-unused-vars
+  51:6   warning  React Hook useEffect has a missing dependency: 'fetchFeedbacks'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+D:\workspace\APIWIKI_Beta_v2\src\components\mobile\MobileSearchModal.tsx
+   24:9   warning  'lastScrollY' is assigned a value but never used. Allowed unused vars must match /^_/u          @typescript-eslint/no-unused-vars
+   52:42  warning  Unexpected any. Specify a different type                                                        @typescript-eslint/no-explicit-any
+  169:9   warning  'clearRecentSearches' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+D:\workspace\APIWIKI_Beta_v2\src\data\mockData.ts
+  1729:3  warning  Include a description after the "@ts-ignore" directive to explain why the @ts-ignore is necessary. The description must be 3 characters or longer  @typescript-eslint/ban-ts-comment
+  1733:3  warning  Include a description after the "@ts-ignore" directive to explain why the @ts-ignore is necessary. The description must be 3 characters or longer  @typescript-eslint/ban-ts-comment
+  1741:7  warning  Include a description after the "@ts-ignore" directive to explain why the @ts-ignore is necessary. The description must be 3 characters or longer  @typescript-eslint/ban-ts-comment
+  1745:7  warning  Include a description after the "@ts-ignore" directive to explain why the @ts-ignore is necessary. The description must be 3 characters or longer  @typescript-eslint/ban-ts-comment
+  1749:7  warning  Include a description after the "@ts-ignore" directive to explain why the @ts-ignore is necessary. The description must be 3 characters or longer  @typescript-eslint/ban-ts-comment
+  1755:3  warning  Include a description after the "@ts-ignore" directive to explain why the @ts-ignore is necessary. The description must be 3 characters or longer  @typescript-eslint/ban-ts-comment
+  1765:7  warning  Include a description after the "@ts-ignore" directive to explain why the @ts-ignore is necessary. The description must be 3 characters or longer  @typescript-eslint/ban-ts-comment
+  1768:7  warning  Include a description after the "@ts-ignore" directive to explain why the @ts-ignore is necessary. The description must be 3 characters or longer  @typescript-eslint/ban-ts-comment
+  1774:3  warning  Include a description after the "@ts-ignore" directive to explain why the @ts-ignore is necessary. The description must be 3 characters or longer  @typescript-eslint/ban-ts-comment
+  1777:5  warning  Include a description after the "@ts-ignore" directive to explain why the @ts-ignore is necessary. The description must be 3 characters or longer  @typescript-eslint/ban-ts-comment
+  1784:5  warning  Include a description after the "@ts-ignore" directive to explain why the @ts-ignore is necessary. The description must be 3 characters or longer  @typescript-eslint/ban-ts-comment
+  1789:3  warning  Include a description after the "@ts-ignore" directive to explain why the @ts-ignore is necessary. The description must be 3 characters or longer  @typescript-eslint/ban-ts-comment
+  1802:5  warning  Include a description after the "@ts-ignore" directive to explain why the @ts-ignore is necessary. The description must be 3 characters or longer  @typescript-eslint/ban-ts-comment
+  1810:3  warning  Include a description after the "@ts-ignore" directive to explain why the @ts-ignore is necessary. The description must be 3 characters or longer  @typescript-eslint/ban-ts-comment
+  1818:5  warning  Include a description after the "@ts-ignore" directive to explain why the @ts-ignore is necessary. The description must be 3 characters or longer  @typescript-eslint/ban-ts-comment
+  1823:3  warning  Include a description after the "@ts-ignore" directive to explain why the @ts-ignore is necessary. The description must be 3 characters or longer  @typescript-eslint/ban-ts-comment
+  1841:5  warning  Include a description after the "@ts-ignore" directive to explain why the @ts-ignore is necessary. The description must be 3 characters or longer  @typescript-eslint/ban-ts-comment
+
+D:\workspace\APIWIKI_Beta_v2\src\lib\__tests__\supabaseHelpers.test.ts
+  13:32  warning  'beforeEach' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  14:13  warning  'helpers' is defined but never used. Allowed unused vars must match /^_/u     @typescript-eslint/no-unused-vars
+
+D:\workspace\APIWIKI_Beta_v2\src\lib\activity.ts
+    2:15  warning  'UserActivity' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+    2:29  warning  'User' is defined but never used. Allowed unused vars must match /^_/u          @typescript-eslint/no-unused-vars
+   41:5   warning  Unexpected console statement                                                    no-console
+   96:9   warning  Unexpected console statement                                                    no-console
+  109:5   warning  Unexpected console statement                                                    no-console
+  117:19  warning  Unexpected any. Specify a different type                                        @typescript-eslint/no-explicit-any
+
+D:\workspace\APIWIKI_Beta_v2\src\lib\auth.ts
+   84:53  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   90:44  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  109:26  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  132:22  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  133:43  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\workspace\APIWIKI_Beta_v2\src\lib\supabaseHelpers.ts
+   22:11  warning  'SupabaseError' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+   32:29  warning  Unexpected any. Specify a different type                                         @typescript-eslint/no-explicit-any
+  125:5   warning  Unexpected console statement                                                     no-console
+  151:5   warning  Unexpected console statement                                                     no-console
+  171:5   warning  Unexpected console statement                                                     no-console
+  223:5   warning  Unexpected console statement                                                     no-console
+  312:5   warning  Unexpected console statement                                                     no-console
+
+✖ 155 problems (0 errors, 155 warnings)
+  0 errors and 2 warnings potentially fixable with the `--fix` option.
+

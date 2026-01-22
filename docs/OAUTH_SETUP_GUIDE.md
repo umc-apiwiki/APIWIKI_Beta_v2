@@ -48,7 +48,7 @@
 2. **OAuth App 생성**
    - "OAuth Apps" > "New OAuth App" 클릭
    - Application name: "API Wiki"
-   - Homepage URL: 
+   - Homepage URL:
      ```
      http://localhost:3000
      ```
@@ -93,6 +93,7 @@ GITHUB_CLIENT_SECRET=your-github-client-secret
 ### NEXTAUTH_SECRET 생성 방법
 
 터미널에서 실행:
+
 ```bash
 # Linux/Mac
 openssl rand -base64 32
@@ -120,12 +121,14 @@ node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
    ```
 
 ### Google OAuth 리디렉션 URI 업데이트
+
 - Google Cloud Console에서 승인된 리디렉션 URI에 프로덕션 URL 추가:
   ```
   https://yourdomain.com/api/auth/callback/google
   ```
 
 ### GitHub OAuth 콜백 URL 업데이트
+
 - GitHub OAuth App 설정에서 Authorization callback URL 업데이트:
   ```
   https://yourdomain.com/api/auth/callback/github
@@ -138,6 +141,7 @@ node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
 ### 로컬 개발 환경 테스트
 
 1. 개발 서버 시작:
+
    ```bash
    npm run dev
    ```
@@ -159,26 +163,31 @@ node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
 ### Google OAuth 오류
 
 **"redirect_uri_mismatch" 오류**
+
 - Google Cloud Console에서 승인된 리디렉션 URI 확인
 - 정확히 `http://localhost:3000/api/auth/callback/google` 또는 프로덕션 URL인지 확인
 
 **"access_denied" 오류**
+
 - OAuth 동의 화면이 제대로 구성되었는지 확인
 - 테스트 사용자 추가 (개발 중일 경우)
 
 ### GitHub OAuth 오류
 
 **"The redirect_uri MUST match the registered callback URL" 오류**
+
 - GitHub OAuth App 설정에서 callback URL 확인
 - 정확히 `http://localhost:3000/api/auth/callback/github`인지 확인
 
 ### NextAuth 오류
 
 **"[next-auth][error][NO_SECRET]" 경고**
+
 - `.env` 파일에 `NEXTAUTH_SECRET` 추가 확인
 - 32자 이상의 랜덤 문자열 사용
 
 **"[next-auth][error][SIGNIN_OAUTH_ERROR]" 오류**
+
 - Client ID와 Client Secret이 정확한지 확인
 - 환경 변수가 제대로 로드되었는지 확인 (`console.log`로 디버깅)
 

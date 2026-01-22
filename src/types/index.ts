@@ -11,8 +11,8 @@ export type UserGrade = 'bronze' | 'silver' | 'gold' | 'admin';
 /** API 승인 상태 */
 export type ApiStatus = 'pending' | 'approved' | 'rejected';
 
-/** 게시판 타입 */
-export type BoardType = 'inquiry' | 'qna' | 'free' | 'community';
+/** 게시판 타입 - 커뮤니티 게시판만 사용 */
+export type BoardType = 'community';
 
 /** 피드백 타입 */
 export type FeedbackType = 'error' | 'feature' | 'idea';
@@ -124,6 +124,7 @@ export interface API {
   approved_by?: string;
   approved_at?: string;
   createdAt?: string;
+  createdat?: string; // DB Column name (lowercase)
   updatedAt?: string;
 }
 
@@ -306,4 +307,3 @@ export interface ApiResponse<T> {
   error?: string;
   message?: string;
 }
-

@@ -4,20 +4,20 @@
 import { useState, useEffect, useRef, useCallback, Suspense } from 'react';
 import { motion } from 'motion/react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import Link from 'next/link';
+import Image from 'next/image';
 import APICard from '@/components/APICard';
 import Header from '@/components/Header';
 import SearchBar from '@/components/SearchBar';
 import CompareModal from '@/components/CompareModal';
 import FilterModal from '@/components/FilterModal';
-import { searchAPIs, getAllCategories, type SearchFilters } from '@/lib/apiService';
+import MobileSearchModal from '@/components/mobile/MobileSearchModal';
 import type { API } from '@/types';
+import styles from './page.module.css';
 
 function ExploreContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [apis, setApis] = useState<API[]>([]);
-  const [categories, setCategories] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const initialQuery = searchParams.get('q') || '';
   const initialCategory = searchParams.get('category') || '';
@@ -31,9 +31,18 @@ function ExploreContent() {
   const [hasMore, setHasMore] = useState(true);
   const [compareList, setCompareList] = useState<string[]>([]);
   const [isCompareOpen, setIsCompareOpen] = useState(false);
-  const [favorites, setFavorites] = useState<string[]>([]);
 
   const [isFiltersVisible, setIsFiltersVisible] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
+
+  // 모바일 감지
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth <= 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // 필터 상태들
   const [priceFilter, setPriceFilter] = useState<string[]>([]);
@@ -55,9 +64,9 @@ function ExploreContent() {
         const response = await fetch(`/api/apis?status=approved&_t=${Date.now()}`, {
           cache: 'no-store',
           headers: {
-            'Pragma': 'no-cache',
-            'Cache-Control': 'no-cache'
-          }
+            Pragma: 'no-cache',
+            'Cache-Control': 'no-cache',
+          },
         });
         if (response.ok) {
           const data = await response.json();
@@ -78,19 +87,7 @@ function ExploreContent() {
 
   // 카테고리 데이터 로드
   useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await fetch('/api/apis/categories');
-        if (response.ok) {
-          const data = await response.json();
-          setCategories(data);
-        }
-      } catch (error) {
-        console.error('Error fetching categories:', error);
-      }
-    };
-
-    fetchCategories();
+    // Categories are fetched from API responses, no separate fetch needed
   }, []);
 
   // URL 파라미터가 변경되면 상태 업데이트
@@ -99,7 +96,7 @@ function ExploreContent() {
     const queryParam = searchParams.get('q') || '';
     setSelectedCategory(categoryParam);
     setSearchQuery(queryParam);
-    
+
     // 검색어가 있으면 기본 정렬을 '정확도순'으로 변경
     if (queryParam) {
       setSortBy('정확도순');
@@ -115,43 +112,44 @@ function ExploreContent() {
 
     // Category filter (URL 파라미터에서)
     if (selectedCategory) {
-      result = result.filter(api =>
-        api.categories && api.categories.some(cat => cat === selectedCategory)
+      result = result.filter(
+        (api) => api.categories && api.categories.some((cat) => cat === selectedCategory)
       );
     }
 
     // Search filter
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
-      result = result.filter(api =>
-        api.name.toLowerCase().includes(query) ||
-        api.description.toLowerCase().includes(query) ||
-        (api.company && api.company.toLowerCase().includes(query)) ||
-        api.categories.some(cat => cat.toLowerCase().includes(query)) ||
-        (api.tags && api.tags.some(tag => tag.toLowerCase().includes(query))) ||
-        (api.features && api.features.some(f => f.toLowerCase().includes(query)))
+      result = result.filter(
+        (api) =>
+          api.name.toLowerCase().includes(query) ||
+          api.description.toLowerCase().includes(query) ||
+          (api.company && api.company.toLowerCase().includes(query)) ||
+          api.categories.some((cat) => cat.toLowerCase().includes(query)) ||
+          (api.tags && api.tags.some((tag) => tag.toLowerCase().includes(query))) ||
+          (api.features && api.features.some((f) => f.toLowerCase().includes(query)))
       );
     }
 
     // Price filter
     if (priceFilter.length > 0) {
-      result = result.filter(api => api.price && priceFilter.includes(api.price));
+      result = result.filter((api) => api.price && priceFilter.includes(api.price));
     }
 
     // Rating filter
     if (ratingFilter > 0) {
-      result = result.filter(api => api.rating !== undefined && api.rating >= ratingFilter);
+      result = result.filter((api) => api.rating !== undefined && api.rating >= ratingFilter);
     }
 
     // Country filter (if mock data has country list)
     if (countryFilter.length > 0) {
-      result = result.filter(api => {
+      result = result.filter((api) => {
         // api may not have countries field; fall back to checking company-country heuristic if available
         // Prefer `api.countries` if present
-        // @ts-ignore
+        // @ts-ignore - Framer Motion AnimatePresence typing issue with children
         const countries: string[] = api.countries || [];
         if (countries.length > 0) {
-          return countryFilter.some(c => countries.includes(c));
+          return countryFilter.some((c) => countries.includes(c));
         }
         return true; // if no country data, don't filter out
       });
@@ -159,11 +157,11 @@ function ExploreContent() {
 
     // Auth method filter
     if (authMethodFilter.length > 0) {
-      result = result.filter(api => {
-        // @ts-ignore
+      result = result.filter((api) => {
+        // @ts-ignore - Framer Motion AnimatePresence typing issue with children
         const methods: string[] = api.authMethods || [];
         if (methods.length > 0) {
-          return authMethodFilter.some(m => methods.includes(m));
+          return authMethodFilter.some((m) => methods.includes(m));
         }
         return true;
       });
@@ -171,11 +169,11 @@ function ExploreContent() {
 
     // Documentation language filter
     if (docLanguageFilter.length > 0) {
-      result = result.filter(api => {
-        // @ts-ignore
+      result = result.filter((api) => {
+        // @ts-ignore - Framer Motion AnimatePresence typing issue with children
         const langs: string[] = api.docsLanguages || [];
         if (langs.length > 0) {
-          return docLanguageFilter.some(l => langs.includes(l));
+          return docLanguageFilter.some((l) => langs.includes(l));
         }
         return true;
       });
@@ -184,41 +182,41 @@ function ExploreContent() {
     // Company filter
     if (companyFilter.length > 0) {
       // Ignore entries without company to satisfy type expectations and avoid false matches
-      result = result.filter(api => api.company && companyFilter.includes(api.company));
+      result = result.filter((api) => api.company && companyFilter.includes(api.company));
     }
 
     // Sort
     switch (sortBy) {
       case '정확도순':
         if (searchQuery) {
-            const query = searchQuery.toLowerCase();
-            result.sort((a, b) => {
-                const getScore = (api: API) => {
-                    let score = 0;
-                    const name = api.name.toLowerCase();
-                    const desc = api.description.toLowerCase();
-                    const company = api.company ? api.company.toLowerCase() : '';
-                    
-                    if (name === query) score += 100;
-                    else if (name.startsWith(query)) score += 80;
-                    else if (name.includes(query)) score += 60;
-                    
-                    if (company.includes(query)) score += 50;
-                    if (desc.includes(query)) score += 40;
-                    
-                    if (api.categories.some(c => c.toLowerCase().includes(query))) score += 20;
-                    if (api.tags && api.tags.some(t => t.toLowerCase().includes(query))) score += 20;
-                    
-                    // Add rating as a tie-breaker
-                    score += (api.rating || 0);
+          const query = searchQuery.toLowerCase();
+          result.sort((a, b) => {
+            const getScore = (api: API) => {
+              let score = 0;
+              const name = api.name.toLowerCase();
+              const desc = api.description.toLowerCase();
+              const company = api.company ? api.company.toLowerCase() : '';
 
-                    return score;
-                };
-                return getScore(b) - getScore(a);
-            });
+              if (name === query) score += 100;
+              else if (name.startsWith(query)) score += 80;
+              else if (name.includes(query)) score += 60;
+
+              if (company.includes(query)) score += 50;
+              if (desc.includes(query)) score += 40;
+
+              if (api.categories.some((c) => c.toLowerCase().includes(query))) score += 20;
+              if (api.tags && api.tags.some((t) => t.toLowerCase().includes(query))) score += 20;
+
+              // Add rating as a tie-breaker
+              score += api.rating || 0;
+
+              return score;
+            };
+            return getScore(b) - getScore(a);
+          });
         } else {
-            // Fallback if no query
-             result.sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
+          // Fallback if no query
+          result.sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
         }
         break;
       case '인기순':
@@ -227,8 +225,10 @@ function ExploreContent() {
         break;
       case '최신순':
         // Assuming createdat exists, if not fallback to nothing (or id)
-        // @ts-ignore
-        result.sort((a, b) => new Date(b.createdat || 0).getTime() - new Date(a.createdat || 0).getTime());
+        // @ts-ignore - Framer Motion AnimatePresence typing issue with children
+        result.sort(
+          (a, b) => new Date(b.createdat || 0).getTime() - new Date(a.createdat || 0).getTime()
+        );
         break;
       case '후기 많은 순':
         // Fallback to 0 when users count is missing to keep comparator safe
@@ -248,7 +248,18 @@ function ExploreContent() {
     setDisplayedAPIs(result.slice(0, ITEMS_PER_PAGE));
     setPage(1);
     setHasMore(result.length > ITEMS_PER_PAGE);
-  }, [apis, searchQuery, selectedCategory, sortBy, priceFilter, ratingFilter, countryFilter, authMethodFilter, docLanguageFilter, companyFilter]);
+  }, [
+    apis,
+    searchQuery,
+    selectedCategory,
+    sortBy,
+    priceFilter,
+    ratingFilter,
+    countryFilter,
+    authMethodFilter,
+    docLanguageFilter,
+    companyFilter,
+  ]);
 
   // 무한 스크롤 로드
   const loadMore = useCallback(() => {
@@ -260,7 +271,7 @@ function ExploreContent() {
     const newItems = filteredAPIs.slice(startIndex, endIndex);
 
     if (newItems.length > 0) {
-      setDisplayedAPIs(prev => [...prev, ...newItems]);
+      setDisplayedAPIs((prev) => [...prev, ...newItems]);
       setPage(nextPage);
       setHasMore(endIndex < filteredAPIs.length);
     } else {
@@ -271,7 +282,7 @@ function ExploreContent() {
   // Intersection Observer
   useEffect(() => {
     const observer = new IntersectionObserver(
-      entries => {
+      (entries) => {
         if (entries[0].isIntersecting && hasMore) {
           loadMore();
         }
@@ -314,29 +325,6 @@ function ExploreContent() {
     return () => window.removeEventListener('scroll', onScroll);
   }, [loadMore, hasMore]);
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      router.push(`/explore?q=${encodeURIComponent(searchQuery)}`);
-    }
-  };
-
-  const toggleCompare = (apiId: string) => {
-    setCompareList(prev =>
-      prev.includes(apiId)
-        ? prev.filter(id => id !== apiId)
-        : prev.length < 4 ? [...prev, apiId] : prev
-    );
-  };
-
-  const toggleFavorite = (apiId: string) => {
-    setFavorites(prev =>
-      prev.includes(apiId)
-        ? prev.filter(id => id !== apiId)
-        : [...prev, apiId]
-    );
-  };
-
   // 필터 적용 핸들러
   const handleApplyFilters = (filters: {
     priceFilter: string[];
@@ -352,6 +340,16 @@ function ExploreContent() {
     setAuthMethodFilter(filters.authMethodFilter);
     setDocLanguageFilter(filters.docLanguageFilter);
     setCompanyFilter(filters.companyFilter);
+  };
+
+  const toggleCompare = (apiId: string) => {
+    setCompareList((prev) =>
+      prev.includes(apiId)
+        ? prev.filter((id) => id !== apiId)
+        : prev.length < 4
+          ? [...prev, apiId]
+          : prev
+    );
   };
 
   useEffect(() => {
@@ -379,13 +377,13 @@ function ExploreContent() {
   };
 
   return (
-    <motion.div 
-      className="min-h-screen" 
+    <motion.div
+      className={styles.explorePage}
       style={{ backgroundColor: 'var(--bg-light)' }}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      transition={{ duration: 0.5, ease: "easeInOut" }}
+      transition={{ duration: 0.5, ease: 'easeInOut' }}
     >
       {/* Header */}
       <Header />
@@ -394,12 +392,36 @@ function ExploreContent() {
       <div className="bg-glow" />
 
       {/* 검색바 - 페이지 최상단 */}
-      <div className="w-full flex justify-center" style={{ marginTop: '120px', marginBottom: '2rem' }}>
-        <div className="w-[800px] max-w-[90vw]">
+      <div
+        className={isMobile ? 'w-full px-4' : 'w-full flex justify-center'}
+        style={{ marginTop: isMobile ? '1rem' : '120px', marginBottom: isMobile ? '1rem' : '2rem' }}
+      >
+        <div className={isMobile ? 'w-full' : 'w-[800px] max-w-[90vw]'}>
           {loading ? (
             <div className="h-[3.25rem] w-full rounded-2xl bg-gray-100 animate-pulse border border-gray-200" />
+          ) : isMobile ? (
+            /* 모바일: 검색 버튼 클릭 시 모달 열기 - 홈페이지 디자인과 동일 */
+            <motion.div
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.25, ease: 'easeOut' }}
+              onClick={() => setIsSearchModalOpen(true)}
+              className="flex items-center h-12 w-full rounded-[1.25rem] bg-white px-5 cursor-pointer relative"
+              style={{ boxShadow: '0px 2px 5px rgba(1, 149, 255, 0.2)' }}
+            >
+              <span className="flex-1 text-sm text-gray-400">
+                {searchQuery || '궁금한 API를 검색해보세요'}
+              </span>
+              <div className="w-5 h-5 flex items-center justify-center">
+                <Image src="/mingcute_search-line.svg" alt="Search" width={20} height={20} />
+              </div>
+            </motion.div>
           ) : (
-            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25, ease: 'easeOut' }}>
+            <motion.div
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.25, ease: 'easeOut' }}
+            >
               <SearchBar
                 initialQuery={searchQuery}
                 onSearch={(query) => {
@@ -415,34 +437,39 @@ function ExploreContent() {
         </div>
       </div>
 
+      {/* 모바일 검색 모달 */}
+      <MobileSearchModal isOpen={isSearchModalOpen} onClose={() => setIsSearchModalOpen(false)} />
+
       <div className="grid-container py-6">
         {/* 메인 콘텐츠 영역 (Full width now) */}
         <main className="col-12">
           {/* 정렬 옵션 및 결과 수 */}
           <div className="flex items-center justify-between mb-6">
             <p className="text-[14px]" style={{ color: 'var(--text-gray)' }}>
-              {searchQuery && `"${searchQuery}" 에 대한`}검색결과 약 {filteredAPIs.length.toLocaleString()}개
+              {!isMobile && searchQuery && `"${searchQuery}" 에 대한`}검색결과 약{' '}
+              {filteredAPIs.length.toLocaleString()}개
             </p>
             <div className="flex items-center gap-4 relative">
               {/* Filter Button */}
-              <button 
+              <button
                 onClick={() => setIsFiltersVisible(true)}
                 className="flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors"
               >
-                <span>Hide Filters</span>
-                {/* Keeping the text 'Hide Filters' as per screenshot reference if intended, 
-                    but logic suggests 'Filters' is better for a modal trigger. 
-                    However, user sent screenshot showing 'Hide Filters X'. 
-                    Wait, if it's a MODAL, 'Hide Filters' on the page makes no sense. 
-                    I will change it to 'Filters' or keep it if user implies the screenshot is the desired look.
-                    The screenshot 'uploaded_image_1...' shows 'Hide Filters 3 X' next to 'Sort By'.
-                    Actually that looks like 'active filters' or separate functionality.
-                    But user said "Change filter to modal". 
-                    So on the page, there should be a button to OPEN the modal.
-                    I'll name it "Filters" for clarity, or "All Filters". 
-                */}
                 <span>Filters</span>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 3h18v18H3z"/><path d="M9 3v18"/></svg>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M3 3h18v18H3z" />
+                  <path d="M9 3v18" />
+                </svg>
               </button>
 
               {/* Sort By Dropdown (Custom) */}
@@ -454,24 +481,35 @@ function ExploreContent() {
                   aria-expanded={isSortOpen}
                 >
                   Sort By
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
                     <polyline points="6 9 12 15 18 9"></polyline>
                   </svg>
                 </button>
                 {/* Dropdown Menu */}
                 {isSortOpen && (
                   <div className="absolute right-0 top-full mt-2 w-40 bg-white rounded-lg shadow-xl border border-gray-100 z-50">
-                     <div className="py-2">
-                       {['정확도순', '인기순', '최신순', '후기 많은 순', '비용 낮은 순'].map(option => (
-                         <button
-                           key={option}
-                           onClick={() => handleSortSelect(option)}
-                           className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${sortBy === option ? 'text-blue-600 font-medium' : 'text-gray-700'}`}
-                         >
-                           {option}
-                         </button>
-                       ))}
-                     </div>
+                    <div className="py-2">
+                      {['정확도순', '인기순', '최신순', '후기 많은 순', '비용 낮은 순'].map(
+                        (option) => (
+                          <button
+                            key={option}
+                            onClick={() => handleSortSelect(option)}
+                            className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${sortBy === option ? 'text-blue-600 font-medium' : 'text-gray-700'}`}
+                          >
+                            {option}
+                          </button>
+                        )
+                      )}
+                    </div>
                   </div>
                 )}
               </div>
@@ -480,10 +518,13 @@ function ExploreContent() {
 
           {/* 비교하기 컨트롤 */}
           {compareList.length > 0 && (
-            <div className="rounded-[15px] p-4 mb-6 flex items-center justify-between card-shadow" style={{ 
-              backgroundColor: 'rgba(33, 150, 243, 0.1)',
-              border: '0.5px solid var(--primary-blue)'
-            }}>
+            <div
+              className="rounded-[15px] p-4 mb-6 flex items-center justify-between card-shadow"
+              style={{
+                backgroundColor: 'rgba(33, 150, 243, 0.1)',
+                border: '0.5px solid var(--primary-blue)',
+              }}
+            >
               <span className="text-sm" style={{ color: 'var(--primary-blue)' }}>
                 {compareList.length}개 선택됨 (최대 4개)
               </span>
@@ -508,26 +549,29 @@ function ExploreContent() {
           )}
 
           {/* API 카드 그리드 */}
-          <div className="grid grid-cols-12 gap-4">
-            {displayedAPIs.map((api, idx) => (
-              <div key={`${api.id}-${idx}`} className="col-3">
-                <APICard 
-                  api={api} 
-                  onToggleCompare={() => toggleCompare(api.id)}
-                  isCompareSelected={compareList.includes(api.id)}
-                />
-                 <button
-                  onClick={(e) => {
-                    e.preventDefault();
-                    toggleFavorite(api.id);
-                  }}
-                  className="absolute top-4 right-4 text-2xl hover:scale-110 transition-transform z-10"
-                >
-                  {favorites.includes(api.id) ? '⭐' : '☆'}
-                </button>
+          {loading && displayedAPIs.length === 0 ? (
+            <div className="flex justify-center items-center py-20">
+              <div className="text-center">
+                <div
+                  className="inline-block w-10 h-10 border-4 border-t-transparent rounded-full animate-spin"
+                  style={{ borderColor: '#2196F3', borderTopColor: 'transparent' }}
+                ></div>
+                <p className="mt-4 text-sm text-gray-600">검색 결과를 불러오는 중...</p>
               </div>
-            ))}
-          </div>
+            </div>
+          ) : (
+            <div className={styles.apiGrid}>
+              {displayedAPIs.map((api, idx) => (
+                <div key={`${api.id}-${idx}`} className={styles.apiCardWrapper}>
+                  <APICard
+                    api={api}
+                    onToggleCompare={() => toggleCompare(api.id)}
+                    isCompareSelected={compareList.includes(api.id)}
+                  />
+                </div>
+              ))}
+            </div>
+          )}
 
           {/* 로딩 및 결과 없음 UI ... (Existing) */}
           {hasMore && (
@@ -536,7 +580,7 @@ function ExploreContent() {
             </div>
           )}
 
-          {displayedAPIs.length === 0 && (
+          {!loading && displayedAPIs.length === 0 && (
             <div className="text-center py-16 bg-white rounded-lg border border-gray-200">
               <p className="text-gray-500 text-lg">검색 결과가 없습니다.</p>
               <p className="text-gray-400 text-sm mt-2">다른 검색어를 시도해보세요.</p>
@@ -569,7 +613,11 @@ function ExploreContent() {
       <CompareModal
         isOpen={isCompareOpen}
         onClose={() => setIsCompareOpen(false)}
-        apis={compareList.map(id => displayedAPIs.find(api => api.id === id)).filter(Boolean) as API[]}
+        apis={
+          compareList
+            .map((id) => displayedAPIs.find((api) => api.id === id))
+            .filter(Boolean) as API[]
+        }
       />
     </motion.div>
   );
@@ -577,14 +625,16 @@ function ExploreContent() {
 
 export default function ExplorePage() {
   return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-          <p className="text-gray-600">로딩 중...</p>
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-white flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+            <p className="text-gray-600">로딩 중...</p>
+          </div>
         </div>
-      </div>
-    }>
+      }
+    >
       <ExploreContent />
     </Suspense>
   );

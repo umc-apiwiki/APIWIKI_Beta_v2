@@ -1,5 +1,5 @@
 // src/components/CategoryCarousel.tsx
- 'use client';
+'use client';
 
 import { useRef, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -15,7 +15,7 @@ export default function CategoryCarousel() {
       const scrollAmount = 200;
       scrollRef.current.scrollBy({
         left: direction === 'left' ? -scrollAmount : scrollAmount,
-        behavior: 'smooth'
+        behavior: 'smooth',
       });
     }
   };
@@ -64,31 +64,29 @@ export default function CategoryCarousel() {
   };
 
   return (
-    <div className="relative max-w-[600px] mx-auto mt-0 px-10 select-none" style={{ userSelect: 'none', WebkitUserSelect: 'none' }}>
+    <div
+      className="relative max-w-[600px] mx-auto mt-0 px-10 select-none"
+      style={{ userSelect: 'none', WebkitUserSelect: 'none' }}
+    >
       <button
         onClick={() => scroll('left')}
         className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 flex items-center justify-center select-none"
         style={{
           userSelect: 'none',
-          WebkitUserSelect: 'none'
+          WebkitUserSelect: 'none',
         }}
         aria-label="이전 카테고리"
       >
-        <Image 
-          src="/move_tag/uiw_right.svg" 
-          alt="Previous" 
-          width={20} 
-          height={20} 
-        />
+        <Image src="/move_tag/uiw_right.svg" alt="Previous" width={20} height={20} />
       </button>
-      
-      <div 
+
+      <div
         ref={scrollRef}
         className={`flex gap-2 overflow-x-auto scrollbar-hide py-2 select-none ${isDown ? 'cursor-grabbing' : 'cursor-grab'}`}
-        style={{ 
+        style={{
           touchAction: 'pan-y',
           userSelect: 'none',
-          WebkitUserSelect: 'none'
+          WebkitUserSelect: 'none',
         }}
         onMouseDown={onMouseDown}
         onMouseMove={onMouseMove}
@@ -106,7 +104,7 @@ export default function CategoryCarousel() {
               border: '0.5px solid var(--primary-blue)',
               color: 'var(--primary-blue)',
               userSelect: 'none',
-              WebkitUserSelect: 'none'
+              WebkitUserSelect: 'none',
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.background = 'var(--primary-blue)';
@@ -129,11 +127,11 @@ export default function CategoryCarousel() {
         className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 flex items-center justify-center"
         aria-label="다음 카테고리"
       >
-        <Image 
-          src="/move_tag/uiw_right.svg" 
-          alt="Next" 
-          width={20} 
-          height={20} 
+        <Image
+          src="/move_tag/uiw_right.svg"
+          alt="Next"
+          width={20}
+          height={20}
           style={{ transform: 'rotate(180deg)' }}
         />
       </button>

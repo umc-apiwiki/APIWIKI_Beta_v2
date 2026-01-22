@@ -1,0 +1,59 @@
+/* 게시글 상세 페이지 모바일 대응 */
+
+@media (max-width: 768px) {
+  .boardDetailPage {
+    padding-bottom: 5rem; /* 하단 네비게이션 공간 */
+  }
+
+  /* 메인 컨텐츠 */
+  .boardDetailPage > div {
+    padding-top: 1rem !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+
+  /* 제목 */
+  .boardDetailPage h1 {
+    font-size: 1.5rem !important;
+    line-height: 1.4 !important;
+  }
+
+  /* 메타 정보 */
+  .boardDetailPage [class*='flex'][class*='items-center'] {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  /* 본문 내용 */
+  .boardDetailPage [class*='prose'] {
+    font-size: 0.9375rem !important;
+  }
+
+  /* 버튼 그룹 */
+  .boardDetailPage [class*='flex'][class*='gap'] button {
+    padding: 0.625rem 1rem !important;
+    font-size: 0.875rem !important;
+  }
+
+  /* 댓글 섹션 */
+  .boardDetailPage [class*='comment'] {
+    padding: 1rem !important;
+  }
+
+  /* 이미지 */
+  .boardDetailPage img {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .boardDetailPage > div {
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+  }
+
+  .boardDetailPage h1 {
+    font-size: 1.25rem !important;
+  }
+}

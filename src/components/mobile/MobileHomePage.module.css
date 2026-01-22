@@ -1,0 +1,411 @@
+/* MobileHomePage.module.css */
+
+.container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: white;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.header {
+  width: 100%;
+  height: 3.5rem;
+  padding: 0 1rem;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  background: white;
+  z-index: 10;
+  box-sizing: border-box;
+}
+
+.headerLogo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.pointsText {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #2196f3;
+}
+
+.logoImage {
+  width: 1.5rem;
+  height: 1.5rem;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.logoText {
+  color: #0ea5e9;
+  font-size: 1rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.notificationBtn {
+  width: 1.5rem;
+  height: 1.5rem;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.main {
+  flex: 1;
+  width: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0 0 10rem 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.logoWrapper {
+  width: 5rem;
+  height: 5rem;
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.description {
+  width: 100%;
+  max-width: 100%;
+  text-align: center;
+  color: #0c4a6e;
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.25rem;
+  margin: 0 0 1.5rem 0;
+  padding: 0 1rem;
+  box-sizing: border-box;
+}
+
+.searchWrapper {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 0 1rem 0;
+  padding: 0 1rem;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+.searchFakeInput {
+  width: 100%;
+  height: 3rem;
+  position: relative;
+  background-color: white;
+  border-radius: 1.25rem;
+  overflow: hidden;
+  box-shadow: 0px 2px 5px rgba(1, 149, 255, 0.2);
+  display: flex;
+  align-items: center;
+  padding: 0 3.5rem 0 1.25rem;
+}
+
+.searchPlaceholder {
+  flex: 1;
+  font-size: 0.875rem;
+  color: #9ca3af;
+}
+
+.searchIcon {
+  position: absolute;
+  right: 1.25rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1.25rem;
+  height: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.searchForm {
+  width: calc(100% - 2rem);
+  max-width: 100%;
+  height: 3rem;
+  position: relative;
+  background-color: white;
+  border-radius: 1.25rem;
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+  box-shadow: 0px 2px 5px rgba(1, 149, 255, 0.2);
+  align-self: center;
+}
+
+.searchInput {
+  width: 100%;
+  height: 100%;
+  padding: 0 3.5rem 0 1.25rem;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 0.875rem;
+  color: #374151;
+}
+
+.searchInput::placeholder {
+  color: #9ca3af;
+}
+
+.searchButton {
+  position: absolute;
+  right: 1.25rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1.25rem;
+  height: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.carouselWrapper {
+  width: 85%;
+  max-width: 85%;
+  margin: 0.5rem 0 0 0;
+  padding: 0 1rem;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.carouselScroll {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.375rem 0;
+  margin: 0;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  touch-action: pan-x;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* 스크롤바 숨기기 */
+.carouselScroll::-webkit-scrollbar {
+  display: none;
+}
+
+.carouselScroll {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.categoryButton {
+  padding: 0.125rem 0.375rem;
+  background-color: white;
+  border-radius: 9999px;
+  white-space: nowrap;
+  font-size: 0.6rem;
+  font-weight: 400;
+  flex-shrink: 0;
+  border: 0.5px solid #2196f3;
+  color: #2196f3;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-width: 2rem;
+  max-width: 4rem;
+}
+
+.categoryButton:active {
+  transform: scale(0.95);
+}
+
+.progressBarWrapper {
+  width: 12%;
+  max-width: 200px;
+  height: 0.25rem;
+  background-color: #e5e7eb;
+  border-radius: 9999px;
+  margin: 0.625rem auto 0 auto;
+  position: relative;
+  overflow: visible;
+}
+
+.progressIndicator {
+  position: absolute;
+  width: 0.625rem;
+  height: 0.1875rem;
+  background-color: #0ea5e9;
+  border-radius: 9999px;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: left 0.2s ease-out;
+  box-shadow: 0 1px 3px rgba(14, 165, 233, 0.4);
+}
+
+.scrollIndicator {
+  position: fixed;
+  bottom: 5rem;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  width: 3rem;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  z-index: 1000;
+  padding: 0;
+  transition: opacity 0.3s;
+}
+
+.scrollContent {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: white;
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 2000;
+  -webkit-overflow-scrolling: touch;
+  padding-top: 0.5rem;
+}
+
+.downArrow {
+  position: relative;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin: 0.5rem auto 1rem auto;
+  padding: 0;
+}
+
+.contentWrapper {
+  padding: 0 0 6rem 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.section {
+  margin-bottom: 1.5rem;
+}
+
+.sectionTitle {
+  font-size: 1.0625rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 0.875rem;
+  padding: 0 1rem;
+  letter-spacing: -0.015em;
+}
+
+.scrollableSection {
+  display: flex;
+  flex-direction: row;
+  gap: 0.625rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0 1rem 0.625rem 1rem;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
+}
+
+.scrollableSection::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollableSection {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.cardItem {
+  width: calc(50vw - 1.25rem);
+  min-width: calc(50vw - 1.25rem);
+  flex-shrink: 0;
+  scroll-snap-align: start;
+  min-height: 6rem;
+  height: auto;
+}
+
+/* 모바일 카드 상단 섹션 간격 */
+.cardItem :global(.api-card) > div > div:first-child {
+  gap: 0.625rem !important;
+  margin-bottom: 0.375rem !important;
+}
+
+/* 카드 상단 flex 레이아웃 간격 조정 */
+.cardItem :global(.api-card) > div > div:first-child {
+  gap: 0.375rem !important;
+  margin-bottom: 0.375rem !important;
+}
+
+/* 카드 내부 이미지 크기 조정 */
+.cardItem :global(.api-card) img,
+.cardItem :global(.news-card) img {
+  width: 100%;
+  height: auto;
+  max-height: 2rem;
+  min-height: 1.5rem;
+  object-fit: contain;
+  border-radius: 0.25rem;
+}
+
+.progressBarWrapper {
+  width: 15%;
+  max-width: 200px;
+  height: 0.25rem;
+  background-color: #e5e7eb;
+  border-radius: 9999px;
+  margin: 0.75rem auto 0 auto;
+  position: relative;
+  overflow: visible;
+}
+
+.progressIndicator {
+  position: absolute;
+  width: 0.75rem;
+  height: 0.1875rem;
+  background-color: #0ea5e9;
+  border-radius: 9999px;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  transition: left 0.2s ease-out;
+  box-shadow: 0 1px 3px rgba(14, 165, 233, 0.4);
+}

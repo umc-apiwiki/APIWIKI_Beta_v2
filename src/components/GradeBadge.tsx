@@ -11,10 +11,10 @@ import type { UserGrade } from '@/types';
 // ============================================
 
 interface GradeBadgeProps {
-    grade: UserGrade;
-    size?: 'sm' | 'md' | 'lg';
-    showLabel?: boolean;
-    className?: string;
+  grade: UserGrade;
+  size?: 'sm' | 'md' | 'lg';
+  showLabel?: boolean;
+  className?: string;
 }
 
 // ============================================
@@ -22,33 +22,33 @@ interface GradeBadgeProps {
 // ============================================
 
 const sizeStyles = {
-    sm: {
-        container: 'px-2 py-1 text-xs',
-        icon: 'text-sm',
-    },
-    md: {
-        container: 'px-3 py-1.5 text-sm',
-        icon: 'text-base',
-    },
-    lg: {
-        container: 'px-4 py-2 text-base',
-        icon: 'text-lg',
-    },
+  sm: {
+    container: 'px-2 py-1 text-xs',
+    icon: 'text-sm',
+  },
+  md: {
+    container: 'px-3 py-1.5 text-sm',
+    icon: 'text-base',
+  },
+  lg: {
+    container: 'px-4 py-2 text-base',
+    icon: 'text-lg',
+  },
 };
 
 const getGradeInfo = (grade: UserGrade) => {
-    switch (grade) {
-        case 'bronze':
-            return { name: '브론즈', color: '#CD7F32', icon: '🥉' };
-        case 'silver':
-            return { name: '실버', color: '#C0C0C0', icon: '🥈' };
-        case 'gold':
-            return { name: '골드', color: '#FFD700', icon: '🥇' };
-        case 'admin':
-            return { name: '관리자', color: '#EF4444', icon: '👑' };
-        default:
-            return { name: '브론즈', color: '#CD7F32', icon: '🥉' };
-    }
+  switch (grade) {
+    case 'bronze':
+      return { name: '브론즈', color: '#CD7F32', icon: '🥉' };
+    case 'silver':
+      return { name: '실버', color: '#C0C0C0', icon: '🥈' };
+    case 'gold':
+      return { name: '골드', color: '#FFD700', icon: '🥇' };
+    case 'admin':
+      return { name: '관리자', color: '#EF4444', icon: '👑' };
+    default:
+      return { name: '브론즈', color: '#CD7F32', icon: '🥉' };
+  }
 };
 
 // ============================================
@@ -56,32 +56,32 @@ const getGradeInfo = (grade: UserGrade) => {
 // ============================================
 
 export default function GradeBadge({
-    grade,
-    size = 'md',
-    showLabel = true,
-    className = '',
+  grade,
+  size = 'md',
+  showLabel = true,
+  className = '',
 }: GradeBadgeProps) {
-    const gradeInfo = getGradeInfo(grade);
-    const styles = sizeStyles[size || 'md'];
+  const gradeInfo = getGradeInfo(grade);
+  const styles = sizeStyles[size || 'md'];
 
-    return (
-        <div
-            className={`
+  return (
+    <div
+      className={`
         inline-flex items-center gap-1.5 rounded-full font-semibold
         ${styles.container}
         ${className}
       `}
-            style={{
-                backgroundColor: `${gradeInfo.color}20`,
-                color: gradeInfo.color,
-                border: `2px solid ${gradeInfo.color}`,
-            }}
-            title={`${gradeInfo.name} 등급`}
-        >
-            <span className={styles.icon}>{gradeInfo.icon}</span>
-            {showLabel && <span>{gradeInfo.name}</span>}
-        </div>
-    );
+      style={{
+        backgroundColor: `${gradeInfo.color}20`,
+        color: gradeInfo.color,
+        border: `2px solid ${gradeInfo.color}`,
+      }}
+      title={`${gradeInfo.name} 등급`}
+    >
+      <span className={styles.icon}>{gradeInfo.icon}</span>
+      {showLabel && <span>{gradeInfo.name}</span>}
+    </div>
+  );
 }
 
 // ============================================
@@ -89,42 +89,37 @@ export default function GradeBadge({
 // ============================================
 
 interface GradeBadgeWithTooltipProps extends GradeBadgeProps {
-    score: number;
-    nextGradeScore?: number;
+  score: number;
+  nextGradeScore?: number;
 }
 
 export function GradeBadgeWithTooltip({
-    grade,
-    score,
-    nextGradeScore,
-    size = 'md',
-    showLabel = true,
-    className = '',
+  grade,
+  score,
+  nextGradeScore,
+  size = 'md',
+  showLabel = true,
+  className = '',
 }: GradeBadgeWithTooltipProps) {
-    const gradeInfo = getGradeInfo(grade);
-    const pointsToNext = nextGradeScore ? nextGradeScore - score : 0;
+  const gradeInfo = getGradeInfo(grade);
+  const pointsToNext = nextGradeScore ? nextGradeScore - score : 0;
 
-    return (
-        <div className="relative group">
-            <GradeBadge
-                grade={grade}
-                size={size}
-                showLabel={showLabel}
-                className={className}
-            />
+  return (
+    <div className="relative group">
+      <GradeBadge grade={grade} size={size} showLabel={showLabel} className={className} />
 
-            {/* 툴팁 */}
-            <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block z-10">
-                <div className="bg-gray-900 text-white text-xs rounded-lg py-2 px-3 whitespace-nowrap">
-                    <div className="font-semibold">{gradeInfo.name} 등급</div>
-                    <div className="text-gray-300 mt-1">현재 점수: {score}점</div>
-                    {/* nextGrade logic removed as grading system is gone/simplified */}
-                    {/* 화살표 */}
-                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 -mt-1">
-                        <div className="border-4 border-transparent border-t-gray-900"></div>
-                    </div>
-                </div>
-            </div>
+      {/* 툴팁 */}
+      <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block z-10">
+        <div className="bg-gray-900 text-white text-xs rounded-lg py-2 px-3 whitespace-nowrap">
+          <div className="font-semibold">{gradeInfo.name} 등급</div>
+          <div className="text-gray-300 mt-1">현재 점수: {score}점</div>
+          {/* nextGrade logic removed as grading system is gone/simplified */}
+          {/* 화살표 */}
+          <div className="absolute top-full left-1/2 transform -translate-x-1/2 -mt-1">
+            <div className="border-4 border-transparent border-t-gray-900"></div>
+          </div>
         </div>
-    );
+      </div>
+    </div>
+  );
 }

@@ -5,6 +5,7 @@
 ---
 
 ## 1) 헤더 검색 위치 변경 (우선순위: 상)
+
 - 요약: 메인 페이지(`/`)에서는 헤더에 검색창을 표시하지 않고, 탐색/검색 관련 페이지(`/explore`, 상세페이지 등)에서만 헤더 상단(또는 상단바)에 검색창을 표시.
 - 대상 파일: `src/app/layout.tsx`, `src/app/page.tsx`, `src/components/SearchBar.tsx`
 - 수락 기준:
@@ -14,6 +15,7 @@
 ---
 
 ## 2) 홈(메인) 레이아웃 조정: 추천/인기/카테고리 섹션 추가 (우선순위: 상)
+
 - 요약: 메인에 '추천 API(사용자 스택 기반 3개)', '최근 인기 Top6', '카테고리 바로가기(8개)' 섹션을 와이어프레임대로 배치.
 - 대상 파일: `src/app/page.tsx`, `src/components/CategoryCarousel.tsx`, `src/components/APICarousel.tsx`, `src/components/APICard.tsx`
 - 수락 기준:
@@ -24,6 +26,7 @@
 ---
 
 ## 3) Suggest API / 유사 API 캐러셀 (우선순위: 중)
+
 - 요약: 상세 페이지 하단(또는 홈의 추천 영역)에 현재 API와 유사한 API를 보여주는 캐러셀을 추가.
 - 대상 파일: `src/app/api/[id]/page.tsx`, `src/components/APICarousel.tsx`, `src/data/mockData.ts`
 - 수락 기준:
@@ -33,6 +36,7 @@
 ---
 
 ## 4) Explore 페이지: 필터/정렬 및 페이지당 카드 수 변경 (우선순위: 상)
+
 - 요약: 와이어프레임의 필터 옵션(가격대, 평점, 제공국가, 인증방식, 문서 언어 등)을 반영하고, 한 페이지에 9개씩 로드하도록 변경(무한스크롤 유지).
 - 대상 파일: `src/app/explore/page.tsx`
 - 수락 기준:
@@ -42,6 +46,7 @@
 ---
 
 ## 5) 비교(Compare) 모달 및 선택 로직 (우선순위: 상)
+
 - 요약: API 카드에서 비교 선택(최대 4개)을 지원하고, '비교하기' 클릭 시 중앙 모달로 간단 비교 표를 표시.
 - 대상 파일: `src/components/APICard.tsx`, `src/components/CompareModal.tsx`(신규), `src/app/explore/page.tsx`
 - 수락 기준:
@@ -53,6 +58,7 @@
 ---
 
 ## 6) 모달 공통 규약 (우선순위: 중)
+
 - 요약: 모든 모달은 페이지 전환 없이 중앙에 표시, 주변 흐리게(blur) 효과 적용, 접근성(포커스 트랩, ESC 닫기) 보장.
 - 대상 파일: `src/components/ModalBase.tsx`(신규) 또는 기존 모달 확장, `src/app/layout.tsx`(글로벌 컨텍스트/포털 지원)
 - 수락 기준:
@@ -62,6 +68,7 @@
 ---
 
 ## 7) mockData 확장 (우선순위: 상)
+
 - 요약: 와이어프레임에서 필요한 데이터를 위해 `src/data/mockData.ts`에 필드 추가 및 헬퍼 개선.
 - 권장 추가/확장 필드 예시:
   - `viewsLast7Days: number` (최근 7일 조회수)
@@ -79,6 +86,7 @@
 ---
 
 ## 8) 반응형 및 접근성 점검 (우선순위: 중)
+
 - 요약: 변경된 UI(특히 캐러셀, 모달, 그리드)가 모바일/데스크탑에서 정상 동작하는지 확인하고, 시멘틱한 마크업과 ARIA 속성 추가.
 - 대상 파일: 변경된 모든 컴포넌트
 - 수락 기준:
@@ -88,6 +96,7 @@
 ---
 
 ## 구현 우선순위 제안
+
 1. 헤더/검색 위치 변경 (작업 #2)
 2. mockData 확장 (작업 #8)
 3. 홈 레이아웃(추천/인기/카테고리) 추가 (작업 #3)
@@ -99,6 +108,7 @@
 ---
 
 ## 개발 노트 / 구현 팁
+
 - 클라이언트 컴포넌트는 `"use client"`를 유지해야 합니다. 특히 검색바, 비교 토글, 캐러셀은 클라이언트로 유지.
 - 무한스크롤과 페이지당 갯수 변경 시 `IntersectionObserver` 설정에서 페이지 크기를 9로 맞출 것.
 - 모달은 React Portal로 `document.body`에 렌더링하고, 배경 블러는 `backdrop-filter: blur(6px)` 혹은 Tailwind 유틸을 사용.
