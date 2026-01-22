@@ -1,7 +1,6 @@
 'use client';
 
 import { motion } from 'motion/react';
-import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Header from '@/components/Header';
 import styles from './page.module.css';
