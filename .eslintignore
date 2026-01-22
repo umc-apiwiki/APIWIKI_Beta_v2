@@ -11,3 +11,4 @@ scripts/seed-database.js
 test-db-connection.js
 test-db-write.js
 next-env.d.ts
+docs/*
