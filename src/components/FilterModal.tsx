@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import ModalBase from './ModalBase';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion } from 'motion/react';
 
 type Props = {
   isOpen: boolean;
@@ -23,8 +23,6 @@ type Props = {
     docLanguageFilter: string[];
     companyFilter: string[];
   }) => void;
-  // Count for button
-  resultCount: number;
 };
 
 const TABS = [
@@ -44,7 +42,6 @@ export default function FilterModal({
   docLanguageFilter,
   companyFilter,
   onApplyFilters,
-  resultCount,
 }: Props) {
   const [activeTab, setActiveTab] = useState('price');
 
@@ -110,7 +107,7 @@ export default function FilterModal({
 
   return (
     <ModalBase isOpen={isOpen} onClose={onClose} title="Filters">
-      <div className="flex flex-col h-[60vh] md:h-auto">
+      <div className="flex flex-col h-[60dvh] md:h-auto">
         {/* Tabs */}
         <div className="flex border-b overflow-x-auto no-scrollbar mb-4">
           {TABS.map((tab) => (

@@ -22,7 +22,7 @@
   z-index: 10000;
   width: 100%;
   max-width: 42rem;
-  max-height: 90vh;
+  max-height: 90dvh;
   display: flex;
   flex-direction: column;
 }
@@ -77,7 +77,7 @@
   }
 
   .dialogContainer {
-    max-height: 95vh;
+    max-height: 95dvh;
   }
 
   .dialog {
@@ -109,7 +109,7 @@
   }
 
   .dialogContainer {
-    max-height: 98vh;
+    max-height: 98dvh;
   }
 
   .dialog {

@@ -606,7 +606,6 @@ function ExploreContent() {
         docLanguageFilter={docLanguageFilter}
         companyFilter={companyFilter}
         onApplyFilters={handleApplyFilters}
-        resultCount={filteredAPIs.length}
       />
 
       {/* Compare Modal */}
