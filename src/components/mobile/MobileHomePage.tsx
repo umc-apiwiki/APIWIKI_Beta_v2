@@ -6,8 +6,8 @@ import { motion } from 'motion/react';
 import { Bell } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import MobileBottomNavigation from './MobileBottomNavigation';
-import MobileSearchModal from './MobileSearchModal';
+import MobileBottomNavigation from '@/components/mobile/MobileBottomNavigation';
+import MobileSearchModal from '@/components/mobile/MobileSearchModal';
 import { categories } from '@/data/mockData';
 import styles from './MobileHomePage.module.css';
 
@@ -16,7 +16,6 @@ export default function MobileHomePage() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
-  const [isScrolling, setIsScrolling] = useState(false);
 
   const handleScroll = () => {
     if (scrollRef.current) {
@@ -28,13 +27,8 @@ export default function MobileHomePage() {
   };
 
   const handleScrollToTop = () => {
-    if (isScrolling) return;
-    setIsScrolling(true);
-    // 애니메이션 후 페이지 새로고침
-    setTimeout(() => {
-      router.push('/');
-      router.refresh();
-    }, 500);
+    router.push('/');
+    router.refresh();
   };
 
   return (
@@ -153,11 +147,11 @@ export default function MobileHomePage() {
       <motion.button
         className={styles.scrollIndicator}
         onClick={handleScrollToTop}
-        animate={isScrolling ? { y: -1000, opacity: 0 } : { y: [0, -6, 0] }}
+        animate={{ y: [0, -6, 0] }}
         transition={{
-          duration: isScrolling ? 0.5 : 2,
-          repeat: isScrolling ? 0 : Infinity,
-          ease: isScrolling ? "easeInOut" : "easeInOut"
+          duration: 2,
+          repeat: Infinity,
+          ease: "easeInOut"
         }}
         aria-label="위로 스크롤"
       >
