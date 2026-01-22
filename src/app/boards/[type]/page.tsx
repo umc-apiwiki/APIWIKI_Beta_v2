@@ -3,7 +3,6 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { motion } from 'motion/react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Header from '@/components/Header';
 import BoardForm from '@/components/BoardForm';
@@ -14,28 +13,24 @@ const BOARD_CONFIGS: Record<BoardType, { gradient: string; description: string }
     community: {
         gradient: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
         description: '커뮤니티에서 다양한 이야기를 나누세요'
-    },
-    inquiry: {
-        gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-        description: '궁금한 점을 문의해주세요'
-    },
-    qna: {
-        gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-        description: '질문과 답변을 나누세요'
-    },
-    free: {
-        gradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
-        description: '자유롭게 이야기를 나누세요'
-    },
+    }
 };
 
 export default function BoardTypePage({ params }: { params: { type: BoardType } }) {
-    const router = useRouter();
     const [boards, setBoards] = useState<Board[]>([]);
     const [loading, setLoading] = useState(true);
     const [showForm, setShowForm] = useState(false);
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
+    const [isMobile, setIsMobile] = useState(false);
+
+    // 모바일 감지
+    useEffect(() => {
+        const checkMobile = () => setIsMobile(window.innerWidth <= 768);
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
 
     const fetchBoards = useCallback(async () => {
         try {
@@ -57,8 +52,6 @@ export default function BoardTypePage({ params }: { params: { type: BoardType } 
     useEffect(() => {
         fetchBoards();
     }, [fetchBoards]);
-
-    const config = BOARD_CONFIGS[params.type] || BOARD_CONFIGS.community;
 
     return (
         <motion.div 
@@ -89,19 +82,17 @@ export default function BoardTypePage({ params }: { params: { type: BoardType } 
 
             <Header />
             
-            <div className="grid-container pt-28 md:pt-36 pb-32 md:pb-60 relative z-10">
+            <div className={isMobile ? "px-4 pt-4 pb-20 relative z-10" : "grid-container pt-28 md:pt-36 pb-32 md:pb-60 relative z-10"}>
                 {/* 헤더 영역 - 제목과 글쓰기 버튼 */}
                 <motion.div
-                    className="col-12 flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6 md:mb-8"
+                    className={isMobile ? "w-full flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6 md:mb-8" : "col-12 flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6 md:mb-8"}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 0.1 }}
                 >
                     <div>
-                        <h1 className="text-xl md:text-2xl font-bold mb-1" style={{ color: 'var(--text-dark)' }}>
-                            커뮤니티 게시판
-                        </h1>
-                        <p className="text-sm text-gray-500 hidden md:block">자유롭게 의견을 나누고 소통해보세요</p>
+                        <p className="text-sm uppercase tracking-[0.15em] text-slate-500">Community</p>
+                        <h1 className="text-3xl font-semibold text-slate-900 mt-1">커뮤니티 게시판</h1>
                     </div>
                     <motion.button
                         onClick={() => setShowForm(!showForm)}

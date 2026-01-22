@@ -1,0 +1,58 @@
+/* Mobile Design System - Unified Styles */
+
+/* Mobile Container Spacing */
+@media (max-width: 768px) {
+  .mobileContainer {
+    padding-top: 4.5rem !important; /* 72px - Header height + spacing */
+    padding-bottom: 5rem !important; /* 80px - Bottom navigation space */
+    padding-left: 1rem !important; /* 16px */
+    padding-right: 1rem !important; /* 16px */
+  }
+
+  /* Typography */
+  .mobilePageTitle {
+    font-size: 1.5rem !important; /* 24px */
+    font-weight: 700 !important;
+    line-height: 1.3 !important;
+  }
+
+  .mobileSectionTitle {
+    font-size: 1.125rem !important; /* 18px */
+    font-weight: 600 !important;
+    line-height: 1.4 !important;
+  }
+
+  .mobileBodyText {
+    font-size: 0.875rem !important; /* 14px */
+    font-weight: 400 !important;
+    line-height: 1.5 !important;
+  }
+
+  .mobileSmallText {
+    font-size: 0.75rem !important; /* 12px */
+    font-weight: 400 !important;
+    line-height: 1.4 !important;
+  }
+
+  /* Component Sizing */
+  .mobileButton {
+    height: 2.75rem !important; /* 44px - Touch optimized */
+    padding: 0 1rem !important;
+    font-size: 0.875rem !important;
+    border-radius: 0.75rem !important;
+  }
+
+  .mobileInput {
+    height: 2.75rem !important; /* 44px */
+    padding: 0 1rem !important;
+    font-size: 0.875rem !important;
+    border-radius: 0.75rem !important;
+  }
+
+  .mobileSearchBar {
+    height: 3rem !important; /* 48px */
+    padding: 0 1.25rem !important;
+    font-size: 0.875rem !important;
+    border-radius: 1.25rem !important;
+  }
+}

@@ -4,7 +4,6 @@
 import { useState, useEffect, useRef, useCallback, Suspense } from 'react';
 import { motion } from 'motion/react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import Link from 'next/link';
 import Image from 'next/image';
 import APICard from '@/components/APICard';
 import Header from '@/components/Header';
@@ -12,7 +11,6 @@ import SearchBar from '@/components/SearchBar';
 import CompareModal from '@/components/CompareModal';
 import FilterModal from '@/components/FilterModal';
 import MobileSearchModal from '@/components/mobile/MobileSearchModal';
-import { searchAPIs, getAllCategories, type SearchFilters } from '@/lib/apiService';
 import type { API } from '@/types';
 import styles from './page.module.css';
 
@@ -20,7 +18,6 @@ function ExploreContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [apis, setApis] = useState<API[]>([]);
-  const [categories, setCategories] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const initialQuery = searchParams.get('q') || '';
   const initialCategory = searchParams.get('category') || '';
@@ -34,7 +31,6 @@ function ExploreContent() {
   const [hasMore, setHasMore] = useState(true);
   const [compareList, setCompareList] = useState<string[]>([]);
   const [isCompareOpen, setIsCompareOpen] = useState(false);
-  const [favorites, setFavorites] = useState<string[]>([]);
 
   const [isFiltersVisible, setIsFiltersVisible] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -91,19 +87,7 @@ function ExploreContent() {
 
   // 카테고리 데이터 로드
   useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await fetch('/api/apis/categories');
-        if (response.ok) {
-          const data = await response.json();
-          setCategories(data);
-        }
-      } catch (error) {
-        console.error('Error fetching categories:', error);
-      }
-    };
-
-    fetchCategories();
+    // Categories are fetched from API responses, no separate fetch needed
   }, []);
 
   // URL 파라미터가 변경되면 상태 업데이트
@@ -161,7 +145,7 @@ function ExploreContent() {
       result = result.filter(api => {
         // api may not have countries field; fall back to checking company-country heuristic if available
         // Prefer `api.countries` if present
-        // @ts-ignore
+        // @ts-ignore - Framer Motion AnimatePresence typing issue with children
         const countries: string[] = api.countries || [];
         if (countries.length > 0) {
           return countryFilter.some(c => countries.includes(c));
@@ -173,7 +157,7 @@ function ExploreContent() {
     // Auth method filter
     if (authMethodFilter.length > 0) {
       result = result.filter(api => {
-        // @ts-ignore
+        // @ts-ignore - Framer Motion AnimatePresence typing issue with children
         const methods: string[] = api.authMethods || [];
         if (methods.length > 0) {
           return authMethodFilter.some(m => methods.includes(m));
@@ -185,7 +169,7 @@ function ExploreContent() {
     // Documentation language filter
     if (docLanguageFilter.length > 0) {
       result = result.filter(api => {
-        // @ts-ignore
+        // @ts-ignore - Framer Motion AnimatePresence typing issue with children
         const langs: string[] = api.docsLanguages || [];
         if (langs.length > 0) {
           return docLanguageFilter.some(l => langs.includes(l));
@@ -240,7 +224,7 @@ function ExploreContent() {
         break;
       case '최신순':
         // Assuming createdat exists, if not fallback to nothing (or id)
-        // @ts-ignore
+        // @ts-ignore - Framer Motion AnimatePresence typing issue with children
         result.sort((a, b) => new Date(b.createdat || 0).getTime() - new Date(a.createdat || 0).getTime());
         break;
       case '후기 많은 순':
@@ -327,28 +311,7 @@ function ExploreContent() {
     return () => window.removeEventListener('scroll', onScroll);
   }, [loadMore, hasMore]);
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      router.push(`/explore?q=${encodeURIComponent(searchQuery)}`);
-    }
-  };
 
-  const toggleCompare = (apiId: string) => {
-    setCompareList(prev =>
-      prev.includes(apiId)
-        ? prev.filter(id => id !== apiId)
-        : prev.length < 4 ? [...prev, apiId] : prev
-    );
-  };
-
-  const toggleFavorite = (apiId: string) => {
-    setFavorites(prev =>
-      prev.includes(apiId)
-        ? prev.filter(id => id !== apiId)
-        : [...prev, apiId]
-    );
-  };
 
   // 필터 적용 핸들러
   const handleApplyFilters = (filters: {
@@ -365,6 +328,14 @@ function ExploreContent() {
     setAuthMethodFilter(filters.authMethodFilter);
     setDocLanguageFilter(filters.docLanguageFilter);
     setCompanyFilter(filters.companyFilter);
+  };
+
+  const toggleCompare = (apiId: string) => {
+    setCompareList(prev =>
+      prev.includes(apiId)
+        ? prev.filter(id => id !== apiId)
+        : prev.length < 4 ? [...prev, apiId] : prev
+    );
   };
 
   useEffect(() => {
@@ -407,8 +378,8 @@ function ExploreContent() {
       <div className="bg-glow" />
 
       {/* 검색바 - 페이지 최상단 */}
-      <div className="w-full flex justify-center" style={{ marginTop: isMobile ? '4.5rem' : '120px', marginBottom: isMobile ? '1rem' : '2rem' }}>
-        <div className="w-[800px] max-w-[90vw]">
+      <div className={isMobile ? "w-full px-4" : "w-full flex justify-center"} style={{ marginTop: isMobile ? '1rem' : '120px', marginBottom: isMobile ? '1rem' : '2rem' }}>
+        <div className={isMobile ? "w-full" : "w-[800px] max-w-[90vw]"}>
           {loading ? (
             <div className="h-[3.25rem] w-full rounded-2xl bg-gray-100 animate-pulse border border-gray-200" />
           ) : isMobile ? (
@@ -532,17 +503,26 @@ function ExploreContent() {
           )}
 
           {/* API 카드 그리드 */}
-          <div className={styles.apiGrid}>
-            {displayedAPIs.map((api, idx) => (
-              <div key={`${api.id}-${idx}`} className={styles.apiCardWrapper}>
-                <APICard
-                  api={api}
-                  onToggleCompare={() => toggleCompare(api.id)}
-                  isCompareSelected={compareList.includes(api.id)}
-                />
+          {loading && displayedAPIs.length === 0 ? (
+            <div className="flex justify-center items-center py-20">
+              <div className="text-center">
+                <div className="inline-block w-10 h-10 border-4 border-t-transparent rounded-full animate-spin" style={{ borderColor: '#2196F3', borderTopColor: 'transparent' }}></div>
+                <p className="mt-4 text-sm text-gray-600">검색 결과를 불러오는 중...</p>
               </div>
-            ))}
-          </div>
+            </div>
+          ) : (
+            <div className={styles.apiGrid}>
+              {displayedAPIs.map((api, idx) => (
+                <div key={`${api.id}-${idx}`} className={styles.apiCardWrapper}>
+                  <APICard
+                    api={api}
+                    onToggleCompare={() => toggleCompare(api.id)}
+                    isCompareSelected={compareList.includes(api.id)}
+                  />
+                </div>
+              ))}
+            </div>
+          )}
 
           {/* 로딩 및 결과 없음 UI ... (Existing) */}
           {hasMore && (
@@ -551,7 +531,7 @@ function ExploreContent() {
             </div>
           )}
 
-          {displayedAPIs.length === 0 && (
+          {!loading && displayedAPIs.length === 0 && (
             <div className="text-center py-16 bg-white rounded-lg border border-gray-200">
               <p className="text-gray-500 text-lg">검색 결과가 없습니다.</p>
               <p className="text-gray-400 text-sm mt-2">다른 검색어를 시도해보세요.</p>

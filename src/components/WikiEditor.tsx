@@ -342,7 +342,9 @@ export default function WikiEditor({ apiId, initialContent = '', onSave }: WikiE
                   className="prose prose-slate max-w-none min-h-[400px]"
                   style={{
                     color: 'var(--text-dark)',
-                    lineHeight: '1.8'
+                    lineHeight: '1.8',
+                    overflowWrap: 'break-word',
+                    wordWrap: 'break-word'
                   }}
                 >
                   {text ? (
@@ -350,16 +352,16 @@ export default function WikiEditor({ apiId, initialContent = '', onSave }: WikiE
                       remarkPlugins={[remarkGfm]}
                       rehypePlugins={[rehypeRaw, rehypeSanitize]}
                       components={{
-                        h1: ({node, ...props}) => <h1 className="text-[32px] font-bold mb-4 mt-6" style={{ color: 'var(--text-dark)' }} {...props} />,
-                        h2: ({node, ...props}) => <h2 className="text-[28px] font-bold mb-3 mt-5" style={{ color: 'var(--text-dark)' }} {...props} />,
-                        h3: ({node, ...props}) => <h3 className="text-[24px] font-bold mb-2 mt-4" style={{ color: 'var(--text-dark)' }} {...props} />,
-                        p: ({node, ...props}) => <p className="mb-4 text-[16px]" style={{ color: 'var(--text-dark)' }} {...props} />,
-                        a: ({node, ...props}) => <a className="font-medium hover:underline" style={{ color: 'var(--primary-blue)' }} {...props} />,
+                        h1: ({node, ...props}) => <h1 className="text-[32px] font-bold mb-4 mt-6 break-words" style={{ color: 'var(--text-dark)' }} {...props} />,
+                        h2: ({node, ...props}) => <h2 className="text-[28px] font-bold mb-3 mt-5 break-words" style={{ color: 'var(--text-dark)' }} {...props} />,
+                        h3: ({node, ...props}) => <h3 className="text-[24px] font-bold mb-2 mt-4 break-words" style={{ color: 'var(--text-dark)' }} {...props} />,
+                        p: ({node, ...props}) => <p className="mb-4 text-[16px] break-words" style={{ color: 'var(--text-dark)' }} {...props} />,
+                        a: ({node, ...props}) => <a className="font-medium hover:underline break-all" style={{ color: 'var(--primary-blue)' }} {...props} />,
                         code: ({node, inline, ...props}: any) => 
                           inline ? (
-                            <code className="px-2 py-1 rounded text-[14px] font-mono" style={{ backgroundColor: 'rgba(0, 0, 0, 0.05)', color: '#e11d48' }} {...props} />
+                            <code className="px-2 py-1 rounded text-[14px] font-mono break-all" style={{ backgroundColor: 'rgba(0, 0, 0, 0.05)', color: '#e11d48', maxWidth: '100%' }} {...props} />
                           ) : (
-                            <code className="block p-4 rounded-[12px] text-[14px] font-mono overflow-x-auto" style={{ backgroundColor: 'rgba(0, 0, 0, 0.05)' }} {...props} />
+                            <code className="block p-4 rounded-[12px] text-[14px] font-mono overflow-x-auto" style={{ backgroundColor: 'rgba(0, 0, 0, 0.05)', maxWidth: '100%', whiteSpace: 'pre-wrap', wordBreak: 'break-all' }} {...props} />
                           ),
                         ul: ({node, ...props}) => <ul className="list-disc list-inside mb-4 space-y-2" {...props} />,
                         ol: ({node, ...props}) => <ol className="list-decimal list-inside mb-4 space-y-2" {...props} />,
@@ -392,23 +394,25 @@ export default function WikiEditor({ apiId, initialContent = '', onSave }: WikiE
                 className="prose prose-slate max-w-none"
                 style={{
                   color: 'var(--text-dark)',
-                  lineHeight: '1.8'
+                  lineHeight: '1.8',
+                  overflowWrap: 'break-word',
+                  wordWrap: 'break-word'
                 }}
               >
                 <ReactMarkdown
                   remarkPlugins={[remarkGfm]}
                   rehypePlugins={[rehypeRaw, rehypeSanitize]}
                   components={{
-                    h1: ({node, ...props}) => <h1 className="text-[32px] font-bold mb-4 mt-6" style={{ color: 'var(--text-dark)' }} {...props} />,
-                    h2: ({node, ...props}) => <h2 className="text-[28px] font-bold mb-3 mt-5" style={{ color: 'var(--text-dark)' }} {...props} />,
-                    h3: ({node, ...props}) => <h3 className="text-[24px] font-bold mb-2 mt-4" style={{ color: 'var(--text-dark)' }} {...props} />,
-                    p: ({node, ...props}) => <p className="mb-4 text-[16px]" style={{ color: 'var(--text-dark)' }} {...props} />,
-                    a: ({node, ...props}) => <a className="font-medium hover:underline" style={{ color: 'var(--primary-blue)' }} {...props} />,
+                    h1: ({node, ...props}) => <h1 className="text-[32px] font-bold mb-4 mt-6 break-words" style={{ color: 'var(--text-dark)' }} {...props} />,
+                    h2: ({node, ...props}) => <h2 className="text-[28px] font-bold mb-3 mt-5 break-words" style={{ color: 'var(--text-dark)' }} {...props} />,
+                    h3: ({node, ...props}) => <h3 className="text-[24px] font-bold mb-2 mt-4 break-words" style={{ color: 'var(--text-dark)' }} {...props} />,
+                    p: ({node, ...props}) => <p className="mb-4 text-[16px] break-words" style={{ color: 'var(--text-dark)' }} {...props} />,
+                    a: ({node, ...props}) => <a className="font-medium hover:underline break-all" style={{ color: 'var(--primary-blue)' }} {...props} />,
                     code: ({node, inline, ...props}: any) => 
                       inline ? (
-                        <code className="px-2 py-1 rounded text-[14px] font-mono" style={{ backgroundColor: 'rgba(0, 0, 0, 0.05)', color: '#e11d48' }} {...props} />
+                        <code className="px-2 py-1 rounded text-[14px] font-mono break-all" style={{ backgroundColor: 'rgba(0, 0, 0, 0.05)', color: '#e11d48', maxWidth: '100%' }} {...props} />
                       ) : (
-                        <code className="block p-4 rounded-[12px] text-[14px] font-mono overflow-x-auto" style={{ backgroundColor: 'rgba(0, 0, 0, 0.05)' }} {...props} />
+                        <code className="block p-4 rounded-[12px] text-[14px] font-mono overflow-x-auto" style={{ backgroundColor: 'rgba(0, 0, 0, 0.05)', maxWidth: '100%', whiteSpace: 'pre-wrap', wordBreak: 'break-all' }} {...props} />
                       ),
                     ul: ({node, ...props}) => <ul className="list-disc list-inside mb-4 space-y-2" {...props} />,
                     ol: ({node, ...props}) => <ol className="list-decimal list-inside mb-4 space-y-2" {...props} />,

@@ -43,10 +43,8 @@ export default function ProfilePage() {
         if (!isLoading && !isAuthenticated) {
             // 모바일인 경우 로그인 모달 표시
             const isMobileDevice = window.innerWidth <= 768;
-            console.log('Profile auth check:', { isLoading, isAuthenticated, isMobileDevice });
             
             if (isMobileDevice) {
-                console.log('Opening login modal for mobile');
                 setIsLoginModalOpen(true);
             } else {
                 router.push('/');
@@ -235,7 +233,7 @@ export default function ProfilePage() {
 
             <div className="bg-glow" />
 
-            <div className="max-w-6xl mx-auto px-6 pt-28 pb-20 space-y-6 relative z-10">
+            <div className={isMobile ? "px-4 pt-16 pb-20 space-y-6 relative z-10" : "max-w-6xl mx-auto px-6 pt-28 pb-20 space-y-6 relative z-10"}>
                 <div className="flex items-center justify-between flex-wrap gap-3">
                     <div>
                         <p className="text-sm uppercase tracking-[0.15em] text-slate-500">Profile</p>
@@ -356,7 +354,7 @@ export default function ProfilePage() {
                                     value={formData.password}
                                     onChange={handleChange}
                                     placeholder="8자 이상 권장"
-                                    className="w-full h-12 px-4 rounded-2xl border border-slate-200 bg-white focus:outline-none focus:border-[#2196F3] focus:ring-2 focus:ring-[#2196F3]/15 text-base text-slate-900"
+                                    className={`w-full ${isMobile ? 'h-11' : 'h-12'} px-4 rounded-2xl border border-slate-200 bg-white focus:outline-none focus:border-[#2196F3] focus:ring-2 focus:ring-[#2196F3]/15 text-base text-slate-900`}
                                 />
                             </div>
 
@@ -371,7 +369,7 @@ export default function ProfilePage() {
                                     value={formData.passwordConfirm}
                                     onChange={handleChange}
                                     placeholder="한 번 더 입력"
-                                    className="w-full h-12 px-4 rounded-2xl border border-slate-200 bg-white focus:outline-none focus:border-[#2196F3] focus:ring-2 focus:ring-[#2196F3]/15 text-base text-slate-900"
+                                    className={`w-full ${isMobile ? 'h-11' : 'h-12'} px-4 rounded-2xl border border-slate-200 bg-white focus:outline-none focus:border-[#2196F3] focus:ring-2 focus:ring-[#2196F3]/15 text-base text-slate-900`}
                                 />
                             </div>
 
@@ -379,7 +377,7 @@ export default function ProfilePage() {
                                 <motion.button
                                     type="submit"
                                     disabled={isSaving}
-                                    className="w-full h-12 rounded-xl bg-[#2196F3] text-white font-semibold shadow-md hover:bg-[#1b82d8] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                                    className={`w-full ${isMobile ? 'h-11' : 'h-12'} rounded-xl bg-[#2196F3] text-white font-semibold shadow-md hover:bg-[#1b82d8] transition-colors disabled:opacity-60 disabled:cursor-not-allowed`}
                                     whileHover={{ scale: isSaving ? 1 : 1.01 }}
                                     whileTap={{ scale: isSaving ? 1 : 0.99 }}
                                 >
@@ -407,7 +405,7 @@ export default function ProfilePage() {
                         <button
                             onClick={handleLogout}
                             disabled={isLoggingOut}
-                            className="w-full h-12 rounded-xl bg-rose-50 border border-rose-200 text-rose-600 font-semibold flex items-center justify-center gap-2 hover:bg-rose-100 transition-colors disabled:opacity-60"
+                            className="w-full h-11 rounded-xl bg-rose-50 border border-rose-200 text-rose-600 font-semibold flex items-center justify-center gap-2 hover:bg-rose-100 transition-colors disabled:opacity-60"
                         >
                             <LogOut className="w-5 h-5" />
                             {isLoggingOut ? '로그아웃 중...' : '로그아웃'}

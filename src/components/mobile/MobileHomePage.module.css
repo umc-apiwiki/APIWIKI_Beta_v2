@@ -72,7 +72,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 0 0 4rem 0;
+  padding: 0 0 10rem 0;
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
@@ -226,8 +226,8 @@
   font-size: 0.6rem;
   font-weight: 400;
   flex-shrink: 0;
-  border: 0.5px solid #2196F3;
-  color: #2196F3;
+  border: 0.5px solid #2196f3;
+  color: #2196f3;
   cursor: pointer;
   transition: all 0.2s;
   min-width: 2rem;

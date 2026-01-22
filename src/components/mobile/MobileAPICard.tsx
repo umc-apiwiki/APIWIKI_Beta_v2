@@ -23,6 +23,7 @@ export default function MobileAPICard({ api }: MobileAPICardProps) {
     <Link 
       href={`/api/${api.id}`}
       className="block w-full h-full bg-white rounded-xl transition-all duration-200 active:scale-95 shadow-sm"
+      style={{ border: '1px solid #2196F3' }}
     >
       <div className="relative p-2 h-full flex flex-col">
         {/* Top Section: Image and Info */}

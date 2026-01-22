@@ -2,8 +2,6 @@
 'use client';
 
 import { useState, useEffect, useMemo, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
-import { Star, Users, ChevronLeft, Heart, Share2 } from 'lucide-react';
 import Header from '@/components/Header';
 import APICard from '@/components/APICard';
 import WikiEditor from '@/components/WikiEditor';
@@ -12,7 +10,6 @@ import { API } from '@/types';
 import styles from './page.module.css';
 
 export default function APIDetailPage({ params }: { params: { id: string } }) {
-  const router = useRouter();
   const [api, setApi] = useState<API | null>(null);
   const [relatedAPIs, setRelatedAPIs] = useState<API[]>([]);
   const [activeTab, setActiveTab] = useState('개요');
@@ -205,7 +202,16 @@ export default function APIDetailPage({ params }: { params: { id: string } }) {
     }
   };
 
-  if (loading) return null;
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--bg-light)' }}>
+        <div className="text-center">
+          <div className="inline-block w-12 h-12 border-4 border-t-transparent rounded-full animate-spin" style={{ borderColor: '#2196F3', borderTopColor: 'transparent' }}></div>
+          <p className="mt-4 text-sm text-gray-600">API 정보를 불러오는 중...</p>
+        </div>
+      </div>
+    );
+  }
   if (!api) return <div>API not found</div>;
 
   const tabs = [
