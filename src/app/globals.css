@@ -40,9 +40,33 @@ body {
   background-color: var(--bg-light);
   color: var(--text-dark);
   line-height: 1.6;
-  /* Force desktop layout even on mobile to avoid broken views */
-  overflow-x: auto;
-  min-width: 1200px;
+}
+
+/* 모바일에서 좌우 스크롤 방지 */
+@media (max-width: 767px) {
+  html {
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+  }
+  
+  body {
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    margin: 0;
+    padding: 0;
+  }
+}
+
+/* 데스크톱에서만 최소 너비 적용 */
+@media (min-width: 768px) {
+  body {
+    overflow-x: auto;
+    min-width: 1200px;
+  }
 }
 
 a {
